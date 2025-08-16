@@ -102,7 +102,7 @@ const ServicesSection = () => {
           <Card>
             <CardContent className="pt-6">
               <div className="text-center">
-                <h3 className="text-lg font-semibold mb-2">Ready to Start?</h3>
+                
                 <p className="text-muted-foreground mb-4">If you're ready to proceed after our consultation, you can make a payment here. All services are £20 per hour. </p>
                 <Button size="lg" variant="outline" className="border-2 gap-2" onClick={() => window.open('https://buy.stripe.com/9AQ9Cv4mm2HgcEgcMM', '_blank')}>
                   <ExternalLink size={20} />
