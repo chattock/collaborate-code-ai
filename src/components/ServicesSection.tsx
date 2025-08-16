@@ -1,6 +1,7 @@
 import { Check, ChevronDown, ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { BookingDialog } from "@/components/BookingDialog";
 
 const ServicesSection = () => {
   const services = [
@@ -108,18 +109,22 @@ const ServicesSection = () => {
               <CardTitle className="text-xl text-center">Book a Free Consultation</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="bg-muted/30 rounded-lg p-4 min-h-[500px] flex items-center justify-center">
-                <div className="text-center text-muted-foreground">
-                  <p className="mb-2">Booking widget would be embedded here</p>
-                  <p className="text-sm">Acuity Scheduling integration</p>
-                  <Button 
-                    variant="outline" 
-                    className="mt-4 gap-2"
-                    onClick={() => window.open('https://app.acuityscheduling.com/schedule.php?owner=33781461', '_blank')}
-                  >
-                    <ExternalLink size={16} />
-                    Book Consultation
-                  </Button>
+              <div className="bg-muted/30 rounded-lg p-6 min-h-[500px] flex flex-col items-center justify-center text-center">
+                <div className="space-y-4">
+                  <div className="text-6xl">📅</div>
+                  <h3 className="text-lg font-semibold">Schedule Your Meeting</h3>
+                  <p className="text-muted-foreground max-w-md">
+                    Book a free 30-minute consultation to discuss your project requirements. 
+                    Available times within the next week.
+                  </p>
+                  <BookingDialog>
+                    <Button size="lg" className="mt-4">
+                      Book Free Consultation
+                    </Button>
+                  </BookingDialog>
+                  <p className="text-xs text-muted-foreground">
+                    No commitment required • Free consultation
+                  </p>
                 </div>
               </div>
             </CardContent>
