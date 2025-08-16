@@ -88,18 +88,6 @@ const ServicesSection = () => {
                   </div>
                 </div>
               </div>
-              
-              <div className="mt-6 pt-6 border-t border-border">
-                <Button 
-                  size="lg" 
-                  variant="outline" 
-                  className="w-full border-2 gap-2"
-                  onClick={() => window.open('https://buy.stripe.com/9AQ9Cv4mm2HgcEgcMM', '_blank')}
-                >
-                  <ExternalLink size={20} />
-                  Payment Link
-                </Button>
-              </div>
             </CardContent>
           </Card>
 
@@ -107,35 +95,48 @@ const ServicesSection = () => {
           <Card className="h-fit">
             <CardHeader>
               <CardTitle className="text-xl text-center">Book a Free Consultation</CardTitle>
-              <p className="text-center text-muted-foreground">
-                Schedule a free 30-minute consultation to discuss your project requirements.
-              </p>
             </CardHeader>
             <CardContent>
-              <div className="bg-muted/30 rounded-lg p-6 min-h-96 flex flex-col items-center justify-center text-center">
-                <div className="space-y-4 flex-1 flex flex-col justify-center">
+              <div className="bg-muted/30 rounded-lg p-6 min-h-[500px] flex flex-col items-center justify-center text-center">
+                <div className="space-y-4">
                   <div className="text-6xl">📅</div>
                   <h3 className="text-lg font-semibold">Schedule Your Meeting</h3>
                   <p className="text-muted-foreground max-w-md">
-                    Available times within the next week. No commitment required.
+                    Book a free 30-minute consultation to discuss your project requirements. 
+                    Available times within the next week.
                   </p>
                   <BookingDialog>
                     <Button size="lg" className="mt-4">
                       Book Free Consultation
                     </Button>
                   </BookingDialog>
+                  <p className="text-xs text-muted-foreground">
+                    No commitment required • Free consultation
+                  </p>
                 </div>
               </div>
-              
-              <div className="mt-6 pt-6 border-t border-border">
-                <div className="text-center text-sm text-muted-foreground">
-                  <p className="mb-2">🎯 <strong>What to expect:</strong></p>
-                  <ul className="space-y-1 text-xs">
-                    <li>• Project scope discussion</li>
-                    <li>• Timeline and budget estimation</li>
-                    <li>• Technical approach planning</li>
-                  </ul>
-                </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Payment Link Section */}
+        <div className="mt-8">
+          <Card>
+            <CardContent className="pt-6">
+              <div className="text-center">
+                <h3 className="text-lg font-semibold mb-2">Ready to Start?</h3>
+                <p className="text-muted-foreground mb-4">
+                  If you're ready to proceed after our consultation, you can make a payment here.
+                </p>
+                <Button 
+                  size="lg" 
+                  variant="outline" 
+                  className="border-2 gap-2"
+                  onClick={() => window.open('https://buy.stripe.com/9AQ9Cv4mm2HgcEgcMM', '_blank')}
+                >
+                  <ExternalLink size={20} />
+                  Payment Link
+                </Button>
               </div>
             </CardContent>
           </Card>
