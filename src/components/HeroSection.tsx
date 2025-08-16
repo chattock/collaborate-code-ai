@@ -26,7 +26,7 @@ const HeroSection = () => {
             <h1 className="text-4xl lg:text-5xl font-bold text-foreground mb-4">
               James Chattock
             </h1>
-            <p className="text-xl lg:text-2xl text-primary font-semibold mb-8">Geospatial Data Scientist</p>
+            <p className="text-xl lg:text-2xl text-muted-foreground font-semibold mb-8">Geospatial Data Scientist</p>
 
             {/* Action Buttons */}
             <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start mb-8">

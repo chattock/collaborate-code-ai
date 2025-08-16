@@ -9,6 +9,12 @@ import globalTempsImg from "@/assets/project-global-temps.jpg";
 import climateMappingImg from "@/assets/project-climate-mapping.jpg";
 import orstedImg from "@/assets/project-orsted.jpg";
 import fashionEsgImg from "@/assets/project-fashion-esg.jpg";
+import retailAnalyticsImg from "@/assets/project-retail-analytics.jpg";
+import mlNetworkImg from "@/assets/project-ml-network.jpg";
+import propertyAnalysisImg from "@/assets/project-property-analysis.jpg";
+import supplyChainImg from "@/assets/project-supply-chain.jpg";
+import sentimentAnalysisImg from "@/assets/project-sentiment-analysis.jpg";
+import portfolioOptimizerImg from "@/assets/project-portfolio-optimizer.jpg";
 
 const ProjectsSection = () => {
   const projects = [
@@ -58,6 +64,54 @@ const ProjectsSection = () => {
       buttons: [
         { label: "Report", icon: FileText, url: "#", download: true }
       ]
+    },
+    {
+      title: "Retail Analytics Dashboard",
+      image: retailAnalyticsImg,
+      buttons: [
+        { label: "Website", icon: ExternalLink, url: "#" },
+        { label: "Github", icon: Github, url: "#" }
+      ]
+    },
+    {
+      title: "Machine Learning Network Analysis",
+      image: mlNetworkImg,
+      buttons: [
+        { label: "Report", icon: FileText, url: "#", download: true },
+        { label: "Github", icon: Github, url: "#" }
+      ]
+    },
+    {
+      title: "Property Market Analysis",
+      image: propertyAnalysisImg,
+      buttons: [
+        { label: "Website", icon: ExternalLink, url: "#" },
+        { label: "Project", icon: FileText, url: "#", download: true }
+      ]
+    },
+    {
+      title: "Supply Chain Optimization",
+      image: supplyChainImg,
+      buttons: [
+        { label: "Report", icon: FileText, url: "#", download: true },
+        { label: "Github", icon: Github, url: "#" }
+      ]
+    },
+    {
+      title: "Social Media Sentiment Analysis",
+      image: sentimentAnalysisImg,
+      buttons: [
+        { label: "Website", icon: ExternalLink, url: "#" },
+        { label: "Github", icon: Github, url: "#" }
+      ]
+    },
+    {
+      title: "Portfolio Risk Optimizer",
+      image: portfolioOptimizerImg,
+      buttons: [
+        { label: "Website", icon: ExternalLink, url: "#" },
+        { label: "Report", icon: FileText, url: "#", download: true }
+      ]
     }
   ];
 
@@ -76,47 +130,49 @@ const ProjectsSection = () => {
           <h2 className="text-3xl lg:text-4xl font-bold text-foreground">Projects</h2>
         </div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {projects.map((project, index) => (
-            <Card key={index} className="group hover:shadow-lg transition-all duration-300 overflow-hidden">
-              <div className="aspect-video overflow-hidden">
-                <img
-                  src={project.image}
-                  alt={project.title}
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                />
-              </div>
-              <CardHeader className="pb-3">
-                <CardTitle className="text-lg text-center line-clamp-2">{project.title}</CardTitle>
-              </CardHeader>
-              <CardContent className="pt-0">
-                <div className="flex flex-wrap gap-2 justify-center">
-                  {project.buttons.map((button, buttonIndex) => {
-                    const Icon = button.icon;
-                    return (
-                      <Button
-                        key={buttonIndex}
-                        variant="outline"
-                        size="sm"
-                        className="gap-1.5 text-xs"
-                        onClick={() => {
-                          if (button.download) {
-                            // Handle download
-                            console.log(`Download ${button.label} for ${project.title}`);
-                          } else {
-                            window.open(button.url, '_blank');
-                          }
-                        }}
-                      >
-                        <Icon size={14} />
-                        {button.label}
-                      </Button>
-                    );
-                  })}
+        <div className="overflow-x-auto pb-4">
+          <div className="flex gap-8 w-max">
+            {projects.map((project, index) => (
+              <Card key={index} className="group hover:shadow-lg transition-all duration-300 overflow-hidden w-80 flex-shrink-0">
+                <div className="aspect-video overflow-hidden">
+                  <img
+                    src={project.image}
+                    alt={project.title}
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                  />
                 </div>
-              </CardContent>
-            </Card>
-          ))}
+                <CardHeader className="pb-3">
+                  <CardTitle className="text-lg text-center line-clamp-2">{project.title}</CardTitle>
+                </CardHeader>
+                <CardContent className="pt-0">
+                  <div className="flex flex-wrap gap-2 justify-center">
+                    {project.buttons.map((button, buttonIndex) => {
+                      const Icon = button.icon;
+                      return (
+                        <Button
+                          key={buttonIndex}
+                          variant="outline"
+                          size="sm"
+                          className="gap-1.5 text-xs"
+                          onClick={() => {
+                            if (button.download) {
+                              // Handle download
+                              console.log(`Download ${button.label} for ${project.title}`);
+                            } else {
+                              window.open(button.url, '_blank');
+                            }
+                          }}
+                        >
+                          <Icon size={14} />
+                          {button.label}
+                        </Button>
+                      );
+                    })}
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
         </div>
 
         {/* Scroll Arrow */}
