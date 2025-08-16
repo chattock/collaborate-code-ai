@@ -72,7 +72,7 @@ const ServicesSection = () => {
               </p>
             </CardHeader>
             <CardContent>
-              <div className="grid gap-4 max-h-96 overflow-y-auto pr-2">
+              <div className="grid gap-4 h-96 overflow-y-auto pr-2">
                 {services.map((service, index) => (
                   <div key={index} className="flex gap-3 p-3 rounded-lg hover:bg-muted/50 transition-colors">
                     <Check className="w-5 h-5 text-accent mt-0.5 flex-shrink-0" />
@@ -82,11 +82,6 @@ const ServicesSection = () => {
                     </div>
                   </div>
                 ))}
-                <div className="flex gap-3 p-3">
-                  <div>
-                    <h3 className="font-semibold text-foreground">And more...</h3>
-                  </div>
-                </div>
               </div>
             </CardContent>
           </Card>
@@ -97,7 +92,7 @@ const ServicesSection = () => {
               <CardTitle className="text-xl text-center">Book a Free Consultation</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="bg-muted/30 rounded-lg p-6 min-h-[500px] flex flex-col items-center justify-center text-center">
+              <div className="bg-muted/30 rounded-lg p-6 h-96 flex flex-col items-center justify-center text-center">
                 <div className="space-y-4">
                   <div className="text-6xl">📅</div>
                   <h3 className="text-lg font-semibold">Schedule Your Meeting</h3>
