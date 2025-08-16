@@ -8,8 +8,8 @@ import aboutPic from "@/assets/about-pic.jpg";
 const AboutSection = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
-  const scrollToServices = () => {
-    const element = document.querySelector('#services');
+  const scrollToProjects = () => {
+    const element = document.querySelector('#projects');
     if (element) {
       element.scrollIntoView({ behavior: 'smooth' });
     }
@@ -93,7 +93,7 @@ const AboutSection = () => {
           <Button
             variant="ghost"
             size="icon"
-            onClick={scrollToServices}
+            onClick={scrollToProjects}
             className="w-12 h-12 rounded-full hover:bg-primary/10"
           >
             <ChevronDown size={24} className="text-primary" />

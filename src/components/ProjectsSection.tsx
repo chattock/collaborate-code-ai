@@ -61,8 +61,8 @@ const ProjectsSection = () => {
     }
   ];
 
-  const scrollToContact = () => {
-    const element = document.querySelector('#contact');
+  const scrollToServices = () => {
+    const element = document.querySelector('#services');
     if (element) {
       element.scrollIntoView({ behavior: 'smooth' });
     }
@@ -124,7 +124,7 @@ const ProjectsSection = () => {
           <Button
             variant="ghost"
             size="icon"
-            onClick={scrollToContact}
+            onClick={scrollToServices}
             className="w-12 h-12 rounded-full hover:bg-primary/10"
           >
             <ChevronDown size={24} className="text-primary" />
