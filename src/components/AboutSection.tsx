@@ -4,19 +4,17 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import aboutPic from "@/assets/about-pic.jpg";
-
 const AboutSection = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-
   const scrollToProjects = () => {
     const element = document.querySelector('#projects');
     if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
+      element.scrollIntoView({
+        behavior: 'smooth'
+      });
     }
   };
-
-  return (
-    <section id="about" className="py-20 px-4 bg-muted/30">
+  return <section id="about" className="py-20 px-4 bg-muted/30">
       <div className="container mx-auto max-w-6xl">
         <div className="text-center mb-16">
           <p className="text-lg text-muted-foreground mb-4">Get To Know More</p>
@@ -27,11 +25,7 @@ const AboutSection = () => {
           {/* About Image */}
           <div className="order-2 lg:order-1">
             <div className="rounded-2xl overflow-hidden shadow-lg">
-              <img
-                src={aboutPic}
-                alt="Data science workspace"
-                className="w-full h-auto object-cover"
-              />
+              <img src={aboutPic} alt="Data science workspace" className="w-full h-auto object-cover" />
             </div>
           </div>
 
@@ -45,8 +39,8 @@ const AboutSection = () => {
                   <CardTitle className="text-lg">Experience</CardTitle>
                 </CardHeader>
                 <CardContent className="text-sm text-muted-foreground leading-relaxed">
-                  <p>2+ Years experience working with Python, R, SQL, JavaScript and GIS.</p>
-                  <p className="mt-2">My expertise combines data science proficiency and business acumen, with work experience in ESG reporting and a focus on Geographic data science.</p>
+                  <p>3+ Years experience working with Python, R, SQL, JavaScript and GIS.</p>
+                  
                 </CardContent>
               </Card>
 
@@ -58,8 +52,9 @@ const AboutSection = () => {
                 </CardHeader>
                 <CardContent className="text-sm text-muted-foreground leading-relaxed space-y-2">
                   <p>M.Sc. Geographic Data Science - London School of Economics</p>
-                  <p>B.Sc. Chinese and Business Management - The University of Manchester</p>
-                  <p>IBM Data Science Certified</p>
+                  <p>
+                </p>
+                  
                 </CardContent>
               </Card>
             </div>
@@ -67,11 +62,7 @@ const AboutSection = () => {
             {/* CV Dialog */}
             <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
               <DialogTrigger asChild>
-                <Button 
-                  variant="outline" 
-                  size="lg" 
-                  className="w-full border-2"
-                >
+                <Button variant="outline" size="lg" className="w-full border-2">
                   View CV
                 </Button>
               </DialogTrigger>
@@ -90,18 +81,11 @@ const AboutSection = () => {
 
         {/* Scroll Arrow */}
         <div className="flex justify-center mt-16">
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={scrollToProjects}
-            className="w-12 h-12 rounded-full hover:bg-primary/10"
-          >
+          <Button variant="ghost" size="icon" onClick={scrollToProjects} className="w-12 h-12 rounded-full hover:bg-primary/10">
             <ChevronDown size={24} className="text-primary" />
           </Button>
         </div>
       </div>
-    </section>
-  );
+    </section>;
 };
-
 export default AboutSection;
