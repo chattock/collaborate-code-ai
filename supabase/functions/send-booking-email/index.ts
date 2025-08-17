@@ -1,7 +1,7 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { Resend } from "npm:resend@2.0.0";
 
-const resend = new Resend(Deno.env.get("RESEND_API_KEY"));
+// Resend instance is created inside the handler after validating API key
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -29,6 +29,18 @@ const handler = async (req: Request): Promise<Response> => {
     const bookingData: BookingEmailRequest = await req.json();
     console.log("Received booking request:", bookingData);
 
+    // Ensure API key exists before creating the client
+    const apiKey = Deno.env.get("RESEND_API_KEY");
+    if (!apiKey) {
+      console.error("RESEND_API_KEY is missing");
+      return new Response(
+        JSON.stringify({ error: "Email service is not configured. Please set RESEND_API_KEY." }),
+        { status: 500, headers: { "Content-Type": "application/json", ...corsHeaders } }
+      );
+    }
+
+    const resend = new Resend(apiKey);
+
     // Format the booking details for the emails
     const formattedDate = new Date(bookingData.booking_date).toLocaleDateString('en-GB', {
       weekday: 'long',
@@ -41,7 +53,7 @@ const handler = async (req: Request): Promise<Response> => {
 
     // Send confirmation email to the client
     const clientEmailResponse = await resend.emails.send({
-      from: "James Chattock <james@resend.dev>",
+      from: "James Chattock <onboarding@resend.dev>",
       to: [bookingData.email],
       subject: "Consultation Booking Confirmed",
       html: `
@@ -65,7 +77,7 @@ const handler = async (req: Request): Promise<Response> => {
 
     // Send notification email to James
     const jamesEmailResponse = await resend.emails.send({
-      from: "Booking System <bookings@resend.dev>",
+      from: "Bookings <onboarding@resend.dev>",
       to: ["james.chattock@gmail.com"],
       subject: `New Consultation Booking - ${bookingData.name}`,
       html: `
