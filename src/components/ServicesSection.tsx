@@ -102,7 +102,7 @@ const ServicesSection = () => {
                     <User className="w-6 h-6 mx-auto text-primary mb-2" />
                     <h3 className="font-semibold text-foreground mb-3">About Me</h3>
                     <div className="text-sm text-muted-foreground leading-relaxed text-left space-y-2">
-                      <p>I have studied Geographic Data Science at the London School of Economics (LSE), where I built a strong technical foundation in data analysis and geographic information systems. With a bachelor's degree in Chinese Language and Business at LSE, I have worked on a range of projects leveraging Python, R, QGIS and ArcGIS to analyse datasets, visualise spatial patterns, and develop models tailored to geographic data challenges.</p>
+                      <p>I am a GIS Consultant at Esri UK with a Master’s in Geographic Data Science from the London School of Economics (LSE). My background combines advanced data analysis and geographic information systems with hands-on experience using Python, R, QGIS, and ArcGIS. I have delivered projects that involve analysing complex datasets, visualising spatial patterns, and building models to address real-world geographic challenges.</p>
                       
                     </div>
                   </div>
