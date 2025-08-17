@@ -29,87 +29,87 @@ const ProjectsSection = () => {
       ]
     },
     {
-      title: "Word Relationship Project",
+      title: t("projects.wordRelations"),
       image: wordRelationsImg,
       buttons: [
-        { label: "Website", icon: ExternalLink, url: "https://chattock.github.io/Crisis/" },
-        { label: "Github", icon: Github, url: "https://github.com/chattock/Crisis" }
+        { label: t("projects.website"), icon: ExternalLink, url: "https://chattock.github.io/Crisis/" },
+        { label: t("projects.github"), icon: Github, url: "https://github.com/chattock/Crisis" }
       ]
     },
     {
-      title: "Global Temperatures",
+      title: t("projects.globalTemps"),
       image: globalTempsImg,
       buttons: [
-        { label: "Video Demo", icon: Play, url: "https://www.youtube.com/watch?v=zUuyePLL3rw&t=165s" },
-        { label: "Project", icon: FileText, url: "#", download: true },
-        { label: "Github", icon: Github, url: "https://github.com/chattock/data-vis-essay/blob/main/How%20to%20use%20CIMP6%20Databass-Copy1.ipynb" }
+        { label: t("projects.videoDemo"), icon: Play, url: "https://www.youtube.com/watch?v=zUuyePLL3rw&t=165s" },
+        { label: t("projects.project"), icon: FileText, url: "#", download: true },
+        { label: t("projects.github"), icon: Github, url: "https://github.com/chattock/data-vis-essay/blob/main/How%20to%20use%20CIMP6%20Databass-Copy1.ipynb" }
       ]
     },
     {
-      title: "Battle of the Skies Demo",
+      title: t("projects.battleSkies"),
       image: climateMappingImg,
       buttons: [
-        { label: "Website", icon: ExternalLink, url: "https://chattock.github.io/climate-mapping/" },
-        { label: "Github", icon: Github, url: "https://github.com/chattock/climate-mapping" }
+        { label: t("projects.website"), icon: ExternalLink, url: "https://chattock.github.io/climate-mapping/" },
+        { label: t("projects.github"), icon: Github, url: "https://github.com/chattock/climate-mapping" }
       ]
     },
     {
-      title: "Ørsted Financial Analysis",
+      title: t("projects.orsted"),
       image: orstedImg,
       buttons: [
-        { label: "Report", icon: FileText, url: "#", download: true }
+        { label: t("projects.report"), icon: FileText, url: "#", download: true }
       ]
     },
     {
-      title: "UK Fashion ESG Report",
+      title: t("projects.fashionESG"),
       image: fashionEsgImg,
       buttons: [
-        { label: "Report", icon: FileText, url: "#", download: true }
+        { label: t("projects.report"), icon: FileText, url: "#", download: true }
       ]
     },
     {
-      title: "Chinese Development in Nairobi",
+      title: t("projects.chineseDevelopment"),
       image: retailAnalyticsImg,
       buttons: [
-        { label: "Report", icon: FileText, url: "#", download: true },
-        { label: "Website", icon: ExternalLink, url: "#" }
+        { label: t("projects.report"), icon: FileText, url: "#", download: true },
+        { label: t("projects.website"), icon: ExternalLink, url: "#" }
       ]
     },
     {
-      title: "Predicting Fires in California",
+      title: t("projects.californiaFires"),
       image: mlNetworkImg,
       buttons: [
-        { label: "Report", icon: FileText, url: "#", download: true },
-        { label: "Github", icon: Github, url: "#" }
+        { label: t("projects.report"), icon: FileText, url: "#", download: true },
+        { label: t("projects.github"), icon: Github, url: "#" }
       ]
     },
     {
-      title: "Glastonbury Festival Economic Evaluation",
+      title: t("projects.glastonbury"),
       image: propertyAnalysisImg,
       buttons: [
-        { label: "Report", icon: FileText, url: "#", download: true }
+        { label: t("projects.report"), icon: FileText, url: "#", download: true }
       ]
     },
     {
-      title: "Drivers of Gentrification in Chicago",
+      title: t("projects.gentrification"),
       image: supplyChainImg,
       buttons: [
-        { label: "Website", icon: ExternalLink, url: "#" }
+        { label: t("projects.website"), icon: ExternalLink, url: "#" }
       ]
     },
     {
-      title: "Elizabeth Line Effect on Property Prices",
+      title: t("projects.elizabethLine"),
       image: sentimentAnalysisImg,
       buttons: [
-        { label: "Report", icon: FileText, url: "#", download: true },
-        { label: "Website", icon: ExternalLink, url: "#" }
+        { label: t("projects.report"), icon: FileText, url: "#", download: true },
+        { label: t("projects.website"), icon: ExternalLink, url: "#" }
       ]
     },
     {
-      title: "Predicting Cheaters of Video Games",
+      title: t("projects.portfolioOptimizer"),
       image: portfolioOptimizerImg,
       buttons: [
-        { label: "Github", icon: Github, url: "#" }
+        { label: t("projects.github"), icon: Github, url: "#" }
       ]
     }
   ];
