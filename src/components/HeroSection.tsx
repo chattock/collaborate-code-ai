@@ -1,7 +1,11 @@
+import { useState } from "react";
 import { Download, Mail, Linkedin, Github } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import profilePic from "@/assets/profile-pic.jpg";
 const HeroSection = () => {
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  
   const scrollToContact = () => {
     const element = document.querySelector('#contact');
     if (element) {
@@ -30,10 +34,26 @@ const HeroSection = () => {
 
             {/* Action Buttons */}
             <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start mb-8">
-              <Button size="lg" variant="outline" className="gap-2 border-2" onClick={() => window.open('#', '_blank')}>
-                <Download size={20} />
-                Download CV
-              </Button>
+              <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+                <DialogTrigger asChild>
+                  <Button size="lg" variant="outline" className="border-2">
+                    CV
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+                  <DialogHeader>
+                    <DialogTitle>Curriculum Vitae</DialogTitle>
+                  </DialogHeader>
+                  <div className="text-center py-12 text-muted-foreground space-y-4">
+                    <p>CV content would be displayed here.</p>
+                    <p className="text-sm">For the demo, this would show the actual CV PDF content.</p>
+                    <Button className="gap-2" onClick={() => window.open('#', '_blank')}>
+                      <Download size={20} />
+                      Download CV
+                    </Button>
+                  </div>
+                </DialogContent>
+              </Dialog>
               <Button size="lg" className="gap-2" onClick={scrollToContact}>
                 <Mail size={20} />
                 Contact Info

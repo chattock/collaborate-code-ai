@@ -1,4 +1,4 @@
-import { Check, ChevronDown, ExternalLink, Award, GraduationCap } from "lucide-react";
+import { Check, ChevronDown, ExternalLink, Award, GraduationCap, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { BookingDialog } from "@/components/BookingDialog";
@@ -78,25 +78,44 @@ const ServicesSection = () => {
             </CardHeader>
             <CardContent>
               <div className="bg-muted/30 rounded-lg p-6 h-96 overflow-y-auto pr-2 space-y-6">
+                {/* About Me Section */}
+                <div className="text-center">
+                  <User className="w-6 h-6 mx-auto text-primary mb-2" />
+                  <h3 className="font-semibold text-foreground mb-3">About Me</h3>
+                  <div className="text-sm text-muted-foreground leading-relaxed text-left space-y-2">
+                    <ul className="space-y-1">
+                      <li>• I have studied Geographic Data Science at the London School of Economics (LSE), where I built a strong technical foundation in data analysis and geographic information systems</li>
+                      <li>• With a bachelor's degree in Chinese Language and Business at LSE, I have worked on a range of projects leveraging Python, R, QGIS and ArcGIS to analyse datasets, visualise spatial patterns, and develop models tailored to geographic data challenges</li>
+                      <li>• Professionally, I have developed expertise in GIS, data science, ESG reporting, and venture capital</li>
+                      <li>• In addition to my academic and professional experience, I earned the IBM Data Science Professional Certificate independently</li>
+                    </ul>
+                  </div>
+                </div>
+
                 <div className="grid gap-6">
                   {/* Experience Card */}
                   <div className="text-center">
                     <Award className="w-6 h-6 mx-auto text-primary mb-2" />
                     <h3 className="font-semibold text-foreground mb-1">Experience</h3>
-                    <p className="text-sm text-muted-foreground">GIS Consultant at ESRI with 3+ years experience in Python, R, SQL, JavaScript and GIS technologies.</p>
+                    <div className="text-sm text-muted-foreground text-left">
+                      <ul className="space-y-1">
+                        <li>• GIS Consultant at ESRI</li>
+                        <li>• 3+ years experience in Python, R, SQL, JavaScript and GIS technologies</li>
+                      </ul>
+                    </div>
                   </div>
 
                   {/* Education Card */}
                   <div className="text-center">
                     <GraduationCap className="w-6 h-6 mx-auto text-primary mb-2" />
                     <h3 className="font-semibold text-foreground mb-1">Education</h3>
-                    <p className="text-sm text-muted-foreground">M.Sc. Geographic Data Science - London School of Economics<br />IBM Data Science Professional Certificate</p>
+                    <div className="text-sm text-muted-foreground text-left">
+                      <ul className="space-y-1">
+                        <li>• M.Sc. Geographic Data Science - London School of Economics</li>
+                        <li>• IBM Data Science Professional Certificate</li>
+                      </ul>
+                    </div>
                   </div>
-                </div>
-
-                {/* Background Text */}
-                <div className="text-sm text-muted-foreground leading-relaxed">
-                  <p>I am a GIS Consultant at Esri UK with a Master's degree in Geographic Data Science from the London School of Economics (LSE). My background combines advanced data analysis and geographic information systems with hands-on experience using Python, R, QGIS, and ArcGIS. I have delivered projects that involve analysing complex datasets, visualising spatial patterns, and building models to address real-world geographic challenges. </p>
                 </div>
               </div>
             </CardContent>
@@ -111,7 +130,7 @@ const ServicesSection = () => {
                 <p className="text-muted-foreground mb-4">Meetings are Free. Payments for any services can be made here. All services are £20 per hour.</p>
                 <div className="flex gap-4 justify-center">
                   <BookingDialog>
-                    <Button size="lg" variant="outline" className="border-2">
+                    <Button size="lg" className="bg-gray-800 text-white hover:bg-gray-700">
                       Book a Meeting
                     </Button>
                   </BookingDialog>
