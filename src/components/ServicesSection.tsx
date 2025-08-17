@@ -120,7 +120,7 @@ const ServicesSection = () => {
             <CardContent className="pt-6">
               <div className="text-center">
                 <p className="text-muted-foreground mb-4">Meetings are Free. Payments for any services can be made here. All services are £20 per hour.</p>
-                <div className="flex gap-4 justify-center">
+                <div className="flex flex-col sm:flex-row gap-4 justify-center">
                   <BookingDialog>
                     <Button size="lg" className="bg-gray-800 text-white hover:bg-gray-700">
                       Book a Meeting

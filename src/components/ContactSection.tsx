@@ -23,7 +23,7 @@ const ContactSection = () => {
                   <p className="font-semibold text-foreground mb-1">Email</p>
                   <Button
                     variant="link"
-                    className="h-auto p-0 text-primary hover:underline"
+                    className="h-auto p-0 text-primary hover:underline text-left break-all"
                     onClick={() => window.location.href = 'mailto:james.chattock@gmail.com'}
                   >
                     james.chattock@gmail.com
