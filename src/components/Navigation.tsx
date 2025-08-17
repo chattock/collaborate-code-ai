@@ -9,7 +9,7 @@ const Navigation = () => {
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
   const navLinks = [
-    { href: "#about", label: "About" },
+    { href: "#hero", label: "About" },
     { href: "#projects", label: "Projects" },
     { href: "#services", label: "Skills" },
     { href: "#contact", label: "Contact" },
