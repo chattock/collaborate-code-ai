@@ -2,6 +2,7 @@ import { Check, ChevronDown, ExternalLink, Award, GraduationCap } from "lucide-r
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { BookingDialog } from "@/components/BookingDialog";
+
 const ServicesSection = () => {
   const services = [{
     title: "GIS Solutions",
@@ -31,6 +32,7 @@ const ServicesSection = () => {
     title: "Data Cleaning",
     description: "Improving data quality"
   }];
+
   const scrollToContact = () => {
     const element = document.querySelector('#contact');
     if (element) {
@@ -39,7 +41,9 @@ const ServicesSection = () => {
       });
     }
   };
-  return <section id="services" className="py-20 px-4">
+
+  return (
+    <section id="services" className="py-20 px-4">
       <div className="container mx-auto max-w-6xl">
         <div className="text-center mb-16">
           <p className="text-lg text-muted-foreground mb-4">Explore My</p>
@@ -54,13 +58,15 @@ const ServicesSection = () => {
             </CardHeader>
             <CardContent>
               <div className="grid gap-4 h-96 overflow-y-auto pr-2">
-                {services.map((service, index) => <div key={index} className="flex gap-3 p-3 rounded-lg hover:bg-muted/50 transition-colors">
+                {services.map((service, index) => (
+                  <div key={index} className="flex gap-3 p-3 rounded-lg hover:bg-muted/50 transition-colors">
                     <Check className="w-5 h-5 text-accent mt-0.5 flex-shrink-0" />
                     <div>
                       <h3 className="font-semibold text-foreground">{service.title}</h3>
                       <p className="text-sm text-muted-foreground mt-1">{service.description}</p>
                     </div>
-                  </div>)}
+                  </div>
+                ))}
               </div>
             </CardContent>
           </Card>
@@ -72,12 +78,6 @@ const ServicesSection = () => {
             </CardHeader>
             <CardContent>
               <div className="bg-muted/30 rounded-lg p-6 h-96 overflow-y-auto pr-2 space-y-6">
-                {/* Background Text */}
-                <div className="text-sm text-muted-foreground leading-relaxed">
-                  <p>I am a GIS Consultant at Esri UK with a Master’s degree in Geographic Data Science from the London School of Economics (LSE). My background combines advanced data analysis and geographic information systems with hands-on experience using Python, R, QGIS, and ArcGIS. I have delivered projects that involve analysing complex datasets, visualising spatial patterns, and building models to address real-world geographic challenges. </p>
-                  
-                </div>
-                
                 <div className="grid gap-6">
                   {/* Experience Card */}
                   <div className="text-center">
@@ -92,6 +92,11 @@ const ServicesSection = () => {
                     <h3 className="font-semibold text-foreground mb-1">Education</h3>
                     <p className="text-sm text-muted-foreground">M.Sc. Geographic Data Science - London School of Economics<br />IBM Data Science Professional Certificate</p>
                   </div>
+                </div>
+
+                {/* Background Text */}
+                <div className="text-sm text-muted-foreground leading-relaxed">
+                  <p>I am a GIS Consultant at Esri UK with a Master's degree in Geographic Data Science from the London School of Economics (LSE). My background combines advanced data analysis and geographic information systems with hands-on experience using Python, R, QGIS, and ArcGIS. I have delivered projects that involve analysing complex datasets, visualising spatial patterns, and building models to address real-world geographic challenges. </p>
                 </div>
               </div>
             </CardContent>
@@ -127,6 +132,8 @@ const ServicesSection = () => {
           </Button>
         </div>
       </div>
-    </section>;
+    </section>
+  );
 };
+
 export default ServicesSection;
