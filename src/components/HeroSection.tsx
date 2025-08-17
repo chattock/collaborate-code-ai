@@ -36,7 +36,8 @@ const HeroSection = () => {
             <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start mb-8">
               <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
                 <DialogTrigger asChild>
-                  <Button size="lg" variant="outline" className="border-2">
+                  <Button size="lg" variant="outline" className="border-2 gap-2">
+                    <Download size={20} />
                     CV
                   </Button>
                 </DialogTrigger>

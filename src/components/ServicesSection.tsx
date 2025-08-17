@@ -78,20 +78,6 @@ const ServicesSection = () => {
             </CardHeader>
             <CardContent>
               <div className="bg-muted/30 rounded-lg p-6 h-96 overflow-y-auto pr-2 space-y-6">
-                {/* About Me Section */}
-                <div className="text-center">
-                  <User className="w-6 h-6 mx-auto text-primary mb-2" />
-                  <h3 className="font-semibold text-foreground mb-3">About Me</h3>
-                  <div className="text-sm text-muted-foreground leading-relaxed text-left space-y-2">
-                    <ul className="space-y-1">
-                      <li>• I have studied Geographic Data Science at the London School of Economics (LSE), where I built a strong technical foundation in data analysis and geographic information systems</li>
-                      <li>• With a bachelor's degree in Chinese Language and Business at LSE, I have worked on a range of projects leveraging Python, R, QGIS and ArcGIS to analyse datasets, visualise spatial patterns, and develop models tailored to geographic data challenges</li>
-                      <li>• Professionally, I have developed expertise in GIS, data science, ESG reporting, and venture capital</li>
-                      <li>• In addition to my academic and professional experience, I earned the IBM Data Science Professional Certificate independently</li>
-                    </ul>
-                  </div>
-                </div>
-
                 <div className="grid gap-6">
                   {/* Experience Card */}
                   <div className="text-center">
@@ -114,6 +100,16 @@ const ServicesSection = () => {
                         <li>• M.Sc. Geographic Data Science - London School of Economics</li>
                         <li>• IBM Data Science Professional Certificate</li>
                       </ul>
+                    </div>
+                  </div>
+
+                  {/* About Me Section */}
+                  <div className="text-center">
+                    <User className="w-6 h-6 mx-auto text-primary mb-2" />
+                    <h3 className="font-semibold text-foreground mb-3">About Me</h3>
+                    <div className="text-sm text-muted-foreground leading-relaxed text-left space-y-2">
+                      <p>I have studied Geographic Data Science at the London School of Economics (LSE), where I built a strong technical foundation in data analysis and geographic information systems. With a bachelor's degree in Chinese Language and Business at LSE, I have worked on a range of projects leveraging Python, R, QGIS and ArcGIS to analyse datasets, visualise spatial patterns, and develop models tailored to geographic data challenges.</p>
+                      <p>Professionally, I have developed expertise in GIS, data science, ESG reporting, and venture capital. In addition to my academic and professional experience, I earned the IBM Data Science Professional Certificate independently.</p>
                     </div>
                   </div>
                 </div>
