@@ -1,11 +1,12 @@
-import { Check, ChevronDown, ExternalLink } from "lucide-react";
+import { Check, ChevronDown, ExternalLink, Award, GraduationCap } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { BookingDialog } from "@/components/BookingDialog";
+
 const ServicesSection = () => {
   const services = [{
     title: "GIS Solutions",
-    description: "Geospatial data Analysis with QGIS"
+    description: "Geospatial data Analysis with Esri products"
   }, {
     title: "Data Analysis",
     description: "Leveraging Python or R in Jupyter or RMarkdown for data driven insights"
@@ -25,15 +26,13 @@ const ServicesSection = () => {
     title: "Database Management",
     description: "PostgreSQL for organizing and storing data"
   }, {
-    title: "API Integration",
-    description: "Connecting software systems"
-  }, {
     title: "Big Data Processing",
     description: "Handling large datasets with Spark SQL and TensorFlow"
   }, {
     title: "Data Cleaning",
     description: "Improving data quality"
   }];
+
   const scrollToContact = () => {
     const element = document.querySelector('#contact');
     if (element) {
@@ -42,7 +41,9 @@ const ServicesSection = () => {
       });
     }
   };
-  return <section id="services" className="py-20 px-4">
+
+  return (
+    <section id="services" className="py-20 px-4">
       <div className="container mx-auto max-w-6xl">
         <div className="text-center mb-16">
           <p className="text-lg text-muted-foreground mb-4">Explore My</p>
@@ -54,60 +55,66 @@ const ServicesSection = () => {
           <Card className="h-fit">
             <CardHeader>
               <CardTitle className="text-xl text-center">Services</CardTitle>
-              
             </CardHeader>
             <CardContent>
               <div className="grid gap-4 h-96 overflow-y-auto pr-2">
-                {services.map((service, index) => <div key={index} className="flex gap-3 p-3 rounded-lg hover:bg-muted/50 transition-colors">
+                {services.map((service, index) => (
+                  <div key={index} className="flex gap-3 p-3 rounded-lg hover:bg-muted/50 transition-colors">
                     <Check className="w-5 h-5 text-accent mt-0.5 flex-shrink-0" />
                     <div>
                       <h3 className="font-semibold text-foreground">{service.title}</h3>
                       <p className="text-sm text-muted-foreground mt-1">{service.description}</p>
                     </div>
-                  </div>)}
+                  </div>
+                ))}
               </div>
             </CardContent>
           </Card>
 
-          {/* Booking Widget */}
+          {/* About Me Widget */}
           <Card className="h-fit">
             <CardHeader>
-              <CardTitle className="text-xl text-center">Book a Free Consultation</CardTitle>
+              <CardTitle className="text-xl text-center">About Me</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="bg-muted/30 rounded-lg p-6 h-96 flex flex-col items-center justify-center text-center">
-                <div className="space-y-4">
-                  <div className="text-6xl">📅</div>
-                  <h3 className="text-lg font-semibold">Schedule Your Meeting</h3>
-                  <p className="text-muted-foreground max-w-md">
-                    Book a free 30-minute consultation to discuss your project requirements. 
-                    Available times within the next week.
-                  </p>
-                  <BookingDialog>
-                    <Button size="lg" className="mt-4">
-                      Book Free Consultation
-                    </Button>
-                  </BookingDialog>
-                  <p className="text-xs text-muted-foreground">
-                    No commitment required • Free consultation
-                  </p>
+              <div className="bg-muted/30 rounded-lg p-6 h-96 flex flex-col justify-center space-y-6">
+                <div className="grid gap-6">
+                  {/* Experience Card */}
+                  <div className="text-center">
+                    <Award className="w-6 h-6 mx-auto text-primary mb-2" />
+                    <h3 className="font-semibold text-foreground mb-1">Experience</h3>
+                    <p className="text-sm text-muted-foreground">3+ Years experience working with Python, R, SQL, JavaScript and GIS.</p>
+                  </div>
+
+                  {/* Education Card */}
+                  <div className="text-center">
+                    <GraduationCap className="w-6 h-6 mx-auto text-primary mb-2" />
+                    <h3 className="font-semibold text-foreground mb-1">Education</h3>
+                    <p className="text-sm text-muted-foreground">M.Sc. Geographic Data Science - London School of Economics</p>
+                  </div>
                 </div>
               </div>
             </CardContent>
           </Card>
         </div>
 
-        {/* Payment Link Section */}
+        {/* Payment and Booking Section */}
         <div className="mt-8">
           <Card>
             <CardContent className="pt-6">
               <div className="text-center">
-                
-                <p className="text-muted-foreground mb-4">You can make a payments here. All services are £20 per hour. </p>
-                <Button size="lg" variant="outline" className="border-2 gap-2" onClick={() => window.open('https://buy.stripe.com/9AQ9Cv4mm2HgcEgcMM', '_blank')}>
-                  <ExternalLink size={20} />
-                  Payment Link
-                </Button>
+                <p className="text-muted-foreground mb-4">You can make a payments here. All services are £20 per hour.</p>
+                <div className="flex gap-4 justify-center">
+                  <BookingDialog>
+                    <Button size="lg" variant="outline" className="border-2">
+                      Book Free Consultation
+                    </Button>
+                  </BookingDialog>
+                  <Button size="lg" variant="outline" className="border-2 gap-2" onClick={() => window.open('https://buy.stripe.com/9AQ9Cv4mm2HgcEgcMM', '_blank')}>
+                    <ExternalLink size={20} />
+                    Payment Link
+                  </Button>
+                </div>
               </div>
             </CardContent>
           </Card>
@@ -120,6 +127,8 @@ const ServicesSection = () => {
           </Button>
         </div>
       </div>
-    </section>;
+    </section>
+  );
 };
+
 export default ServicesSection;
