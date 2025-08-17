@@ -54,12 +54,27 @@ const FormSchema = z.object({
   }),
 });
 
-// Available time slots (30-minute intervals from 9:00 to 17:00)
-const timeSlots = [
-  "09:00", "09:30", "10:00", "10:30", "11:00", "11:30",
-  "12:00", "12:30", "13:00", "13:30", "14:00", "14:30",
-  "15:00", "15:30", "16:00", "16:30", "17:00"
-];
+// Available time slots based on day type
+const getTimeSlots = (date: Date | undefined) => {
+  if (!date) return [];
+  
+  const dayOfWeek = date.getDay(); // 0 = Sunday, 6 = Saturday
+  const isWeekend = dayOfWeek === 0 || dayOfWeek === 6;
+  
+  if (isWeekend) {
+    // Weekends: 9:00am-5:00pm
+    return [
+      "09:00", "09:30", "10:00", "10:30", "11:00", "11:30",
+      "12:00", "12:30", "13:00", "13:30", "14:00", "14:30",
+      "15:00", "15:30", "16:00", "16:30", "17:00"
+    ];
+  } else {
+    // Weekdays: 6:00pm-8:00pm
+    return [
+      "18:00", "18:30", "19:00", "19:30", "20:00"
+    ];
+  }
+};
 
 interface BookingDialogProps {
   children: React.ReactNode;
@@ -280,27 +295,32 @@ export function BookingDialog({ children }: BookingDialogProps) {
               <FormField
                 control={form.control}
                 name="booking_time"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Time *</FormLabel>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
-                      <FormControl>
-                        <SelectTrigger>
-                          <Clock className="mr-2 h-4 w-4 opacity-50" />
-                          <SelectValue placeholder="Select time" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        {timeSlots.map((time) => (
-                          <SelectItem key={time} value={time}>
-                            {time}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
+                render={({ field }) => {
+                  const selectedDate = form.watch("booking_date");
+                  const availableTimeSlots = getTimeSlots(selectedDate);
+                  
+                  return (
+                    <FormItem>
+                      <FormLabel>Time *</FormLabel>
+                      <Select onValueChange={field.onChange} defaultValue={field.value}>
+                        <FormControl>
+                          <SelectTrigger>
+                            <Clock className="mr-2 h-4 w-4 opacity-50" />
+                            <SelectValue placeholder="Select time" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          {availableTimeSlots.map((time) => (
+                            <SelectItem key={time} value={time}>
+                              {time}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  );
+                }}
               />
             </div>
 
