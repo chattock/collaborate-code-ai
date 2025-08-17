@@ -105,8 +105,7 @@ const ServicesSection = () => {
                     <User className="w-6 h-6 mx-auto text-primary mb-2" />
                     <h3 className="font-semibold text-foreground mb-3">About Me</h3>
                     <div className="text-sm text-muted-foreground leading-relaxed text-left space-y-2">
-                      <p>• GIS Consultant at Esri UK, with a Master’s Degree in Geographic Data Science from the London School of Economics (LSE). 
-
+                      <p>• GIS Consultant at Esri UK, with a Master’s Degree in Geographic Data Science from the London School of Economics (LSE).  
 • My background combines GIS skills with hands-on experience using Python, R, QGIS, and ArcGIS. </p>
                       
                     </div>
