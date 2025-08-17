@@ -74,7 +74,7 @@ const ServicesSection = () => {
               <div className="bg-muted/30 rounded-lg p-6 h-96 overflow-y-auto pr-2 space-y-6">
                 {/* Background Text */}
                 <div className="text-sm text-muted-foreground leading-relaxed">
-                  <p>I am a GIS Consultant at Esri UK with a Master’s in Geographic Data Science from the London School of Economics (LSE). My background combines advanced data analysis and geographic information systems with hands-on experience using Python, R, QGIS, and ArcGIS. I have delivered projects that involve analysing complex datasets, visualising spatial patterns, and building models to address real-world geographic challenges. </p>
+                  <p>I am a GIS Consultant at Esri UK with a Master’s degree in Geographic Data Science from the London School of Economics (LSE). My background combines advanced data analysis and geographic information systems with hands-on experience using Python, R, QGIS, and ArcGIS. I have delivered projects that involve analysing complex datasets, visualising spatial patterns, and building models to address real-world geographic challenges. </p>
                   
                 </div>
                 
