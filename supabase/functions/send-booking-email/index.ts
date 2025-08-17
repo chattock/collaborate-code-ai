@@ -55,10 +55,10 @@ const handler = async (req: Request): Promise<Response> => {
     const clientEmailResponse = await resend.emails.send({
       from: "James Chattock <onboarding@resend.dev>",
       to: [bookingData.email],
-      subject: "Consultation Booking Confirmed",
+      subject: "Meeting Booking Confirmed",
       html: `
-        <h1>Thank you for booking a consultation, ${bookingData.name}!</h1>
-        <p>Your consultation has been scheduled for:</p>
+        <h1>Thank you for booking a meeting, ${bookingData.name}!</h1>
+        <p>Your meeting has been scheduled for:</p>
         <div style="background: #f5f5f5; padding: 20px; border-radius: 8px; margin: 20px 0;">
           <h3>Booking Details</h3>
           <p><strong>Date:</strong> ${formattedDate}</p>
@@ -78,9 +78,9 @@ const handler = async (req: Request): Promise<Response> => {
     const jamesEmailResponse = await resend.emails.send({
       from: "Bookings <onboarding@resend.dev>",
       to: ["james.chattock@gmail.com"],
-      subject: `New Consultation Booking - ${bookingData.name}`,
+      subject: `New Meeting Booking - ${bookingData.name}`,
       html: `
-        <h1>New Consultation Booking</h1>
+        <h1>New Meeting Booking</h1>
         <div style="background: #f5f5f5; padding: 20px; border-radius: 8px; margin: 20px 0;">
           <h3>Client Details</h3>
           <p><strong>Name:</strong> ${bookingData.name}</p>
