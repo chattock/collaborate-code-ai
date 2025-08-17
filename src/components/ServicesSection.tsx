@@ -7,7 +7,7 @@ const ServicesSection = () => {
     title: "GIS Solutions",
     description: "Geospatial data Analysis with Esri products"
   }, {
-    title: "Data Analysis",
+    title: "Data Analysis", 
     description: "Leveraging Python or R in Jupyter or RMarkdown for data driven insights"
   }, {
     title: "Machine Learning",
@@ -79,10 +79,9 @@ const ServicesSection = () => {
                     <h3 className="font-semibold text-foreground mb-1">Experience</h3>
                     <div className="text-sm text-muted-foreground text-left">
                       <ul className="space-y-1">
-                        <li>• GIS Consultant at ESRI  
-• Data Science Research Assistant at Both LSE and Manchester University 
-• 3+ years experience in Python, R, SQL, JavaScript and GIS technologies</li>
-                        
+                        <li>• GIS Consultant at ESRI</li>
+                        <li>• Data Science Research Assistant at Both LSE and Manchester University</li>
+                        <li>• 3+ years experience in Python, R, SQL, JavaScript and GIS technologies</li>
                       </ul>
                     </div>
                   </div>
@@ -94,8 +93,8 @@ const ServicesSection = () => {
                     <div className="text-sm text-muted-foreground text-left">
                       <ul className="space-y-1">
                         <li>• M.Sc. Geographic Data Science - London School of Economics</li>
-                        <li>• IBM Data Science Professional Certificate
-• BA Chinese and Business Management - University of Manchester</li>
+                        <li>• IBM Data Science Professional Certificate</li>
+                        <li>• BA Chinese and Business Management - University of Manchester</li>
                       </ul>
                     </div>
                   </div>
@@ -105,9 +104,8 @@ const ServicesSection = () => {
                     <User className="w-6 h-6 mx-auto text-primary mb-2" />
                     <h3 className="font-semibold text-foreground mb-3">About Me</h3>
                     <div className="text-sm text-muted-foreground leading-relaxed text-left space-y-2">
-                      <p>• GIS Consultant at Esri UK, with a Master’s Degree in Geographic Data Science from the London School of Economics (LSE).  
-• My background combines GIS skills with hands-on experience using Python, R, QGIS, and ArcGIS. </p>
-                      
+                      <p>• GIS Consultant at Esri UK, with a Master's Degree in Geographic Data Science from the London School of Economics (LSE).</p>
+                      <p>• My background combines GIS skills with hands-on experience using Python, R, QGIS, and ArcGIS.</p>
                     </div>
                   </div>
                 </div>
