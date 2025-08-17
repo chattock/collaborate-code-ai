@@ -2,7 +2,6 @@ import { Check, ChevronDown, ExternalLink, Award, GraduationCap, User } from "lu
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { BookingDialog } from "@/components/BookingDialog";
-
 const ServicesSection = () => {
   const services = [{
     title: "GIS Solutions",
@@ -32,7 +31,6 @@ const ServicesSection = () => {
     title: "Data Cleaning",
     description: "Improving data quality"
   }];
-
   const scrollToContact = () => {
     const element = document.querySelector('#contact');
     if (element) {
@@ -41,9 +39,7 @@ const ServicesSection = () => {
       });
     }
   };
-
-  return (
-    <section id="services" className="py-20 px-4">
+  return <section id="services" className="py-20 px-4">
       <div className="container mx-auto max-w-6xl">
         <div className="text-center mb-16">
           <p className="text-lg text-muted-foreground mb-4">Explore My</p>
@@ -58,15 +54,13 @@ const ServicesSection = () => {
             </CardHeader>
             <CardContent>
               <div className="grid gap-4 h-96 overflow-y-auto pr-2">
-                {services.map((service, index) => (
-                  <div key={index} className="flex gap-3 p-3 rounded-lg hover:bg-muted/50 transition-colors">
+                {services.map((service, index) => <div key={index} className="flex gap-3 p-3 rounded-lg hover:bg-muted/50 transition-colors">
                     <Check className="w-5 h-5 text-accent mt-0.5 flex-shrink-0" />
                     <div>
                       <h3 className="font-semibold text-foreground">{service.title}</h3>
                       <p className="text-sm text-muted-foreground mt-1">{service.description}</p>
                     </div>
-                  </div>
-                ))}
+                  </div>)}
               </div>
             </CardContent>
           </Card>
@@ -109,7 +103,7 @@ const ServicesSection = () => {
                     <h3 className="font-semibold text-foreground mb-3">About Me</h3>
                     <div className="text-sm text-muted-foreground leading-relaxed text-left space-y-2">
                       <p>I have studied Geographic Data Science at the London School of Economics (LSE), where I built a strong technical foundation in data analysis and geographic information systems. With a bachelor's degree in Chinese Language and Business at LSE, I have worked on a range of projects leveraging Python, R, QGIS and ArcGIS to analyse datasets, visualise spatial patterns, and develop models tailored to geographic data challenges.</p>
-                      <p>Professionally, I have developed expertise in GIS, data science, ESG reporting, and venture capital. In addition to my academic and professional experience, I earned the IBM Data Science Professional Certificate independently.</p>
+                      
                     </div>
                   </div>
                 </div>
@@ -147,8 +141,6 @@ const ServicesSection = () => {
           </Button>
         </div>
       </div>
-    </section>
-  );
+    </section>;
 };
-
 export default ServicesSection;
