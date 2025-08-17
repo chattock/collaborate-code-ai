@@ -145,12 +145,13 @@ const ProjectsSection = () => {
                   <div className="grid grid-cols-2 gap-2">
                     {project.buttons.map((button, buttonIndex) => {
                       const Icon = button.icon;
+                      const isLastOddButton = project.buttons.length % 2 === 1 && buttonIndex === project.buttons.length - 1;
                       return (
                         <Button
                           key={buttonIndex}
                           variant="outline"
                           size="sm"
-                          className="gap-1.5 text-xs"
+                          className={`gap-1.5 text-xs ${isLastOddButton ? 'col-span-2' : ''}`}
                           onClick={() => {
                             if (button.download) {
                               // Handle download
