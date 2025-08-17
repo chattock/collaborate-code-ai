@@ -1,6 +1,7 @@
 import { ExternalLink, Github, Play, FileText, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 // Import project images
 import ukTradeImg from "@/assets/project-uk-trade.jpg";
@@ -17,13 +18,14 @@ import sentimentAnalysisImg from "@/assets/project-sentiment-analysis.jpg";
 import portfolioOptimizerImg from "@/assets/project-portfolio-optimizer.jpg";
 
 const ProjectsSection = () => {
+  const { t } = useLanguage();
   const projects = [
     {
-      title: "UK Trade in 1700s",
+      title: t("projects.ukTrade"),
       image: ukTradeImg,
       buttons: [
-        { label: "Website", icon: ExternalLink, url: "https://chattock.github.io/Edmond/" },
-        { label: "Github", icon: Github, url: "https://github.com/chattock/Edmond" }
+        { label: t("projects.website"), icon: ExternalLink, url: "https://chattock.github.io/Edmond/" },
+        { label: t("projects.github"), icon: Github, url: "https://github.com/chattock/Edmond" }
       ]
     },
     {
@@ -123,8 +125,8 @@ const ProjectsSection = () => {
     <section id="projects" className="py-20 px-4 bg-muted/30">
       <div className="container mx-auto max-w-6xl">
         <div className="text-center mb-16">
-          <p className="text-lg text-muted-foreground mb-4">Browse My Recent</p>
-          <h2 className="text-3xl lg:text-4xl font-bold text-foreground">Projects</h2>
+          <p className="text-lg text-muted-foreground mb-4">{t("projects.browse")}</p>
+          <h2 className="text-3xl lg:text-4xl font-bold text-foreground">{t("projects.title")}</h2>
         </div>
 
         <div className="h-[600px] overflow-y-auto pr-2">

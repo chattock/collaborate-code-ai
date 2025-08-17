@@ -2,9 +2,11 @@ import { useState } from "react";
 import { Download, Mail, Linkedin, Github } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { useLanguage } from "@/contexts/LanguageContext";
 import profilePic from "@/assets/profile-pic.jpg";
 const HeroSection = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const { t } = useLanguage();
   
   const scrollToContact = () => {
     const element = document.querySelector('#contact');
@@ -26,11 +28,11 @@ const HeroSection = () => {
 
           {/* Hero Content */}
           <div className="text-center lg:text-left max-w-lg">
-            <p className="text-lg text-muted-foreground mb-2">Hello, I'm</p>
+            <p className="text-lg text-muted-foreground mb-2">{t("hero.hello")}</p>
             <h1 className="text-4xl lg:text-5xl font-bold text-foreground mb-4">
-              James Chattock
+              {t("hero.name")}
             </h1>
-            <p className="text-xl lg:text-2xl text-muted-foreground font-semibold mb-8">Geospatial Data Scientist</p>
+            <p className="text-xl lg:text-2xl text-muted-foreground font-semibold mb-8">{t("hero.title")}</p>
 
             {/* Action Buttons */}
             <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start mb-8">
@@ -38,26 +40,26 @@ const HeroSection = () => {
                 <DialogTrigger asChild>
                   <Button size="lg" variant="outline" className="border-2 gap-2">
                     <Download size={20} />
-                    CV
+                    {t("hero.cv")}
                   </Button>
                 </DialogTrigger>
                 <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
                   <DialogHeader>
-                    <DialogTitle>Curriculum Vitae</DialogTitle>
+                    <DialogTitle>{t("hero.cvTitle")}</DialogTitle>
                   </DialogHeader>
                   <div className="text-center py-12 text-muted-foreground space-y-4">
-                    <p>CV content would be displayed here.</p>
-                    <p className="text-sm">For the demo, this would show the actual CV PDF content.</p>
+                    <p>{t("hero.cvContent")}</p>
+                    <p className="text-sm">{t("hero.cvDemo")}</p>
                     <Button className="gap-2" onClick={() => window.open('#', '_blank')}>
                       <Download size={20} />
-                      Download CV
+                      {t("hero.downloadCV")}
                     </Button>
                   </div>
                 </DialogContent>
               </Dialog>
               <Button size="lg" className="gap-2" onClick={scrollToContact}>
                 <Mail size={20} />
-                Contact Info
+                {t("hero.contactInfo")}
               </Button>
             </div>
 

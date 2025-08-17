@@ -39,6 +39,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { supabase } from "@/integrations/supabase/client";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const FormSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
@@ -83,6 +84,7 @@ interface BookingDialogProps {
 export function BookingDialog({ children }: BookingDialogProps) {
   const [open, setOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const { t } = useLanguage();
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
@@ -134,13 +136,13 @@ export function BookingDialog({ children }: BookingDialogProps) {
         console.error('Email error:', emailError);
         // Don't throw here - booking is saved, just notify about email issue
         toast({
-          title: "Booking Saved",
-          description: "Your consultation is booked but there was an issue sending confirmation emails. You'll be contacted directly.",
+          title: t("booking.saved"),
+          description: t("booking.savedDesc"),
         });
       } else {
         toast({
-          title: "Consultation Booked!",
-          description: "Your booking has been confirmed. Check your email for details.",
+          title: t("booking.success"),
+          description: t("booking.successDesc"),
         });
       }
 
@@ -149,8 +151,8 @@ export function BookingDialog({ children }: BookingDialogProps) {
     } catch (error: any) {
       console.error('Booking error:', error);
       toast({
-        title: "Booking Failed",
-        description: error.message || "Something went wrong. Please try again.",
+        title: t("booking.failed"),
+        description: error.message || t("booking.failedDesc"),
         variant: "destructive",
       });
     } finally {
@@ -165,10 +167,9 @@ export function BookingDialog({ children }: BookingDialogProps) {
       </DialogTrigger>
       <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>Book a Free Consultation</DialogTitle>
+          <DialogTitle>{t("booking.title")}</DialogTitle>
           <DialogDescription>
-            Schedule a 30-minute consultation to discuss your project requirements.
-            Available times are within the next week.
+            {t("booking.description")}
           </DialogDescription>
         </DialogHeader>
 
@@ -180,7 +181,7 @@ export function BookingDialog({ children }: BookingDialogProps) {
                 name="name"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Name *</FormLabel>
+                    <FormLabel>{t("booking.name")} *</FormLabel>
                     <FormControl>
                       <Input placeholder="Your name" {...field} />
                     </FormControl>
@@ -194,7 +195,7 @@ export function BookingDialog({ children }: BookingDialogProps) {
                 name="email"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Email *</FormLabel>
+                    <FormLabel>{t("booking.email")} *</FormLabel>
                     <FormControl>
                       <Input placeholder="your.email@example.com" type="email" {...field} />
                     </FormControl>
@@ -208,7 +209,7 @@ export function BookingDialog({ children }: BookingDialogProps) {
                 name="phone"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Phone</FormLabel>
+                    <FormLabel>{t("booking.phone")}</FormLabel>
                     <FormControl>
                       <Input placeholder="Your phone number" {...field} />
                     </FormControl>
@@ -222,7 +223,7 @@ export function BookingDialog({ children }: BookingDialogProps) {
                 name="company"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Company</FormLabel>
+                    <FormLabel>{t("booking.company")}</FormLabel>
                     <FormControl>
                       <Input placeholder="Your company" {...field} />
                     </FormControl>
@@ -237,10 +238,10 @@ export function BookingDialog({ children }: BookingDialogProps) {
               name="message"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Message</FormLabel>
+                  <FormLabel>{t("booking.message")}</FormLabel>
                   <FormControl>
                     <Textarea 
-                      placeholder="Tell me about your project or any specific requirements..."
+                      placeholder={t("booking.messagePlaceholder")}
                       className="min-h-[100px]"
                       {...field} 
                     />
@@ -256,7 +257,7 @@ export function BookingDialog({ children }: BookingDialogProps) {
                 name="booking_date"
                 render={({ field }) => (
                   <FormItem className="flex flex-col">
-                    <FormLabel>Date *</FormLabel>
+                    <FormLabel>{t("booking.date")} *</FormLabel>
                     <Popover>
                       <PopoverTrigger asChild>
                         <FormControl>
@@ -270,7 +271,7 @@ export function BookingDialog({ children }: BookingDialogProps) {
                             {field.value ? (
                               format(field.value, "PPP")
                             ) : (
-                              <span>Pick a date</span>
+                              <span>{t("booking.pickDate")}</span>
                             )}
                             <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
                           </Button>
@@ -301,12 +302,12 @@ export function BookingDialog({ children }: BookingDialogProps) {
                   
                   return (
                     <FormItem>
-                      <FormLabel>Time *</FormLabel>
+                      <FormLabel>{t("booking.time")} *</FormLabel>
                       <Select onValueChange={field.onChange} defaultValue={field.value}>
                         <FormControl>
                           <SelectTrigger>
                             <Clock className="mr-2 h-4 w-4 opacity-50" />
-                            <SelectValue placeholder="Select time" />
+                            <SelectValue placeholder={t("booking.selectTime")} />
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
@@ -331,14 +332,14 @@ export function BookingDialog({ children }: BookingDialogProps) {
                 onClick={() => setOpen(false)}
                 className="flex-1"
               >
-                Cancel
+                {t("booking.cancel")}
               </Button>
               <Button 
                 type="submit" 
                 disabled={isSubmitting}
                 className="flex-1"
               >
-                {isSubmitting ? "Booking..." : "Book Consultation"}
+                {isSubmitting ? t("booking.booking") : t("booking.bookConsultation")}
               </Button>
             </div>
           </form>

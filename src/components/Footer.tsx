@@ -1,9 +1,12 @@
+import { useLanguage } from "@/contexts/LanguageContext";
+
 const Footer = () => {
+  const { t } = useLanguage();
   const navLinks = [
-    { href: "#about", label: "About" },
-    { href: "#projects", label: "Projects" },
-    { href: "#services", label: "Services" },
-    { href: "#contact", label: "Contact" },
+    { href: "#about", label: t("nav.about") },
+    { href: "#projects", label: t("nav.projects") },
+    { href: "#services", label: t("nav.services") },
+    { href: "#contact", label: t("nav.contact") },
   ];
 
   const scrollToSection = (href: string) => {
@@ -31,7 +34,7 @@ const Footer = () => {
         </nav>
         
         <div className="text-center text-muted-foreground">
-          <p>Copyright &copy; 2023 James Chattock. All Rights Reserved.</p>
+          <p>{t("footer.copyright")}</p>
         </div>
       </div>
     </footer>

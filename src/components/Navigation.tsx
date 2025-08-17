@@ -1,18 +1,20 @@
 import { useState } from "react";
-import { Menu, X } from "lucide-react";
+import { Menu, X, Languages } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const Navigation = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { language, toggleLanguage, t } = useLanguage();
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
   const navLinks = [
-    { href: "#hero", label: "About" },
-    { href: "#projects", label: "Projects" },
-    { href: "#services", label: "Skills" },
-    { href: "#contact", label: "Contact" },
+    { href: "#hero", label: t("nav.about") },
+    { href: "#projects", label: t("nav.projects") },
+    { href: "#services", label: t("nav.skills") },
+    { href: "#contact", label: t("nav.contact") },
   ];
 
   const scrollToSection = (href: string) => {
@@ -28,7 +30,7 @@ const Navigation = () => {
       {/* Desktop Navigation */}
       <nav className="hidden lg:flex justify-between items-center h-20 px-8 fixed top-0 left-0 right-0 bg-background/95 backdrop-blur-sm border-b border-border z-50">
         <div className="text-2xl font-bold text-primary">James Chattock</div>
-        <div className="flex gap-8">
+        <div className="flex gap-8 items-center">
           {navLinks.map((link) => (
             <button
               key={link.href}
@@ -38,20 +40,40 @@ const Navigation = () => {
               {link.label}
             </button>
           ))}
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={toggleLanguage}
+            className="gap-2 text-sm font-medium"
+          >
+            <Languages size={16} />
+            {language === 'en' ? '中文' : 'EN'}
+          </Button>
         </div>
       </nav>
 
       {/* Mobile Navigation */}
       <nav className="lg:hidden flex justify-between items-center h-16 px-4 fixed top-0 left-0 right-0 bg-background/95 backdrop-blur-sm border-b border-border z-50">
         <div className="text-xl font-bold text-primary">James Chattock</div>
-        <Button
-          variant="ghost"
-          size="icon"
-          onClick={toggleMenu}
-          className="relative z-50"
-        >
-          {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
-        </Button>
+        <div className="flex items-center gap-2">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={toggleLanguage}
+            className="gap-1 text-sm font-medium"
+          >
+            <Languages size={14} />
+            {language === 'en' ? '中文' : 'EN'}
+          </Button>
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={toggleMenu}
+            className="relative z-50"
+          >
+            {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
+          </Button>
+        </div>
       </nav>
 
       {/* Mobile Menu Overlay */}

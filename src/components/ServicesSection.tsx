@@ -2,34 +2,37 @@ import { Check, ChevronDown, ExternalLink, Award, GraduationCap, User } from "lu
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { BookingDialog } from "@/components/BookingDialog";
+import { useLanguage } from "@/contexts/LanguageContext";
+
 const ServicesSection = () => {
+  const { t } = useLanguage();
   const services = [{
-    title: "GIS Solutions",
-    description: "Geospatial data Analysis with Esri products"
+    title: t("services.gis"),
+    description: t("services.gisDesc")
   }, {
-    title: "Data Analysis",
-    description: "Leveraging Python or R in Jupyter or RMarkdown for data driven insights"
+    title: t("services.dataAnalysis"),
+    description: t("services.dataAnalysisDesc")
   }, {
-    title: "Machine Learning",
-    description: "Building predictive models with scikit-learn"
+    title: t("services.ml"),
+    description: t("services.mlDesc")
   }, {
-    title: "Web Development",
-    description: "Creating and maintaining websites with HTML/CSS/JavaScript"
+    title: t("services.webDev"),
+    description: t("services.webDevDesc")
   }, {
-    title: "Data Visualization",
-    description: "Creating insightful visuals with Python or R based visualization packages"
+    title: t("services.dataViz"),
+    description: t("services.dataVizDesc")
   }, {
-    title: "Web Scraping",
-    description: "Extracting data from websites"
+    title: t("services.webScraping"),
+    description: t("services.webScrapingDesc")
   }, {
-    title: "Database Management",
-    description: "PostgreSQL for organizing and storing data"
+    title: t("services.database"),
+    description: t("services.databaseDesc")
   }, {
-    title: "Big Data Processing",
-    description: "Handling large datasets with Spark SQL and TensorFlow"
+    title: t("services.bigData"),
+    description: t("services.bigDataDesc")
   }, {
-    title: "Data Cleaning",
-    description: "Improving data quality"
+    title: t("services.dataCleaning"),
+    description: t("services.dataCleaningDesc")
   }];
   const scrollToContact = () => {
     const element = document.querySelector('#contact');
@@ -42,15 +45,15 @@ const ServicesSection = () => {
   return <section id="services" className="py-20 px-4">
       <div className="container mx-auto max-w-6xl">
         <div className="text-center mb-16">
-          <p className="text-lg text-muted-foreground mb-4">Explore My</p>
-          <h2 className="text-3xl lg:text-4xl font-bold text-foreground">Services</h2>
+          <p className="text-lg text-muted-foreground mb-4">{t("services.explore")}</p>
+          <h2 className="text-3xl lg:text-4xl font-bold text-foreground">{t("services.title")}</h2>
         </div>
 
         <div className="grid lg:grid-cols-2 gap-8">
           {/* Services List */}
           <Card className="h-fit">
             <CardHeader>
-              <CardTitle className="text-xl text-center">Skills</CardTitle>
+              <CardTitle className="text-xl text-center">{t("services.skills")}</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="grid gap-4 h-96 overflow-y-auto pr-2">
@@ -68,7 +71,7 @@ const ServicesSection = () => {
           {/* About Me Widget */}
           <Card className="h-fit">
             <CardHeader>
-              <CardTitle className="text-xl text-center">About Me</CardTitle>
+              <CardTitle className="text-xl text-center">{t("services.aboutMe")}</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="bg-muted/30 rounded-lg p-6 h-96 overflow-y-auto pr-2 space-y-6">
@@ -76,12 +79,12 @@ const ServicesSection = () => {
                   {/* Experience Card */}
                   <div className="text-center">
                     <Award className="w-6 h-6 mx-auto text-primary mb-2" />
-                    <h3 className="font-semibold text-foreground mb-1">Experience</h3>
+                    <h3 className="font-semibold text-foreground mb-1">{t("services.experience")}</h3>
                     <div className="text-sm text-muted-foreground text-left">
                       <ul className="space-y-1">
-                        <li>• GIS Consultant at ESRI</li>
-                        <li>• Data Science Research Assistant at Both LSE and Manchester University</li>
-                        <li>• 3+ years experience in Python, R, SQL, JavaScript and GIS technologies</li>
+                        <li>{t("services.experienceDesc1")}</li>
+                        <li>{t("services.experienceDesc2")}</li>
+                        <li>{t("services.experienceDesc3")}</li>
                       </ul>
                     </div>
                   </div>
@@ -89,12 +92,12 @@ const ServicesSection = () => {
                   {/* Education Card */}
                   <div className="text-center">
                     <GraduationCap className="w-6 h-6 mx-auto text-primary mb-2" />
-                    <h3 className="font-semibold text-foreground mb-1">Education</h3>
+                    <h3 className="font-semibold text-foreground mb-1">{t("services.education")}</h3>
                     <div className="text-sm text-muted-foreground text-left">
                       <ul className="space-y-1">
-                        <li>• M.Sc. Geographic Data Science - London School of Economics</li>
-                        <li>• IBM Data Science Professional Certificate</li>
-                        <li>• BA Chinese and Business Management - University of Manchester</li>
+                        <li>{t("services.educationDesc1")}</li>
+                        <li>{t("services.educationDesc2")}</li>
+                        <li>{t("services.educationDesc3")}</li>
                       </ul>
                     </div>
                   </div>
@@ -102,10 +105,10 @@ const ServicesSection = () => {
                   {/* About Me Section */}
                   <div className="text-center">
                     <User className="w-6 h-6 mx-auto text-primary mb-2" />
-                    <h3 className="font-semibold text-foreground mb-3">About Me</h3>
+                    <h3 className="font-semibold text-foreground mb-3">{t("services.aboutMe")}</h3>
                     <div className="text-sm text-muted-foreground leading-relaxed text-left space-y-2">
-                      <p>• GIS Consultant at Esri UK, with a Master's Degree in Geographic Data Science from the London School of Economics (LSE).</p>
-                      <p>• GIS skills with hands-on experience using Python, R, QGIS, and ArcGIS.</p>
+                      <p>{t("services.aboutDesc1")}</p>
+                      <p>{t("services.aboutDesc2")}</p>
                     </div>
                   </div>
                 </div>
@@ -119,16 +122,16 @@ const ServicesSection = () => {
           <Card>
             <CardContent className="pt-6">
               <div className="text-center">
-                <p className="text-muted-foreground mb-4">Meetings are Free. Payments for any services can be made here. All services are £20 per hour.</p>
+                <p className="text-muted-foreground mb-4">{t("services.paymentDesc")}</p>
                 <div className="flex flex-col sm:flex-row gap-4 justify-center">
                   <BookingDialog>
                     <Button size="lg" className="bg-gray-800 text-white hover:bg-gray-700">
-                      Book a Meeting
+                      {t("services.bookMeeting")}
                     </Button>
                   </BookingDialog>
                   <Button size="lg" variant="outline" className="border-2 gap-2" onClick={() => window.open('https://buy.stripe.com/9AQ9Cv4mm2HgcEgcMM', '_blank')}>
                     <ExternalLink size={20} />
-                    Payment Link
+                    {t("services.paymentLink")}
                   </Button>
                 </div>
               </div>

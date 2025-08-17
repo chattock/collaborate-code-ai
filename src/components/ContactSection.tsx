@@ -1,12 +1,15 @@
 import { Mail, Linkedin } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { useLanguage } from "@/contexts/LanguageContext";
+
 const ContactSection = () => {
+  const { t } = useLanguage();
   return <section id="contact" className="py-20 px-4">
       <div className="container mx-auto max-w-4xl">
         <div className="text-center mb-16">
-          <p className="text-lg text-muted-foreground mb-4">Get in Touch</p>
-          <h2 className="text-3xl lg:text-4xl font-bold text-foreground">Contact Me</h2>
+          <p className="text-lg text-muted-foreground mb-4">{t("contact.getInTouch")}</p>
+          <h2 className="text-3xl lg:text-4xl font-bold text-foreground">{t("contact.title")}</h2>
         </div>
 
         <Card className="border-2">
@@ -18,7 +21,7 @@ const ContactSection = () => {
                   <Mail size={24} className="text-primary" />
                 </div>
                 <div>
-                  <p className="font-semibold text-foreground mb-1">Email</p>
+                  <p className="font-semibold text-foreground mb-1">{t("contact.email")}</p>
                   <Button variant="link" onClick={() => window.location.href = 'mailto:james.chattock@gmail.com'} className="h-auto p-0 text-primary hover:underline text-left break-all sm:text-sm text-xs">
                     james.chattock@gmail.com
                   </Button>
@@ -31,9 +34,9 @@ const ContactSection = () => {
                   <Linkedin size={24} className="text-primary" />
                 </div>
                 <div>
-                  <p className="font-semibold text-foreground mb-1">LinkedIn</p>
+                  <p className="font-semibold text-foreground mb-1">{t("contact.linkedin")}</p>
                   <Button variant="link" className="h-auto p-0 text-primary hover:underline" onClick={() => window.open('https://www.linkedin.com/in/james-chattock/', '_blank')}>
-                    LinkedIn Profile
+                    {t("contact.linkedinProfile")}
                   </Button>
                 </div>
               </div>
