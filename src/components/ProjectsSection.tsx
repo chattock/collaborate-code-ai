@@ -134,7 +134,7 @@ const ProjectsSection = () => {
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {projects.map((project, index) => (
               <Card key={index} className="group hover:shadow-lg transition-all duration-300 overflow-hidden">
-                <div className="aspect-video overflow-hidden">
+                <div className="aspect-square overflow-hidden">
                   <img
                     src={project.image}
                     alt={project.title}
