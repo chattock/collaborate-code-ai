@@ -65,11 +65,10 @@ const handler = async (req: Request): Promise<Response> => {
           <p><strong>Time:</strong> ${formattedTime}</p>
           <p><strong>Duration:</strong> 30 minutes</p>
         </div>
-        ${bookingData.company ? `<p><strong>Company:</strong> ${bookingData.company}</p>` : ''}
         ${bookingData.phone ? `<p><strong>Phone:</strong> ${bookingData.phone}</p>` : ''}
         ${bookingData.message ? `<p><strong>Message:</strong> ${bookingData.message}</p>` : ''}
         <p>I'll be in touch shortly with meeting details.</p>
-        <p>Best regards,<br>James Chattock<br>Data Scientist & Web Developer</p>
+        <p>Best regards,<br>James Chattock</p>
       `,
     });
 
