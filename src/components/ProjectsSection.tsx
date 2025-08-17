@@ -142,7 +142,7 @@ const ProjectsSection = () => {
                   <CardTitle className="text-lg text-center line-clamp-2">{project.title}</CardTitle>
                 </CardHeader>
                 <CardContent className="pt-0">
-                  <div className="grid grid-cols-1 gap-2" style={{ gridTemplateColumns: `repeat(${project.buttons.length}, 1fr)` }}>
+                  <div className="grid grid-cols-2 gap-2">
                     {project.buttons.map((button, buttonIndex) => {
                       const Icon = button.icon;
                       return (
@@ -150,7 +150,7 @@ const ProjectsSection = () => {
                           key={buttonIndex}
                           variant="outline"
                           size="sm"
-                          className="gap-1.5 text-xs flex-1"
+                          className="gap-1.5 text-xs"
                           onClick={() => {
                             if (button.download) {
                               // Handle download
