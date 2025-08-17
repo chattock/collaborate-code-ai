@@ -77,20 +77,26 @@ const ServicesSection = () => {
               <CardTitle className="text-xl text-center">About Me</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="bg-muted/30 rounded-lg p-6 h-96 flex flex-col justify-center space-y-6">
+              <div className="bg-muted/30 rounded-lg p-6 h-96 overflow-y-auto pr-2 space-y-6">
+                {/* Background Text */}
+                <div className="text-sm text-muted-foreground leading-relaxed">
+                  <p>I studied Geographic Data Science at the London School of Economics (LSE), building a strong technical foundation in data analysis and geographic information systems. With a bachelor's degree in Chinese Language and Business from LSE, I have worked on diverse projects leveraging Python, R, QGIS, and ArcGIS to analyze datasets, visualize spatial patterns, and develop models for geographic data challenges.</p>
+                  <p className="mt-3">Professionally, I have developed expertise across GIS, data science, ESG reporting, and venture capital. I have also earned the IBM Data Science Professional Certificate to further strengthen my analytical capabilities.</p>
+                </div>
+                
                 <div className="grid gap-6">
                   {/* Experience Card */}
                   <div className="text-center">
                     <Award className="w-6 h-6 mx-auto text-primary mb-2" />
                     <h3 className="font-semibold text-foreground mb-1">Experience</h3>
-                    <p className="text-sm text-muted-foreground">3+ Years experience working with Python, R, SQL, JavaScript and GIS.</p>
+                    <p className="text-sm text-muted-foreground">GIS Consultant at ESRI with 3+ years experience in Python, R, SQL, JavaScript and GIS technologies.</p>
                   </div>
 
                   {/* Education Card */}
                   <div className="text-center">
                     <GraduationCap className="w-6 h-6 mx-auto text-primary mb-2" />
                     <h3 className="font-semibold text-foreground mb-1">Education</h3>
-                    <p className="text-sm text-muted-foreground">M.Sc. Geographic Data Science - London School of Economics</p>
+                    <p className="text-sm text-muted-foreground">M.Sc. Geographic Data Science - London School of Economics<br/>IBM Data Science Professional Certificate</p>
                   </div>
                 </div>
               </div>
@@ -107,7 +113,7 @@ const ServicesSection = () => {
                 <div className="flex gap-4 justify-center">
                   <BookingDialog>
                     <Button size="lg" variant="outline" className="border-2">
-                      Book Free Consultation
+                      Book a Meeting
                     </Button>
                   </BookingDialog>
                   <Button size="lg" variant="outline" className="border-2 gap-2" onClick={() => window.open('https://buy.stripe.com/9AQ9Cv4mm2HgcEgcMM', '_blank')}>
