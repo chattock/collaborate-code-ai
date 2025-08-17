@@ -66,15 +66,15 @@ const ProjectsSection = () => {
       ]
     },
     {
-      title: "Retail Analytics Dashboard",
+      title: "Chinese Development in Nairobi",
       image: retailAnalyticsImg,
       buttons: [
-        { label: "Website", icon: ExternalLink, url: "#" },
-        { label: "Github", icon: Github, url: "#" }
+        { label: "Report", icon: FileText, url: "#", download: true },
+        { label: "Website", icon: ExternalLink, url: "#" }
       ]
     },
     {
-      title: "Machine Learning Network Analysis",
+      title: "Predicting Fires in California",
       image: mlNetworkImg,
       buttons: [
         { label: "Report", icon: FileText, url: "#", download: true },
@@ -82,35 +82,32 @@ const ProjectsSection = () => {
       ]
     },
     {
-      title: "Property Market Analysis",
+      title: "Glastonbury Festival Economic Evaluation",
       image: propertyAnalysisImg,
       buttons: [
-        { label: "Website", icon: ExternalLink, url: "#" },
-        { label: "Project", icon: FileText, url: "#", download: true }
+        { label: "Report", icon: FileText, url: "#", download: true }
       ]
     },
     {
-      title: "Supply Chain Optimization",
+      title: "Drivers of Gentrification in Chicago",
       image: supplyChainImg,
       buttons: [
-        { label: "Report", icon: FileText, url: "#", download: true },
-        { label: "Github", icon: Github, url: "#" }
+        { label: "Website", icon: ExternalLink, url: "#" }
       ]
     },
     {
-      title: "Social Media Sentiment Analysis",
+      title: "Elizabeth Line Effect on Property Prices",
       image: sentimentAnalysisImg,
       buttons: [
-        { label: "Website", icon: ExternalLink, url: "#" },
-        { label: "Github", icon: Github, url: "#" }
+        { label: "Report", icon: FileText, url: "#", download: true },
+        { label: "Website", icon: ExternalLink, url: "#" }
       ]
     },
     {
-      title: "Portfolio Risk Optimizer",
+      title: "Predicting Cheaters of Video Games",
       image: portfolioOptimizerImg,
       buttons: [
-        { label: "Website", icon: ExternalLink, url: "#" },
-        { label: "Report", icon: FileText, url: "#", download: true }
+        { label: "Github", icon: Github, url: "#" }
       ]
     }
   ];
