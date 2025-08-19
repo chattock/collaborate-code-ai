@@ -5,6 +5,15 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useProject } from "@/contexts/ProjectContext";
 import profilePic from "@/assets/profile-pic.jpg";
+
+// WeChat icon as SVG component
+const WeChatIcon = ({ size = 24, className }: { size?: number; className?: string }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor" className={className}>
+    <path d="M8.691 2.188C3.891 2.188 0 5.476 0 9.53c0 2.212 1.172 4.203 3.002 5.55l-.568 2.273 2.896-1.455C6.336 15.118 7.518 15.278 8.691 15.278c.030 0 .058-.003.087-.003-.184-.592-.28-1.214-.28-1.854 0-3.726 3.214-6.74 7.194-6.74.30 0 .593.017.886.051C15.703 4.063 12.500 2.188 8.691 2.188z"/>
+    <path d="M17.699 13.721c0-3.148-2.533-5.704-5.65-5.704-3.115 0-5.648 2.556-5.648 5.704 0 3.148 2.533 5.704 5.648 5.704.647 0 1.270-.102 1.846-.283l2.263 1.139-.443-1.776c1.543-1.048 2.484-2.76 2.484-4.784z"/>
+  </svg>
+);
+
 const HeroSection = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const { t } = useLanguage();
@@ -102,6 +111,9 @@ const HeroSection = () => {
               </Button>
               <Button variant="ghost" size="icon" className="w-12 h-12 rounded-full border border-border hover:border-primary hover:bg-primary/10" onClick={() => window.open('https://github.com/chattock', '_blank')}>
                 <Github size={24} />
+              </Button>
+              <Button variant="ghost" size="icon" className="w-12 h-12 rounded-full border border-border hover:border-primary hover:bg-primary/10 animate-pulse" onClick={scrollToContact}>
+                <WeChatIcon size={24} />
               </Button>
             </div>
           </div>

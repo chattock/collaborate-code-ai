@@ -73,6 +73,7 @@ const translations = {
     'contact.email': 'Email',
     'contact.linkedin': 'LinkedIn',
     'contact.linkedinProfile': 'LinkedIn Profile',
+    'contact.wechat': 'WeChat',
     
     // Footer
     'footer.copyright': 'Copyright © 2023 James Chattock. All Rights Reserved.',
@@ -156,8 +157,8 @@ const translations = {
     'services.webDev': '网页开发',
     'services.webDevDesc': '使用HTML/CSS/JavaScript创建和维护网站',
     'services.dataViz': '数据可视化',
-    'services.dataVizDesc': '使用基于Python或R的可视化包创建有洞察力的视觉效果',
-    'services.webScraping': '网页抓取',
+    'services.dataVizDesc': '使用基于Python或R的可视化包创建牛逼的视觉效果',
+    'services.webScraping': '网页爬取',
     'services.webScrapingDesc': '从网站提取数据',
     'services.database': '数据库管理',
     'services.databaseDesc': '使用PostgreSQL组织和存储数据',
@@ -183,6 +184,7 @@ const translations = {
     'contact.email': '邮箱',
     'contact.linkedin': 'LinkedIn',
     'contact.linkedinProfile': 'LinkedIn个人资料',
+    'contact.wechat': '微信',
     
     // Footer
     'footer.copyright': '版权所有 © 2023 James Chattock。保留所有权利。',
