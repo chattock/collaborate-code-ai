@@ -1,12 +1,21 @@
 import { useState } from "react";
-import { Menu, X, Languages } from "lucide-react";
+import { Menu, X, Languages, User, LogOut, Settings } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { useAdmin } from "@/contexts/AdminContext";
 
 const Navigation = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isLoginOpen, setIsLoginOpen] = useState(false);
+  const [password, setPassword] = useState('');
+  const [loginError, setLoginError] = useState('');
   const { language, toggleLanguage, t } = useLanguage();
+  const { isLoggedIn, showBookingSection, login, logout, toggleBookingSection } = useAdmin();
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
@@ -23,6 +32,23 @@ const Navigation = () => {
       element.scrollIntoView({ behavior: 'smooth' });
     }
     setIsMenuOpen(false);
+  };
+
+  const handleLogin = () => {
+    const success = login(password);
+    if (success) {
+      setIsLoginOpen(false);
+      setPassword('');
+      setLoginError('');
+    } else {
+      setLoginError('Invalid password');
+    }
+  };
+
+  const handleLogout = () => {
+    logout();
+    setPassword('');
+    setLoginError('');
   };
 
   return (
@@ -49,6 +75,68 @@ const Navigation = () => {
             <Languages size={16} />
             {language === 'en' ? '中文' : 'EN'}
           </Button>
+          
+          {/* Admin Login/Controls */}
+          {!isLoggedIn ? (
+            <Dialog open={isLoginOpen} onOpenChange={setIsLoginOpen}>
+              <DialogTrigger asChild>
+                <Button variant="ghost" size="sm" className="gap-2">
+                  <User size={16} />
+                  Admin
+                </Button>
+              </DialogTrigger>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>Admin Login</DialogTitle>
+                </DialogHeader>
+                <div className="space-y-4">
+                  <Input
+                    type="password"
+                    placeholder="Enter password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    onKeyPress={(e) => e.key === 'Enter' && handleLogin()}
+                  />
+                  {loginError && (
+                    <p className="text-sm text-destructive">{loginError}</p>
+                  )}
+                  <Button onClick={handleLogin} className="w-full">
+                    Login
+                  </Button>
+                </div>
+              </DialogContent>
+            </Dialog>
+          ) : (
+            <div className="flex items-center gap-2">
+              <Dialog>
+                <DialogTrigger asChild>
+                  <Button variant="ghost" size="sm" className="gap-2">
+                    <Settings size={16} />
+                    Settings
+                  </Button>
+                </DialogTrigger>
+                <DialogContent>
+                  <DialogHeader>
+                    <DialogTitle>Admin Settings</DialogTitle>
+                  </DialogHeader>
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-between">
+                      <Label htmlFor="booking-toggle">Show Booking Section</Label>
+                      <Switch
+                        id="booking-toggle"
+                        checked={showBookingSection}
+                        onCheckedChange={toggleBookingSection}
+                      />
+                    </div>
+                  </div>
+                </DialogContent>
+              </Dialog>
+              <Button variant="ghost" size="sm" onClick={handleLogout} className="gap-2">
+                <LogOut size={16} />
+                Logout
+              </Button>
+            </div>
+          )}
         </div>
       </nav>
 
@@ -65,6 +153,65 @@ const Navigation = () => {
             <Languages size={14} />
             {language === 'en' ? '中文' : 'EN'}
           </Button>
+          
+          {/* Mobile Admin Controls */}
+          {!isLoggedIn ? (
+            <Dialog open={isLoginOpen} onOpenChange={setIsLoginOpen}>
+              <DialogTrigger asChild>
+                <Button variant="ghost" size="sm" className="gap-1">
+                  <User size={14} />
+                </Button>
+              </DialogTrigger>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>Admin Login</DialogTitle>
+                </DialogHeader>
+                <div className="space-y-4">
+                  <Input
+                    type="password"
+                    placeholder="Enter password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    onKeyPress={(e) => e.key === 'Enter' && handleLogin()}
+                  />
+                  {loginError && (
+                    <p className="text-sm text-destructive">{loginError}</p>
+                  )}
+                  <Button onClick={handleLogin} className="w-full">
+                    Login
+                  </Button>
+                </div>
+              </DialogContent>
+            </Dialog>
+          ) : (
+            <div className="flex items-center gap-1">
+              <Dialog>
+                <DialogTrigger asChild>
+                  <Button variant="ghost" size="sm">
+                    <Settings size={14} />
+                  </Button>
+                </DialogTrigger>
+                <DialogContent>
+                  <DialogHeader>
+                    <DialogTitle>Admin Settings</DialogTitle>
+                  </DialogHeader>
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-between">
+                      <Label htmlFor="booking-toggle-mobile">Show Booking Section</Label>
+                      <Switch
+                        id="booking-toggle-mobile"
+                        checked={showBookingSection}
+                        onCheckedChange={toggleBookingSection}
+                      />
+                    </div>
+                  </div>
+                </DialogContent>
+              </Dialog>
+              <Button variant="ghost" size="sm" onClick={handleLogout}>
+                <LogOut size={14} />
+              </Button>
+            </div>
+          )}
           <Button
             variant="ghost"
             size="icon"
