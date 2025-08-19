@@ -57,26 +57,13 @@ const ProjectManagement = () => {
     }
   });
 
-  const createFileDropzone = (buttonId: string) => {
-    return useDropzone({
-      accept: {
-        'application/pdf': ['.pdf'],
-        'application/msword': ['.doc'],
-        'application/vnd.openxmlformats-officedocument.wordprocessingml.document': ['.docx']
-      },
-      multiple: false,
-      onDrop: (acceptedFiles) => {
-        if (acceptedFiles[0]) {
-          const file = acceptedFiles[0];
-          const reader = new FileReader();
-          reader.onload = (e) => {
-            const base64String = e.target?.result as string;
-            updateButton(buttonId, { url: base64String, file: file });
-          };
-          reader.readAsDataURL(file);
-        }
-      }
-    });
+  const handleFileUpload = (buttonId: string, file: File) => {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const base64String = e.target?.result as string;
+      updateButton(buttonId, { url: base64String, file: file });
+    };
+    reader.readAsDataURL(file);
   };
 
   const addButton = () => {
@@ -264,23 +251,30 @@ const ProjectManagement = () => {
                             )}
                             {button.type === 'report' && (
                               <div>
-                                {(() => {
-                                  const fileDropzone = createFileDropzone(button.id);
-                                  return (
-                                    <div>
-                                      <div {...fileDropzone.getRootProps()} className="border-2 border-dashed border-gray-300 rounded p-2 text-center cursor-pointer hover:border-primary">
-                                        <input {...fileDropzone.getInputProps()} />
-                                        <FileText className="w-4 h-4 mx-auto mb-1 text-gray-400" />
-                                        <p className="text-xs text-gray-600">
-                                          {button.file ? button.file.name : 'Upload PDF/Word'}
-                                        </p>
-                                      </div>
-                                      {button.file && (
-                                        <p className="text-xs text-green-600 mt-1">✓ File uploaded: {button.file.name}</p>
-                                      )}
-                                    </div>
-                                  );
-                                })()}
+                                <input
+                                  type="file"
+                                  accept=".pdf,.doc,.docx"
+                                  onChange={(e) => {
+                                    const file = e.target.files?.[0];
+                                    if (file) {
+                                      handleFileUpload(button.id, file);
+                                    }
+                                  }}
+                                  className="hidden"
+                                  id={`file-${button.id}`}
+                                />
+                                <label
+                                  htmlFor={`file-${button.id}`}
+                                  className="border-2 border-dashed border-gray-300 rounded p-2 text-center cursor-pointer hover:border-primary block"
+                                >
+                                  <FileText className="w-4 h-4 mx-auto mb-1 text-gray-400" />
+                                  <p className="text-xs text-gray-600">
+                                    {button.file ? button.file.name : 'Upload PDF/Word'}
+                                  </p>
+                                </label>
+                                {button.file && (
+                                  <p className="text-xs text-green-600 mt-1">✓ File uploaded: {button.file.name}</p>
+                                )}
                               </div>
                             )}
                           </div>
@@ -461,23 +455,30 @@ const ProjectManagement = () => {
                           )}
                           {button.type === 'report' && (
                             <div>
-                              {(() => {
-                                const fileDropzone = createFileDropzone(button.id);
-                                return (
-                                  <div>
-                                    <div {...fileDropzone.getRootProps()} className="border-2 border-dashed border-gray-300 rounded p-2 text-center cursor-pointer hover:border-primary">
-                                      <input {...fileDropzone.getInputProps()} />
-                                      <FileText className="w-4 h-4 mx-auto mb-1 text-gray-400" />
-                                      <p className="text-xs text-gray-600">
-                                        {button.file ? button.file.name : 'Upload PDF/Word'}
-                                      </p>
-                                    </div>
-                                    {button.file && (
-                                      <p className="text-xs text-green-600 mt-1">✓ File uploaded: {button.file.name}</p>
-                                    )}
-                                  </div>
-                                );
-                              })()}
+                              <input
+                                type="file"
+                                accept=".pdf,.doc,.docx"
+                                onChange={(e) => {
+                                  const file = e.target.files?.[0];
+                                  if (file) {
+                                    handleFileUpload(button.id, file);
+                                  }
+                                }}
+                                className="hidden"
+                                id={`edit-file-${button.id}`}
+                              />
+                              <label
+                                htmlFor={`edit-file-${button.id}`}
+                                className="border-2 border-dashed border-gray-300 rounded p-2 text-center cursor-pointer hover:border-primary block"
+                              >
+                                <FileText className="w-4 h-4 mx-auto mb-1 text-gray-400" />
+                                <p className="text-xs text-gray-600">
+                                  {button.file ? button.file.name : 'Upload PDF/Word'}
+                                </p>
+                              </label>
+                              {button.file && (
+                                <p className="text-xs text-green-600 mt-1">✓ File uploaded: {button.file.name}</p>
+                              )}
                             </div>
                           )}
                         </div>
