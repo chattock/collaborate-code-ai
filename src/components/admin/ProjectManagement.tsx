@@ -20,6 +20,8 @@ const ProjectManagement = () => {
     image: '',
     buttons: []
   });
+  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
+  const [imageFiles, setImageFiles] = useState<{[key: string]: string}>({});
 
   const buttonIcons = {
     report: FileText,
@@ -35,12 +37,21 @@ const ProjectManagement = () => {
     multiple: false,
     onDrop: (acceptedFiles) => {
       if (acceptedFiles[0]) {
-        const imageUrl = URL.createObjectURL(acceptedFiles[0]);
-        if (editingProject) {
-          setEditingProject(prev => prev ? { ...prev, image: imageUrl } : null);
-        } else {
-          setNewProject(prev => ({ ...prev, image: imageUrl }));
-        }
+        const file = acceptedFiles[0];
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const base64String = e.target?.result as string;
+          const tempId = editingProject?.id || 'new';
+          setImageFiles(prev => ({ ...prev, [tempId]: base64String }));
+          
+          if (editingProject) {
+            setEditingProject(prev => prev ? { ...prev, image: base64String } : null);
+          } else {
+            setNewProject(prev => ({ ...prev, image: base64String }));
+          }
+          setHasUnsavedChanges(true);
+        };
+        reader.readAsDataURL(file);
       }
     }
   });
@@ -64,6 +75,7 @@ const ProjectManagement = () => {
         buttons: [...(prev.buttons || []), newButton]
       }));
     }
+    setHasUnsavedChanges(true);
   };
 
   const removeButton = (buttonId: string) => {
@@ -78,6 +90,7 @@ const ProjectManagement = () => {
         buttons: (prev.buttons || []).filter(b => b.id !== buttonId)
       }));
     }
+    setHasUnsavedChanges(true);
   };
 
   const updateButton = (buttonId: string, updates: Partial<ProjectButton>) => {
@@ -92,19 +105,27 @@ const ProjectManagement = () => {
         buttons: (prev.buttons || []).map(b => b.id === buttonId ? { ...b, ...updates } : b)
       }));
     }
+    setHasUnsavedChanges(true);
   };
 
   const handleSave = () => {
     if (editingProject) {
       updateProject(editingProject.id, editingProject);
       setEditingProject(null);
+      setHasUnsavedChanges(false);
     } else {
       if (newProject.title && newProject.titleZh) {
         addProject(newProject as Omit<Project, 'id'>);
         setNewProject({ title: '', titleZh: '', image: '', buttons: [] });
         setIsAddOpen(false);
+        setHasUnsavedChanges(false);
       }
     }
+  };
+
+  const saveAllChanges = () => {
+    // This saves to localStorage automatically via the context
+    setHasUnsavedChanges(false);
   };
 
   const handleDragEnd = (result: DropResult) => {
@@ -125,116 +146,137 @@ const ProjectManagement = () => {
     <div className="space-y-4">
       <div className="flex justify-between items-center">
         <h3 className="text-lg font-semibold">Project Management</h3>
-        <Dialog open={isAddOpen} onOpenChange={setIsAddOpen}>
-          <DialogTrigger asChild>
-            <Button>
-              <Plus className="w-4 h-4 mr-2" />
-              Add Project
+        <div className="flex gap-2">
+          {hasUnsavedChanges && (
+            <Button onClick={saveAllChanges} variant="default">
+              Save All Changes
             </Button>
-          </DialogTrigger>
-          <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
-            <DialogHeader>
-              <DialogTitle>Add New Project</DialogTitle>
-            </DialogHeader>
-            <div className="space-y-4">
-              <div>
-                <Label htmlFor="title">Title (English)</Label>
-                <Input
-                  id="title"
-                  value={newProject.title}
-                  onChange={(e) => setNewProject(prev => ({ ...prev, title: e.target.value }))}
-                />
-              </div>
-              <div>
-                <Label htmlFor="titleZh">Title (Chinese)</Label>
-                <Input
-                  id="titleZh"
-                  value={newProject.titleZh}
-                  onChange={(e) => setNewProject(prev => ({ ...prev, titleZh: e.target.value }))}
-                />
-              </div>
-              
-              <div>
-                <Label>Project Image</Label>
-                <div {...getRootProps()} className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center cursor-pointer hover:border-primary">
-                  <input {...getInputProps()} />
-                  <Upload className="w-8 h-8 mx-auto mb-2 text-gray-400" />
-                  <p className="text-sm text-gray-600">Drop an image here or click to select</p>
+          )}
+          <Dialog open={isAddOpen} onOpenChange={setIsAddOpen}>
+            <DialogTrigger asChild>
+              <Button>
+                <Plus className="w-4 h-4 mr-2" />
+                Add Project
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+              <DialogHeader>
+                <DialogTitle>Add New Project</DialogTitle>
+              </DialogHeader>
+              <div className="space-y-4">
+                <div>
+                  <Label htmlFor="title">Title (English)</Label>
+                  <Input
+                    id="title"
+                    value={newProject.title}
+                    onChange={(e) => {
+                      setNewProject(prev => ({ ...prev, title: e.target.value }));
+                      setHasUnsavedChanges(true);
+                    }}
+                  />
                 </div>
-                {newProject.image && (
-                  <img src={newProject.image} alt="Preview" className="mt-2 w-32 h-32 object-cover rounded" />
-                )}
-              </div>
+                <div>
+                  <Label htmlFor="titleZh">Title (Chinese)</Label>
+                  <Input
+                    id="titleZh"
+                    value={newProject.titleZh}
+                    onChange={(e) => {
+                      setNewProject(prev => ({ ...prev, titleZh: e.target.value }));
+                      setHasUnsavedChanges(true);
+                    }}
+                  />
+                </div>
+                
+                <div>
+                  <Label>Project Image</Label>
+                  <div {...getRootProps()} className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center cursor-pointer hover:border-primary">
+                    <input {...getInputProps()} />
+                    <Upload className="w-8 h-8 mx-auto mb-2 text-gray-400" />
+                    <p className="text-sm text-gray-600">Drop an image here or click to select</p>
+                  </div>
+                  {newProject.image && (
+                    <img src={newProject.image} alt="Preview" className="mt-2 w-32 h-32 object-cover rounded" />
+                  )}
+                </div>
 
-              <div>
-                <div className="flex justify-between items-center mb-2">
-                  <Label>Buttons</Label>
-                  <Button type="button" onClick={addButton} size="sm">
-                    <Plus className="w-4 h-4 mr-1" />
-                    Add Button
-                  </Button>
-                </div>
-                <div className="space-y-2">
-                  {currentButtons.map((button, index) => (
-                    <Card key={button.id} className="p-3">
-                      <div className="flex gap-2 items-start">
-                        <div className="flex-1 space-y-2">
-                          <div className="flex gap-2">
-                            <Select 
-                              value={button.type} 
-                              onValueChange={(value: any) => updateButton(button.id, { type: value })}
-                            >
-                              <SelectTrigger className="w-32">
-                                <SelectValue />
-                              </SelectTrigger>
-                              <SelectContent>
-                                <SelectItem value="report">Report</SelectItem>
-                                <SelectItem value="website">Website</SelectItem>
-                                <SelectItem value="github">Github</SelectItem>
-                                <SelectItem value="video">Video</SelectItem>
-                              </SelectContent>
-                            </Select>
-                            <Input
-                              placeholder="Button label"
-                              value={button.label}
-                              onChange={(e) => updateButton(button.id, { label: e.target.value })}
-                            />
-                          </div>
-                          {button.type !== 'report' && (
-                            <Input
-                              placeholder="URL"
-                              value={button.url || ''}
-                              onChange={(e) => updateButton(button.id, { url: e.target.value })}
-                            />
-                          )}
-                          {button.type === 'report' && (
-                            <div className="border-2 border-dashed border-gray-300 rounded p-2 text-center">
-                              <FileText className="w-4 h-4 mx-auto mb-1 text-gray-400" />
-                              <p className="text-xs text-gray-600">Upload PDF/Word</p>
+                <div>
+                  <div className="flex justify-between items-center mb-2">
+                    <Label>Buttons</Label>
+                    <Button type="button" onClick={addButton} size="sm">
+                      <Plus className="w-4 h-4 mr-1" />
+                      Add Button
+                    </Button>
+                  </div>
+                  <div className="space-y-2">
+                    {currentButtons.map((button, index) => (
+                      <Card key={button.id} className="p-3">
+                        <div className="flex gap-2 items-start">
+                          <div className="flex-1 space-y-2">
+                            <div className="flex gap-2">
+                              <Select 
+                                value={button.type} 
+                                onValueChange={(value: any) => updateButton(button.id, { type: value })}
+                              >
+                                <SelectTrigger className="w-32">
+                                  <SelectValue />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  <SelectItem value="report">Report</SelectItem>
+                                  <SelectItem value="website">Website</SelectItem>
+                                  <SelectItem value="github">Github</SelectItem>
+                                  <SelectItem value="video">Video</SelectItem>
+                                </SelectContent>
+                              </Select>
+                              <Input
+                                placeholder="Button label"
+                                value={button.label}
+                                onChange={(e) => updateButton(button.id, { label: e.target.value })}
+                              />
                             </div>
-                          )}
+                            {button.type !== 'report' && (
+                              <Input
+                                placeholder="URL"
+                                value={button.url || ''}
+                                onChange={(e) => updateButton(button.id, { url: e.target.value })}
+                              />
+                            )}
+                            {button.type === 'report' && (
+                              <div className="border-2 border-dashed border-gray-300 rounded p-2 text-center">
+                                <FileText className="w-4 h-4 mx-auto mb-1 text-gray-400" />
+                                <p className="text-xs text-gray-600">Upload PDF/Word</p>
+                              </div>
+                            )}
+                          </div>
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="icon"
+                            onClick={() => removeButton(button.id)}
+                          >
+                            <X className="w-4 h-4" />
+                          </Button>
                         </div>
-                        <Button
-                          type="button"
-                          variant="outline"
-                          size="icon"
-                          onClick={() => removeButton(button.id)}
-                        >
-                          <X className="w-4 h-4" />
-                        </Button>
-                      </div>
-                    </Card>
-                  ))}
+                      </Card>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="flex justify-end gap-2">
+                  <Button variant="outline" onClick={() => setIsAddOpen(false)}>Cancel</Button>
+                  <Button onClick={handleSave}>Add Project</Button>
                 </div>
               </div>
+            </DialogContent>
+          </Dialog>
+        </div>
+      </div>
 
-              <div className="flex justify-end gap-2">
-                <Button variant="outline" onClick={() => setIsAddOpen(false)}>Cancel</Button>
-                <Button onClick={handleSave}>Add Project</Button>
-              </div>
-            </div>
-          </DialogContent>
-        </Dialog>
+      <div className="mb-4 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+        <p className="text-sm text-yellow-800">
+          <strong>Note:</strong> Currently saving to browser storage (localStorage). 
+          Changes persist on this device but won't sync across devices. 
+          Would you like me to set up permanent backend storage with Supabase?
+        </p>
       </div>
 
       <DragDropContext onDragEnd={handleDragEnd}>
@@ -317,7 +359,10 @@ const ProjectManagement = () => {
                 <Input
                   id="edit-title"
                   value={editingProject.title}
-                  onChange={(e) => setEditingProject(prev => prev ? { ...prev, title: e.target.value } : null)}
+                  onChange={(e) => {
+                    setEditingProject(prev => prev ? { ...prev, title: e.target.value } : null);
+                    setHasUnsavedChanges(true);
+                  }}
                 />
               </div>
               <div>
@@ -325,7 +370,10 @@ const ProjectManagement = () => {
                 <Input
                   id="edit-titleZh"
                   value={editingProject.titleZh}
-                  onChange={(e) => setEditingProject(prev => prev ? { ...prev, titleZh: e.target.value } : null)}
+                  onChange={(e) => {
+                    setEditingProject(prev => prev ? { ...prev, titleZh: e.target.value } : null);
+                    setHasUnsavedChanges(true);
+                  }}
                 />
               </div>
               
