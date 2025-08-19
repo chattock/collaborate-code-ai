@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
-
+import { supabase } from '@/integrations/supabase/client';
 export interface ProjectButton {
   id: string;
   type: 'report' | 'website' | 'github' | 'video';
@@ -24,12 +24,15 @@ interface ProjectContextType {
   reorderProjects: (startIndex: number, endIndex: number) => void;
   cvFile: File | null;
   setCvFile: (file: File | null) => void;
+  cvUrl: string | null;
+  setCvUrl: (url: string | null) => void;
 }
 
 const ProjectContext = createContext<ProjectContextType | undefined>(undefined);
 
 export const ProjectProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [cvFile, setCvFile] = useState<File | null>(null);
+  const [cvUrl, setCvUrl] = useState<string | null>(null);
   
   const defaultProjects: Project[] = [
     {
@@ -194,7 +197,9 @@ export const ProjectProvider: React.FC<{ children: ReactNode }> = ({ children })
       deleteProject,
       reorderProjects,
       cvFile,
-      setCvFile
+      setCvFile,
+      cvUrl,
+      setCvUrl
     }}>
       {children}
     </ProjectContext.Provider>

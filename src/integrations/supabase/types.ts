@@ -14,6 +14,30 @@ export type Database = {
   }
   public: {
     Tables: {
+      admin_settings: {
+        Row: {
+          created_at: string
+          id: string
+          setting_name: string
+          setting_value: Json
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          setting_name: string
+          setting_value: Json
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          setting_name?: string
+          setting_value?: Json
+          updated_at?: string
+        }
+        Relationships: []
+      }
       bookings: {
         Row: {
           booking_date: string
@@ -52,6 +76,39 @@ export type Database = {
           name?: string
           phone?: string | null
           status?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      projects: {
+        Row: {
+          buttons: Json | null
+          created_at: string
+          display_order: number | null
+          id: string
+          image_url: string | null
+          title: string
+          title_zh: string
+          updated_at: string
+        }
+        Insert: {
+          buttons?: Json | null
+          created_at?: string
+          display_order?: number | null
+          id?: string
+          image_url?: string | null
+          title: string
+          title_zh: string
+          updated_at?: string
+        }
+        Update: {
+          buttons?: Json | null
+          created_at?: string
+          display_order?: number | null
+          id?: string
+          image_url?: string | null
+          title?: string
+          title_zh?: string
           updated_at?: string
         }
         Relationships: []
