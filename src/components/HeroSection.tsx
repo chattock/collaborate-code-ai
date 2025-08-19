@@ -116,7 +116,7 @@ const HeroSection = () => {
               <Button variant="ghost" size="icon" className="w-12 h-12 rounded-full border border-border hover:border-primary hover:bg-primary/10" onClick={() => window.open('https://github.com/chattock', '_blank')}>
                 <Github size={24} />
               </Button>
-              <Button variant="ghost" size="icon" className="w-12 h-12 rounded-full border border-border hover:border-primary hover:bg-primary/10 animate-pulse" onClick={scrollToContact}>
+              <Button variant="ghost" size="icon" className="w-12 h-12 rounded-full border border-border hover:border-primary hover:bg-primary/10" onClick={scrollToContact}>
                 <WeChatIcon size={24} />
               </Button>
             </div>
