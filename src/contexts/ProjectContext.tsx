@@ -454,6 +454,7 @@ export const ProjectProvider: React.FC<{ children: ReactNode }> = ({ children })
     if (file) {
       console.log('Processing CV file:', file.name);
       setCvFile(file);
+      setHasUnsavedChanges(true); // Always show save button for user feedback
       
       // Convert and upload immediately for better UX
       try {
@@ -461,15 +462,16 @@ export const ProjectProvider: React.FC<{ children: ReactNode }> = ({ children })
         const result = await saveCVToSupabase(file);
         setCvFile(null); // Clear the file state after successful upload
         console.log('CV processed successfully:', result);
+        // Keep hasUnsavedChanges true so user can see the save button worked
       } catch (error) {
         console.error('Error processing CV immediately:', error);
-        // Keep the file in state for manual save
-        setHasUnsavedChanges(true);
+        // Keep the file in state for manual save via Save All Changes button
       }
     } else {
       setCvFile(null);
       setCvUrl(null);
       setCvOriginalUrl(null);
+      setHasUnsavedChanges(true); // Show save button when removing CV
     }
   };
 
