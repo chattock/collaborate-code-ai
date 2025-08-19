@@ -6,8 +6,11 @@ import { useProject } from "@/contexts/ProjectContext";
 
 
 const ProjectsSection = () => {
+  console.log('ProjectsSection rendering...');
   const { t, language } = useLanguage();
+  console.log('Language context loaded');
   const { projects } = useProject();
+  console.log('Project context loaded, projects:', projects);
 
   const getButtonIcon = (type: string) => {
     switch (type) {

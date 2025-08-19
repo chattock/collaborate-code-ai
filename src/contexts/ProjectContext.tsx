@@ -163,8 +163,14 @@ export const ProjectProvider: React.FC<{ children: ReactNode }> = ({ children })
 
   // Load projects and CV from Supabase on component mount
   useEffect(() => {
+    console.log('ProjectProvider: Loading data from Supabase...');
     loadProjectsFromSupabase();
     loadCVFromSupabase();
+    
+    // Trigger image migration after initial load
+    setTimeout(() => {
+      import('@/utils/migrateProjectImages').catch(console.error);
+    }, 2000);
   }, []);
 
   const loadProjectsFromSupabase = async () => {
@@ -441,7 +447,9 @@ export const ProjectProvider: React.FC<{ children: ReactNode }> = ({ children })
 
 export const useProject = () => {
   const context = useContext(ProjectContext);
+  console.log('ProjectContext value:', context);
   if (context === undefined) {
+    console.error('ProjectContext is undefined - ProjectProvider not found');
     throw new Error('useProject must be used within a ProjectProvider');
   }
   return context;
