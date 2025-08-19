@@ -402,21 +402,12 @@ export const ProjectProvider: React.FC<{ children: ReactNode }> = ({ children })
       project.id === id ? { ...project, ...updatedProject } : project
     ));
     setHasUnsavedChanges(true);
-    // Auto-save after a short delay
-    setTimeout(() => {
-      if (hasUnsavedChanges) {
-        saveChanges();
-      }
-    }, 1000);
   };
 
   const deleteProject = async (id: string) => {
     setProjects(prev => prev.filter(project => project.id !== id));
     setHasUnsavedChanges(true);
-    // Auto-save immediately for deletes
-    setTimeout(() => {
-      saveChanges();
-    }, 100);
+    console.log('Project deleted, hasUnsavedChanges set to true');
   };
 
   const reorderProjects = async (startIndex: number, endIndex: number) => {
