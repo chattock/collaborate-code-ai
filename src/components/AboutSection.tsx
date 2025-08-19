@@ -7,7 +7,7 @@ import { useProject } from "@/contexts/ProjectContext";
 import aboutPic from "@/assets/about-pic.jpg";
 const AboutSection = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const { cvFile } = useProject();
+  const { cvUrl } = useProject();
   const scrollToProjects = () => {
     const element = document.querySelector('#projects');
     if (element) {
@@ -72,33 +72,27 @@ const AboutSection = () => {
                 <DialogHeader>
                   <DialogTitle>Curriculum Vitae</DialogTitle>
                 </DialogHeader>
-                {cvFile ? (
+                {cvUrl ? (
                   <div className="space-y-4">
                     <div className="text-center">
-                      <p className="font-medium">{cvFile.name}</p>
-                      <p className="text-sm text-muted-foreground">
-                        {(cvFile.size / 1024 / 1024).toFixed(1)} MB
-                      </p>
+                      <p className="font-medium">Curriculum Vitae</p>
                     </div>
-                    {cvFile.type === 'application/pdf' && (
-                      <embed 
-                        src={URL.createObjectURL(cvFile)} 
-                        type="application/pdf" 
-                        width="100%" 
-                        height="600px" 
-                      />
-                    )}
+                    <embed 
+                      src={cvUrl} 
+                      type="application/pdf" 
+                      width="100%" 
+                      height="600px" 
+                    />
                     <div className="flex justify-center">
                       <Button 
                         onClick={() => {
-                          const url = URL.createObjectURL(cvFile);
                           const a = document.createElement('a');
-                          a.href = url;
-                          a.download = cvFile.name;
+                          a.href = cvUrl;
+                          a.download = 'CV.pdf';
+                          a.target = '_blank';
                           document.body.appendChild(a);
                           a.click();
                           document.body.removeChild(a);
-                          URL.revokeObjectURL(url);
                         }}
                       >
                         Download CV

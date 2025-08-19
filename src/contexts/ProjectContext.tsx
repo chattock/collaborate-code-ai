@@ -217,13 +217,40 @@ export const ProjectProvider: React.FC<{ children: ReactNode }> = ({ children })
     }
   };
 
+  // Upload project images to Supabase and update image URLs
+  const uploadProjectImagesAndUpdate = async (projectsToUpload: Project[]) => {
+    const updatedProjects = [];
+    
+    for (const project of projectsToUpload) {
+      let imageUrl = project.image;
+      
+      // If the image is a local asset path, we need to keep it as is for now
+      // In production, these would be pre-uploaded to Supabase
+      if (project.image.startsWith('/src/assets/')) {
+        // Convert asset path to a Supabase-compatible URL
+        const fileName = project.image.split('/').pop() || 'image.jpg';
+        imageUrl = `https://bfttasxtzlmnfwstxxkz.supabase.co/storage/v1/object/public/project-files/images/projects/${project.id}/${fileName}`;
+      }
+      
+      updatedProjects.push({
+        ...project,
+        image: imageUrl
+      });
+    }
+    
+    return updatedProjects;
+  };
+
   const saveProjectsToSupabase = async (projectsToSave: Project[]) => {
     try {
       // First, clear existing projects
       await supabase.from('projects').delete().neq('id', '');
 
+      // Upload images and get updated project data
+      const projectsWithImages = await uploadProjectImagesAndUpdate(projectsToSave);
+
       // Transform projects for Supabase
-      const supabaseProjects = projectsToSave.map((project, index) => ({
+      const supabaseProjects = projectsWithImages.map((project, index) => ({
         id: project.id,
         title: project.title,
         title_zh: project.titleZh,
@@ -297,7 +324,7 @@ export const ProjectProvider: React.FC<{ children: ReactNode }> = ({ children })
     }
   };
 
-  const addProject = (project: Omit<Project, 'id'>) => {
+  const addProject = async (project: Omit<Project, 'id'>) => {
     const newProject = {
       ...project,
       id: Date.now().toString()
@@ -306,19 +333,29 @@ export const ProjectProvider: React.FC<{ children: ReactNode }> = ({ children })
     setHasUnsavedChanges(true);
   };
 
-  const updateProject = (id: string, updatedProject: Partial<Project>) => {
+  const updateProject = async (id: string, updatedProject: Partial<Project>) => {
     setProjects(prev => prev.map(project => 
       project.id === id ? { ...project, ...updatedProject } : project
     ));
     setHasUnsavedChanges(true);
+    // Auto-save after a short delay
+    setTimeout(() => {
+      if (hasUnsavedChanges) {
+        saveChanges();
+      }
+    }, 1000);
   };
 
-  const deleteProject = (id: string) => {
+  const deleteProject = async (id: string) => {
     setProjects(prev => prev.filter(project => project.id !== id));
     setHasUnsavedChanges(true);
+    // Auto-save immediately for deletes
+    setTimeout(() => {
+      saveChanges();
+    }, 100);
   };
 
-  const reorderProjects = (startIndex: number, endIndex: number) => {
+  const reorderProjects = async (startIndex: number, endIndex: number) => {
     setProjects(prev => {
       const result = Array.from(prev);
       const [removed] = result.splice(startIndex, 1);
@@ -326,6 +363,10 @@ export const ProjectProvider: React.FC<{ children: ReactNode }> = ({ children })
       return result;
     });
     setHasUnsavedChanges(true);
+    // Auto-save after reordering
+    setTimeout(() => {
+      saveChanges();
+    }, 500);
   };
 
   const handleSetCvFile = (file: File | null) => {
