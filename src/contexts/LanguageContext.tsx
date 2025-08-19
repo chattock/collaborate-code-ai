@@ -73,7 +73,7 @@ const translations = {
     'contact.email': 'Email',
     'contact.linkedin': 'LinkedIn',
     'contact.linkedinProfile': 'LinkedIn Profile',
-    'contact.wechat': 'WeChat',
+    'contact.wechat': 'WeChat ID',
     
     // Footer
     'footer.copyright': 'Copyright © 2023 James Chattock. All Rights Reserved.',
@@ -184,7 +184,7 @@ const translations = {
     'contact.email': '邮箱',
     'contact.linkedin': 'LinkedIn',
     'contact.linkedinProfile': 'LinkedIn个人资料',
-    'contact.wechat': '微信',
+    'contact.wechat': '微信号',
     
     // Footer
     'footer.copyright': '版权所有 © 2023 James Chattock。保留所有权利。',
