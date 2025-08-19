@@ -283,8 +283,21 @@ export const ProjectProvider: React.FC<{ children: ReactNode }> = ({ children })
 
   const saveProjectsToSupabase = async (projectsToSave: Project[]) => {
     try {
+      console.log('Starting to save projects to Supabase...', projectsToSave.length, 'projects');
+      
       // Upload images and get updated project data
       const projectsWithImages = await uploadProjectImagesAndUpdate(projectsToSave);
+      console.log('Images uploaded and processed');
+
+      // First, delete all existing projects to avoid conflicts
+      const { error: deleteError } = await supabase
+        .from('projects')
+        .delete()
+        .neq('id', '');
+
+      if (deleteError) {
+        console.warn('Warning during delete (might be expected if no data exists):', deleteError);
+      }
 
       // Transform projects for Supabase and ensure valid UUIDs
       const supabaseProjects = projectsWithImages.map((project, index) => {
@@ -306,21 +319,19 @@ export const ProjectProvider: React.FC<{ children: ReactNode }> = ({ children })
         };
       });
 
-      // Use upsert to handle both inserts and updates safely
+      console.log('Inserting projects into Supabase...', supabaseProjects);
+      
+      // Insert the new projects
       const { error } = await supabase
         .from('projects')
-        .upsert(supabaseProjects, { 
-          onConflict: 'id',
-          ignoreDuplicates: false 
-        });
+        .insert(supabaseProjects);
 
       if (error) throw error;
 
       console.log('Successfully saved projects to Supabase');
     } catch (error) {
       console.error('Error saving projects to Supabase:', error);
-      // Fallback to localStorage
-      localStorage.setItem('projects', JSON.stringify(projectsToSave));
+      throw error; // Re-throw instead of falling back to localStorage
     }
   };
 
@@ -475,9 +486,9 @@ export const ProjectProvider: React.FC<{ children: ReactNode }> = ({ children })
 
 export const useProject = () => {
   const context = useContext(ProjectContext);
-  console.log('ProjectContext value:', context);
   if (context === undefined) {
-    console.error('ProjectContext is undefined - ProjectProvider not found');
+    console.error('useProject called outside of ProjectProvider');
+    console.trace('Call stack:');
     throw new Error('useProject must be used within a ProjectProvider');
   }
   return context;

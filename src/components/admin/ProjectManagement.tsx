@@ -127,11 +127,7 @@ const ProjectManagement = () => {
         adminChanges ? saveAdminChanges() : Promise.resolve()
       ]);
       console.log('All changes saved successfully');
-      
-      // Reload the page to reflect changes
-      setTimeout(() => {
-        window.location.reload();
-      }, 1000);
+      alert('Changes saved successfully!');
     } catch (error) {
       console.error('Error saving changes:', error);
       alert('Error saving changes. Please try again.');
