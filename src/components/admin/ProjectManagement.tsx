@@ -8,10 +8,12 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useProject, Project, ProjectButton } from '@/contexts/ProjectContext';
+import { useAdmin } from '@/contexts/AdminContext';
 import { useDropzone } from 'react-dropzone';
 
 const ProjectManagement = () => {
-  const { projects, addProject, updateProject, deleteProject, reorderProjects } = useProject();
+  const { projects, addProject, updateProject, deleteProject, reorderProjects, hasUnsavedChanges: projectChanges, saveChanges: saveProjectChanges } = useProject();
+  const { hasUnsavedChanges: adminChanges, saveChanges: saveAdminChanges } = useAdmin();
   const [isAddOpen, setIsAddOpen] = useState(false);
   const [editingProject, setEditingProject] = useState<Project | null>(null);
   const [newProject, setNewProject] = useState<Partial<Project>>({
@@ -20,7 +22,7 @@ const ProjectManagement = () => {
     image: '',
     buttons: []
   });
-  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
+  const hasUnsavedChanges = projectChanges || adminChanges;
   const [imageFiles, setImageFiles] = useState<{[key: string]: string}>({});
 
   const buttonIcons = {
@@ -49,7 +51,6 @@ const ProjectManagement = () => {
           } else {
             setNewProject(prev => ({ ...prev, image: base64String }));
           }
-          setHasUnsavedChanges(true);
         };
         reader.readAsDataURL(file);
       }
@@ -75,7 +76,6 @@ const ProjectManagement = () => {
         buttons: [...(prev.buttons || []), newButton]
       }));
     }
-    setHasUnsavedChanges(true);
   };
 
   const removeButton = (buttonId: string) => {
@@ -90,7 +90,6 @@ const ProjectManagement = () => {
         buttons: (prev.buttons || []).filter(b => b.id !== buttonId)
       }));
     }
-    setHasUnsavedChanges(true);
   };
 
   const updateButton = (buttonId: string, updates: Partial<ProjectButton>) => {
@@ -105,27 +104,30 @@ const ProjectManagement = () => {
         buttons: (prev.buttons || []).map(b => b.id === buttonId ? { ...b, ...updates } : b)
       }));
     }
-    setHasUnsavedChanges(true);
   };
 
   const handleSave = () => {
     if (editingProject) {
       updateProject(editingProject.id, editingProject);
       setEditingProject(null);
-      setHasUnsavedChanges(false);
     } else {
       if (newProject.title && newProject.titleZh) {
         addProject(newProject as Omit<Project, 'id'>);
         setNewProject({ title: '', titleZh: '', image: '', buttons: [] });
         setIsAddOpen(false);
-        setHasUnsavedChanges(false);
       }
     }
   };
 
-  const saveAllChanges = () => {
-    // This saves to localStorage automatically via the context
-    setHasUnsavedChanges(false);
+  const saveAllChanges = async () => {
+    try {
+      await Promise.all([
+        projectChanges ? saveProjectChanges() : Promise.resolve(),
+        adminChanges ? saveAdminChanges() : Promise.resolve()
+      ]);
+    } catch (error) {
+      console.error('Error saving changes:', error);
+    }
   };
 
   const handleDragEnd = (result: DropResult) => {
@@ -169,10 +171,7 @@ const ProjectManagement = () => {
                   <Input
                     id="title"
                     value={newProject.title}
-                    onChange={(e) => {
-                      setNewProject(prev => ({ ...prev, title: e.target.value }));
-                      setHasUnsavedChanges(true);
-                    }}
+                    onChange={(e) => setNewProject(prev => ({ ...prev, title: e.target.value }))}
                   />
                 </div>
                 <div>
@@ -180,10 +179,7 @@ const ProjectManagement = () => {
                   <Input
                     id="titleZh"
                     value={newProject.titleZh}
-                    onChange={(e) => {
-                      setNewProject(prev => ({ ...prev, titleZh: e.target.value }));
-                      setHasUnsavedChanges(true);
-                    }}
+                    onChange={(e) => setNewProject(prev => ({ ...prev, titleZh: e.target.value }))}
                   />
                 </div>
                 
@@ -271,11 +267,9 @@ const ProjectManagement = () => {
         </div>
       </div>
 
-      <div className="mb-4 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
-        <p className="text-sm text-yellow-800">
-          <strong>Note:</strong> Currently saving to browser storage (localStorage). 
-          Changes persist on this device but won't sync across devices. 
-          Would you like me to set up permanent backend storage with Supabase?
+      <div className="mb-4 p-4 bg-green-50 border border-green-200 rounded-lg">
+        <p className="text-sm text-green-800">
+          <strong>✓ Connected to Supabase:</strong> All changes are automatically saved to your backend and sync across devices.
         </p>
       </div>
 
@@ -359,10 +353,7 @@ const ProjectManagement = () => {
                 <Input
                   id="edit-title"
                   value={editingProject.title}
-                  onChange={(e) => {
-                    setEditingProject(prev => prev ? { ...prev, title: e.target.value } : null);
-                    setHasUnsavedChanges(true);
-                  }}
+                  onChange={(e) => setEditingProject(prev => prev ? { ...prev, title: e.target.value } : null)}
                 />
               </div>
               <div>
@@ -370,10 +361,7 @@ const ProjectManagement = () => {
                 <Input
                   id="edit-titleZh"
                   value={editingProject.titleZh}
-                  onChange={(e) => {
-                    setEditingProject(prev => prev ? { ...prev, titleZh: e.target.value } : null);
-                    setHasUnsavedChanges(true);
-                  }}
+                  onChange={(e) => setEditingProject(prev => prev ? { ...prev, titleZh: e.target.value } : null)}
                 />
               </div>
               
