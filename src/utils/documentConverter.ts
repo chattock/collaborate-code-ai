@@ -1,8 +1,8 @@
-import { GlobalWorkerOptions, getDocument } from 'pdfjs-dist';
+import { GlobalWorkerOptions, getDocument, version } from 'pdfjs-dist';
 import { supabase } from '@/integrations/supabase/client';
 
-// Set up PDF.js worker - use jsdelivr as it's more reliable
-GlobalWorkerOptions.workerSrc = 'https://cdn.jsdelivr.net/npm/pdfjs-dist@4.4.168/build/pdf.worker.mjs';
+// Set up PDF.js worker - match the installed version
+GlobalWorkerOptions.workerSrc = `https://cdn.jsdelivr.net/npm/pdfjs-dist@${version}/build/pdf.worker.mjs`;
 
 export interface ConvertedDocument {
   originalUrl: string;
