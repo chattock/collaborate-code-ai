@@ -26,6 +26,8 @@ interface ProjectContextType {
   setCvFile: (file: File | null) => void;
   cvUrl: string | null;
   setCvUrl: (url: string | null) => void;
+  cvOriginalUrl: string | null;
+  setCvOriginalUrl: (url: string | null) => void;
   hasUnsavedChanges: boolean;
   saveChanges: () => Promise<void>;
 }
@@ -35,6 +37,7 @@ const ProjectContext = createContext<ProjectContextType | undefined>(undefined);
 export const ProjectProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [cvFile, setCvFile] = useState<File | null>(null);
   const [cvUrl, setCvUrl] = useState<string | null>(null);
+  const [cvOriginalUrl, setCvOriginalUrl] = useState<string | null>(null);
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
   
   const defaultProjects: Project[] = [
@@ -198,6 +201,7 @@ export const ProjectProvider: React.FC<{ children: ReactNode }> = ({ children })
 
   const loadCVFromSupabase = async () => {
     try {
+      // Load original CV file
       const { data: files } = await supabase.storage
         .from('project-files')
         .list('cv/', {
@@ -205,20 +209,42 @@ export const ProjectProvider: React.FC<{ children: ReactNode }> = ({ children })
           sortBy: { column: 'created_at', order: 'desc' }
         });
 
+      // Load preview image
+      const { data: previewFiles } = await supabase.storage
+        .from('project-files')
+        .list('cv/previews/', {
+          limit: 1,
+          sortBy: { column: 'created_at', order: 'desc' }
+        });
+
       if (files && files.length > 0) {
-        const { data: { publicUrl } } = supabase.storage
+        const { data: { publicUrl: originalUrl } } = supabase.storage
           .from('project-files')
           .getPublicUrl(`cv/${files[0].name}`);
         
-        console.log('CV URL loaded:', publicUrl);
-        setCvUrl(publicUrl);
+        setCvOriginalUrl(originalUrl);
+        
+        // Use preview image if available, otherwise use original
+        if (previewFiles && previewFiles.length > 0) {
+          const { data: { publicUrl: previewUrl } } = supabase.storage
+            .from('project-files')
+            .getPublicUrl(`cv/previews/${previewFiles[0].name}`);
+          
+          setCvUrl(previewUrl);
+        } else {
+          setCvUrl(originalUrl);
+        }
+        
+        console.log('CV loaded - Original:', originalUrl, 'Preview:', previewFiles?.[0] ? 'exists' : 'none');
       } else {
         console.log('No CV files found in Supabase');
         setCvUrl(null);
+        setCvOriginalUrl(null);
       }
     } catch (error) {
       console.error('Error loading CV from Supabase:', error);
       setCvUrl(null);
+      setCvOriginalUrl(null);
     }
   };
 
@@ -281,7 +307,7 @@ export const ProjectProvider: React.FC<{ children: ReactNode }> = ({ children })
 
   const saveCVToSupabase = async (file: File) => {
     try {
-      // Delete existing CV files
+      // Delete existing CV files (both original and previews)
       const { data: existingFiles } = await supabase.storage
         .from('project-files')
         .list('cv/');
@@ -294,20 +320,28 @@ export const ProjectProvider: React.FC<{ children: ReactNode }> = ({ children })
         }
       }
 
-      // Upload new CV
-      const fileName = `cv-${Date.now()}.${file.name.split('.').pop()}`;
-      const { data, error } = await supabase.storage
+      // Delete existing preview files
+      const { data: existingPreviews } = await supabase.storage
         .from('project-files')
-        .upload(`cv/${fileName}`, file);
+        .list('cv/previews/');
 
-      if (error) throw error;
+      if (existingPreviews) {
+        for (const preview of existingPreviews) {
+          await supabase.storage
+            .from('project-files')
+            .remove([`cv/previews/${preview.name}`]);
+        }
+      }
 
-      const { data: { publicUrl } } = supabase.storage
-        .from('project-files')
-        .getPublicUrl(data.path);
-
-      setCvUrl(publicUrl);
-      return publicUrl;
+      // Use the new document converter
+      const { uploadCVWithImage } = await import('@/utils/documentConverter');
+      const result = await uploadCVWithImage(file);
+      
+      // Set both URLs - we'll use imageUrl for display, originalUrl for download
+      setCvUrl(result.imageUrl);
+      setCvOriginalUrl(result.originalUrl);
+      
+      return result.originalUrl;
     } catch (error) {
       console.error('Error saving CV to Supabase:', error);
       throw error;
@@ -395,6 +429,8 @@ export const ProjectProvider: React.FC<{ children: ReactNode }> = ({ children })
       setCvFile: handleSetCvFile,
       cvUrl,
       setCvUrl,
+      cvOriginalUrl,
+      setCvOriginalUrl,
       hasUnsavedChanges,
       saveChanges
     }}>

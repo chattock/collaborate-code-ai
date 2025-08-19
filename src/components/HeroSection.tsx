@@ -8,7 +8,7 @@ import profilePic from "@/assets/profile-pic.jpg";
 const HeroSection = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const { t } = useLanguage();
-  const { cvUrl } = useProject();
+  const { cvUrl, cvOriginalUrl } = useProject();
   
   const scrollToContact = () => {
     const element = document.querySelector('#contact');
@@ -54,22 +54,26 @@ const HeroSection = () => {
                       <div className="text-center">
                         <p className="font-medium">Curriculum Vitae</p>
                       </div>
-                      <embed 
-                        src={cvUrl} 
-                        type="application/pdf" 
-                        width="100%" 
-                        height="600px" 
-                      />
+                      <div className="max-w-full overflow-auto">
+                        <img 
+                          src={cvUrl} 
+                          alt="CV Preview"
+                          className="w-full h-auto max-h-[600px] object-contain border rounded"
+                        />
+                      </div>
                       <div className="flex justify-center">
                         <Button 
                           onClick={() => {
-                            const a = document.createElement('a');
-                            a.href = cvUrl;
-                            a.download = 'CV.pdf';
-                            a.target = '_blank';
-                            document.body.appendChild(a);
-                            a.click();
-                            document.body.removeChild(a);
+                            const downloadUrl = cvOriginalUrl || cvUrl;
+                            if (downloadUrl) {
+                              const a = document.createElement('a');
+                              a.href = downloadUrl;
+                              a.download = 'CV';
+                              a.target = '_blank';
+                              document.body.appendChild(a);
+                              a.click();
+                              document.body.removeChild(a);
+                            }
                           }}
                         >
                           <Download size={20} className="mr-2" />
