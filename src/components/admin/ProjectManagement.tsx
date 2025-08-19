@@ -57,6 +57,28 @@ const ProjectManagement = () => {
     }
   });
 
+  const createFileDropzone = (buttonId: string) => {
+    return useDropzone({
+      accept: {
+        'application/pdf': ['.pdf'],
+        'application/msword': ['.doc'],
+        'application/vnd.openxmlformats-officedocument.wordprocessingml.document': ['.docx']
+      },
+      multiple: false,
+      onDrop: (acceptedFiles) => {
+        if (acceptedFiles[0]) {
+          const file = acceptedFiles[0];
+          const reader = new FileReader();
+          reader.onload = (e) => {
+            const base64String = e.target?.result as string;
+            updateButton(buttonId, { url: base64String, file: file });
+          };
+          reader.readAsDataURL(file);
+        }
+      }
+    });
+  };
+
   const addButton = () => {
     const newButton: ProjectButton = {
       id: Date.now().toString(),
@@ -241,9 +263,24 @@ const ProjectManagement = () => {
                               />
                             )}
                             {button.type === 'report' && (
-                              <div className="border-2 border-dashed border-gray-300 rounded p-2 text-center">
-                                <FileText className="w-4 h-4 mx-auto mb-1 text-gray-400" />
-                                <p className="text-xs text-gray-600">Upload PDF/Word</p>
+                              <div>
+                                {(() => {
+                                  const fileDropzone = createFileDropzone(button.id);
+                                  return (
+                                    <div>
+                                      <div {...fileDropzone.getRootProps()} className="border-2 border-dashed border-gray-300 rounded p-2 text-center cursor-pointer hover:border-primary">
+                                        <input {...fileDropzone.getInputProps()} />
+                                        <FileText className="w-4 h-4 mx-auto mb-1 text-gray-400" />
+                                        <p className="text-xs text-gray-600">
+                                          {button.file ? button.file.name : 'Upload PDF/Word'}
+                                        </p>
+                                      </div>
+                                      {button.file && (
+                                        <p className="text-xs text-green-600 mt-1">✓ File uploaded: {button.file.name}</p>
+                                      )}
+                                    </div>
+                                  );
+                                })()}
                               </div>
                             )}
                           </div>
@@ -423,9 +460,24 @@ const ProjectManagement = () => {
                             />
                           )}
                           {button.type === 'report' && (
-                            <div className="border-2 border-dashed border-gray-300 rounded p-2 text-center">
-                              <FileText className="w-4 h-4 mx-auto mb-1 text-gray-400" />
-                              <p className="text-xs text-gray-600">Upload PDF/Word</p>
+                            <div>
+                              {(() => {
+                                const fileDropzone = createFileDropzone(button.id);
+                                return (
+                                  <div>
+                                    <div {...fileDropzone.getRootProps()} className="border-2 border-dashed border-gray-300 rounded p-2 text-center cursor-pointer hover:border-primary">
+                                      <input {...fileDropzone.getInputProps()} />
+                                      <FileText className="w-4 h-4 mx-auto mb-1 text-gray-400" />
+                                      <p className="text-xs text-gray-600">
+                                        {button.file ? button.file.name : 'Upload PDF/Word'}
+                                      </p>
+                                    </div>
+                                    {button.file && (
+                                      <p className="text-xs text-green-600 mt-1">✓ File uploaded: {button.file.name}</p>
+                                    )}
+                                  </div>
+                                );
+                              })()}
                             </div>
                           )}
                         </div>
