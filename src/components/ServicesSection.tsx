@@ -153,7 +153,7 @@ const ServicesSection = () => {
                       <h3 className="font-semibold text-foreground mb-3">
                         {language === 'zh' ? getAboutSection('about')?.content_zh.title : getAboutSection('about')?.content.title}
                       </h3>
-                      <div className="text-sm text-muted-foreground leading-relaxed text-left space-y-2">
+                      <div className="text-sm text-muted-foreground leading-relaxed text-center space-y-2">
                         {(language === 'zh' ? getAboutSection('about')?.content_zh.paragraphs : getAboutSection('about')?.content.paragraphs)?.map((paragraph: string, index: number) => (
                           <p key={index}>{paragraph}</p>
                         ))}
