@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { Plus, Edit, Trash2, Upload, X, Link, FileText, Github, Globe, Video } from 'lucide-react';
+import { Plus, Edit, Trash2, Upload, X, Link, FileText, Github, Globe, Video, GripVertical } from 'lucide-react';
+import { DragDropContext, Droppable, Draggable, DropResult } from 'react-beautiful-dnd';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
@@ -10,7 +11,7 @@ import { useProject, Project, ProjectButton } from '@/contexts/ProjectContext';
 import { useDropzone } from 'react-dropzone';
 
 const ProjectManagement = () => {
-  const { projects, addProject, updateProject, deleteProject } = useProject();
+  const { projects, addProject, updateProject, deleteProject, reorderProjects } = useProject();
   const [isAddOpen, setIsAddOpen] = useState(false);
   const [editingProject, setEditingProject] = useState<Project | null>(null);
   const [newProject, setNewProject] = useState<Partial<Project>>({
@@ -103,6 +104,17 @@ const ProjectManagement = () => {
         setNewProject({ title: '', titleZh: '', image: '', buttons: [] });
         setIsAddOpen(false);
       }
+    }
+  };
+
+  const handleDragEnd = (result: DropResult) => {
+    if (!result.destination) return;
+    
+    const sourceIndex = result.source.index;
+    const destinationIndex = result.destination.index;
+    
+    if (sourceIndex !== destinationIndex) {
+      reorderProjects(sourceIndex, destinationIndex);
     }
   };
 
@@ -225,38 +237,72 @@ const ProjectManagement = () => {
         </Dialog>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {projects.map((project) => (
-          <Card key={project.id} className="group hover:shadow-lg transition-all duration-300">
-            <div className="aspect-square overflow-hidden">
-              <img
-                src={project.image}
-                alt={project.title}
-                className="w-full h-full object-cover"
-              />
+      <DragDropContext onDragEnd={handleDragEnd}>
+        <Droppable droppableId="projects" direction="vertical">
+          {(provided) => (
+            <div 
+              {...provided.droppableProps} 
+              ref={provided.innerRef}
+              className="space-y-4"
+            >
+              {projects.map((project, index) => (
+                <Draggable key={project.id} draggableId={project.id} index={index}>
+                  {(provided, snapshot) => (
+                    <Card 
+                      ref={provided.innerRef}
+                      {...provided.draggableProps}
+                      className={`group hover:shadow-lg transition-all duration-300 ${
+                        snapshot.isDragging ? 'shadow-2xl rotate-2' : ''
+                      }`}
+                    >
+                      <div className="flex">
+                        <div 
+                          {...provided.dragHandleProps}
+                          className="flex items-center justify-center w-8 bg-muted/50 cursor-grab active:cursor-grabbing"
+                        >
+                          <GripVertical className="w-4 h-4 text-muted-foreground" />
+                        </div>
+                        <div className="flex-1 flex">
+                          <div className="w-24 h-24 overflow-hidden">
+                            <img
+                              src={project.image}
+                              alt={project.title}
+                              className="w-full h-full object-cover"
+                            />
+                          </div>
+                          <div className="flex-1 p-4 flex justify-between items-center">
+                            <div>
+                              <h4 className="font-semibold text-sm mb-1">{project.title}</h4>
+                              <p className="text-xs text-muted-foreground">{project.titleZh}</p>
+                            </div>
+                            <div className="flex gap-1">
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                onClick={() => setEditingProject(project)}
+                              >
+                                <Edit className="w-3 h-3" />
+                              </Button>
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                onClick={() => deleteProject(project.id)}
+                              >
+                                <Trash2 className="w-3 h-3" />
+                              </Button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </Card>
+                  )}
+                </Draggable>
+              ))}
+              {provided.placeholder}
             </div>
-            <CardContent className="p-4">
-              <h4 className="font-semibold text-sm mb-2 line-clamp-2">{project.title}</h4>
-              <div className="flex gap-1">
-                <Button
-                  size="sm"
-                  variant="outline"
-                  onClick={() => setEditingProject(project)}
-                >
-                  <Edit className="w-3 h-3" />
-                </Button>
-                <Button
-                  size="sm"
-                  variant="outline"
-                  onClick={() => deleteProject(project.id)}
-                >
-                  <Trash2 className="w-3 h-3" />
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
+          )}
+        </Droppable>
+      </DragDropContext>
 
       {/* Edit Project Dialog */}
       <Dialog open={!!editingProject} onOpenChange={(open) => !open && setEditingProject(null)}>

@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
 
 export interface ProjectButton {
   id: string;
@@ -21,6 +21,7 @@ interface ProjectContextType {
   addProject: (project: Omit<Project, 'id'>) => void;
   updateProject: (id: string, project: Partial<Project>) => void;
   deleteProject: (id: string) => void;
+  reorderProjects: (startIndex: number, endIndex: number) => void;
   cvFile: File | null;
   setCvFile: (file: File | null) => void;
 }
@@ -29,7 +30,8 @@ const ProjectContext = createContext<ProjectContextType | undefined>(undefined);
 
 export const ProjectProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [cvFile, setCvFile] = useState<File | null>(null);
-  const [projects, setProjects] = useState<Project[]>([
+  
+  const defaultProjects: Project[] = [
     {
       id: '1',
       title: 'UK Trade in 1700s',
@@ -146,7 +148,16 @@ export const ProjectProvider: React.FC<{ children: ReactNode }> = ({ children })
         { id: '12-1', type: 'github', label: 'Github', url: '#' }
       ]
     }
-  ]);
+  ];
+
+  const [projects, setProjects] = useState<Project[]>(() => {
+    const saved = localStorage.getItem('projects');
+    return saved ? JSON.parse(saved) : defaultProjects;
+  });
+
+  useEffect(() => {
+    localStorage.setItem('projects', JSON.stringify(projects));
+  }, [projects]);
 
   const addProject = (project: Omit<Project, 'id'>) => {
     const newProject = {
@@ -166,12 +177,22 @@ export const ProjectProvider: React.FC<{ children: ReactNode }> = ({ children })
     setProjects(prev => prev.filter(project => project.id !== id));
   };
 
+  const reorderProjects = (startIndex: number, endIndex: number) => {
+    setProjects(prev => {
+      const result = Array.from(prev);
+      const [removed] = result.splice(startIndex, 1);
+      result.splice(endIndex, 0, removed);
+      return result;
+    });
+  };
+
   return (
     <ProjectContext.Provider value={{
       projects,
       addProject,
       updateProject,
       deleteProject,
+      reorderProjects,
       cvFile,
       setCvFile
     }}>
