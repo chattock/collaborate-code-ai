@@ -8,6 +8,8 @@ import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useAdmin } from "@/contexts/AdminContext";
+import ProjectManagement from "./admin/ProjectManagement";
+import CVManagement from "./admin/CVManagement";
 
 const Navigation = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -112,22 +114,25 @@ const Navigation = () => {
                 <DialogTrigger asChild>
                   <Button variant="ghost" size="sm" className="gap-2">
                     <Settings size={16} />
-                    Settings
+                    Admin Panel
                   </Button>
                 </DialogTrigger>
-                <DialogContent>
+                <DialogContent className="max-w-7xl max-h-[90vh] overflow-y-auto">
                   <DialogHeader>
-                    <DialogTitle>Admin Settings</DialogTitle>
+                    <DialogTitle>Admin Panel</DialogTitle>
                   </DialogHeader>
-                  <div className="space-y-4">
-                    <div className="flex items-center justify-between">
-                      <Label htmlFor="booking-toggle">Show Booking Section</Label>
+                  <div className="space-y-6">
+                    <div className="flex items-center gap-4 p-4 bg-muted/30 rounded-lg">
                       <Switch
-                        id="booking-toggle"
                         checked={showBookingSection}
                         onCheckedChange={toggleBookingSection}
+                        className="h-4 w-7"
                       />
+                      <span className="text-sm font-medium">Show Booking Section</span>
                     </div>
+                    
+                    <CVManagement />
+                    <ProjectManagement />
                   </div>
                 </DialogContent>
               </Dialog>
@@ -191,19 +196,22 @@ const Navigation = () => {
                     <Settings size={14} />
                   </Button>
                 </DialogTrigger>
-                <DialogContent>
+                <DialogContent className="max-w-7xl max-h-[90vh] overflow-y-auto">
                   <DialogHeader>
-                    <DialogTitle>Admin Settings</DialogTitle>
+                    <DialogTitle>Admin Panel</DialogTitle>
                   </DialogHeader>
-                  <div className="space-y-4">
-                    <div className="flex items-center justify-between">
-                      <Label htmlFor="booking-toggle-mobile">Show Booking Section</Label>
+                  <div className="space-y-6">
+                    <div className="flex items-center gap-4 p-4 bg-muted/30 rounded-lg">
                       <Switch
-                        id="booking-toggle-mobile"
                         checked={showBookingSection}
                         onCheckedChange={toggleBookingSection}
+                        className="h-4 w-7"
                       />
+                      <span className="text-sm font-medium">Show Booking Section</span>
                     </div>
+                    
+                    <CVManagement />
+                    <ProjectManagement />
                   </div>
                 </DialogContent>
               </Dialog>

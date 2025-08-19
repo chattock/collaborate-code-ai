@@ -3,9 +3,11 @@ import { Award, GraduationCap, ChevronDown, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { useProject } from "@/contexts/ProjectContext";
 import aboutPic from "@/assets/about-pic.jpg";
 const AboutSection = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const { cvFile } = useProject();
   const scrollToProjects = () => {
     const element = document.querySelector('#projects');
     if (element) {
@@ -70,10 +72,45 @@ const AboutSection = () => {
                 <DialogHeader>
                   <DialogTitle>Curriculum Vitae</DialogTitle>
                 </DialogHeader>
-                <div className="text-center py-12 text-muted-foreground">
-                  <p>CV content would be displayed here.</p>
-                  <p className="text-sm mt-2">For the demo, this would show the actual CV image or PDF content.</p>
-                </div>
+                {cvFile ? (
+                  <div className="space-y-4">
+                    <div className="text-center">
+                      <p className="font-medium">{cvFile.name}</p>
+                      <p className="text-sm text-muted-foreground">
+                        {(cvFile.size / 1024 / 1024).toFixed(1)} MB
+                      </p>
+                    </div>
+                    {cvFile.type === 'application/pdf' && (
+                      <embed 
+                        src={URL.createObjectURL(cvFile)} 
+                        type="application/pdf" 
+                        width="100%" 
+                        height="600px" 
+                      />
+                    )}
+                    <div className="flex justify-center">
+                      <Button 
+                        onClick={() => {
+                          const url = URL.createObjectURL(cvFile);
+                          const a = document.createElement('a');
+                          a.href = url;
+                          a.download = cvFile.name;
+                          document.body.appendChild(a);
+                          a.click();
+                          document.body.removeChild(a);
+                          URL.revokeObjectURL(url);
+                        }}
+                      >
+                        Download CV
+                      </Button>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="text-center py-12 text-muted-foreground">
+                    <p>No CV uploaded yet.</p>
+                    <p className="text-sm mt-2">Admin can upload a CV in the admin panel.</p>
+                  </div>
+                )}
               </DialogContent>
             </Dialog>
           </div>

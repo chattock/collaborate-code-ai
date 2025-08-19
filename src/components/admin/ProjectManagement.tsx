@@ -1,0 +1,372 @@
+import { useState } from 'react';
+import { Plus, Edit, Trash2, Upload, X, Link, FileText, Github, Globe, Video } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Card, CardContent } from '@/components/ui/card';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { useProject, Project, ProjectButton } from '@/contexts/ProjectContext';
+import { useDropzone } from 'react-dropzone';
+
+const ProjectManagement = () => {
+  const { projects, addProject, updateProject, deleteProject } = useProject();
+  const [isAddOpen, setIsAddOpen] = useState(false);
+  const [editingProject, setEditingProject] = useState<Project | null>(null);
+  const [newProject, setNewProject] = useState<Partial<Project>>({
+    title: '',
+    titleZh: '',
+    image: '',
+    buttons: []
+  });
+
+  const buttonIcons = {
+    report: FileText,
+    website: Globe,
+    github: Github,
+    video: Video
+  };
+
+  const { getRootProps, getInputProps } = useDropzone({
+    accept: {
+      'image/*': ['.jpeg', '.jpg', '.png', '.webp']
+    },
+    multiple: false,
+    onDrop: (acceptedFiles) => {
+      if (acceptedFiles[0]) {
+        const imageUrl = URL.createObjectURL(acceptedFiles[0]);
+        if (editingProject) {
+          setEditingProject(prev => prev ? { ...prev, image: imageUrl } : null);
+        } else {
+          setNewProject(prev => ({ ...prev, image: imageUrl }));
+        }
+      }
+    }
+  });
+
+  const addButton = () => {
+    const newButton: ProjectButton = {
+      id: Date.now().toString(),
+      type: 'website',
+      label: '',
+      url: ''
+    };
+    
+    if (editingProject) {
+      setEditingProject(prev => prev ? {
+        ...prev,
+        buttons: [...prev.buttons, newButton]
+      } : null);
+    } else {
+      setNewProject(prev => ({
+        ...prev,
+        buttons: [...(prev.buttons || []), newButton]
+      }));
+    }
+  };
+
+  const removeButton = (buttonId: string) => {
+    if (editingProject) {
+      setEditingProject(prev => prev ? {
+        ...prev,
+        buttons: prev.buttons.filter(b => b.id !== buttonId)
+      } : null);
+    } else {
+      setNewProject(prev => ({
+        ...prev,
+        buttons: (prev.buttons || []).filter(b => b.id !== buttonId)
+      }));
+    }
+  };
+
+  const updateButton = (buttonId: string, updates: Partial<ProjectButton>) => {
+    if (editingProject) {
+      setEditingProject(prev => prev ? {
+        ...prev,
+        buttons: prev.buttons.map(b => b.id === buttonId ? { ...b, ...updates } : b)
+      } : null);
+    } else {
+      setNewProject(prev => ({
+        ...prev,
+        buttons: (prev.buttons || []).map(b => b.id === buttonId ? { ...b, ...updates } : b)
+      }));
+    }
+  };
+
+  const handleSave = () => {
+    if (editingProject) {
+      updateProject(editingProject.id, editingProject);
+      setEditingProject(null);
+    } else {
+      if (newProject.title && newProject.titleZh) {
+        addProject(newProject as Omit<Project, 'id'>);
+        setNewProject({ title: '', titleZh: '', image: '', buttons: [] });
+        setIsAddOpen(false);
+      }
+    }
+  };
+
+  const currentProject = editingProject || newProject;
+  const currentButtons = currentProject.buttons || [];
+
+  return (
+    <div className="space-y-4">
+      <div className="flex justify-between items-center">
+        <h3 className="text-lg font-semibold">Project Management</h3>
+        <Dialog open={isAddOpen} onOpenChange={setIsAddOpen}>
+          <DialogTrigger asChild>
+            <Button>
+              <Plus className="w-4 h-4 mr-2" />
+              Add Project
+            </Button>
+          </DialogTrigger>
+          <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+            <DialogHeader>
+              <DialogTitle>Add New Project</DialogTitle>
+            </DialogHeader>
+            <div className="space-y-4">
+              <div>
+                <Label htmlFor="title">Title (English)</Label>
+                <Input
+                  id="title"
+                  value={newProject.title}
+                  onChange={(e) => setNewProject(prev => ({ ...prev, title: e.target.value }))}
+                />
+              </div>
+              <div>
+                <Label htmlFor="titleZh">Title (Chinese)</Label>
+                <Input
+                  id="titleZh"
+                  value={newProject.titleZh}
+                  onChange={(e) => setNewProject(prev => ({ ...prev, titleZh: e.target.value }))}
+                />
+              </div>
+              
+              <div>
+                <Label>Project Image</Label>
+                <div {...getRootProps()} className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center cursor-pointer hover:border-primary">
+                  <input {...getInputProps()} />
+                  <Upload className="w-8 h-8 mx-auto mb-2 text-gray-400" />
+                  <p className="text-sm text-gray-600">Drop an image here or click to select</p>
+                </div>
+                {newProject.image && (
+                  <img src={newProject.image} alt="Preview" className="mt-2 w-32 h-32 object-cover rounded" />
+                )}
+              </div>
+
+              <div>
+                <div className="flex justify-between items-center mb-2">
+                  <Label>Buttons</Label>
+                  <Button type="button" onClick={addButton} size="sm">
+                    <Plus className="w-4 h-4 mr-1" />
+                    Add Button
+                  </Button>
+                </div>
+                <div className="space-y-2">
+                  {currentButtons.map((button, index) => (
+                    <Card key={button.id} className="p-3">
+                      <div className="flex gap-2 items-start">
+                        <div className="flex-1 space-y-2">
+                          <div className="flex gap-2">
+                            <Select 
+                              value={button.type} 
+                              onValueChange={(value: any) => updateButton(button.id, { type: value })}
+                            >
+                              <SelectTrigger className="w-32">
+                                <SelectValue />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="report">Report</SelectItem>
+                                <SelectItem value="website">Website</SelectItem>
+                                <SelectItem value="github">Github</SelectItem>
+                                <SelectItem value="video">Video</SelectItem>
+                              </SelectContent>
+                            </Select>
+                            <Input
+                              placeholder="Button label"
+                              value={button.label}
+                              onChange={(e) => updateButton(button.id, { label: e.target.value })}
+                            />
+                          </div>
+                          {button.type !== 'report' && (
+                            <Input
+                              placeholder="URL"
+                              value={button.url || ''}
+                              onChange={(e) => updateButton(button.id, { url: e.target.value })}
+                            />
+                          )}
+                          {button.type === 'report' && (
+                            <div className="border-2 border-dashed border-gray-300 rounded p-2 text-center">
+                              <FileText className="w-4 h-4 mx-auto mb-1 text-gray-400" />
+                              <p className="text-xs text-gray-600">Upload PDF/Word</p>
+                            </div>
+                          )}
+                        </div>
+                        <Button
+                          type="button"
+                          variant="outline"
+                          size="icon"
+                          onClick={() => removeButton(button.id)}
+                        >
+                          <X className="w-4 h-4" />
+                        </Button>
+                      </div>
+                    </Card>
+                  ))}
+                </div>
+              </div>
+
+              <div className="flex justify-end gap-2">
+                <Button variant="outline" onClick={() => setIsAddOpen(false)}>Cancel</Button>
+                <Button onClick={handleSave}>Add Project</Button>
+              </div>
+            </div>
+          </DialogContent>
+        </Dialog>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        {projects.map((project) => (
+          <Card key={project.id} className="group hover:shadow-lg transition-all duration-300">
+            <div className="aspect-square overflow-hidden">
+              <img
+                src={project.image}
+                alt={project.title}
+                className="w-full h-full object-cover"
+              />
+            </div>
+            <CardContent className="p-4">
+              <h4 className="font-semibold text-sm mb-2 line-clamp-2">{project.title}</h4>
+              <div className="flex gap-1">
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={() => setEditingProject(project)}
+                >
+                  <Edit className="w-3 h-3" />
+                </Button>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={() => deleteProject(project.id)}
+                >
+                  <Trash2 className="w-3 h-3" />
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+
+      {/* Edit Project Dialog */}
+      <Dialog open={!!editingProject} onOpenChange={(open) => !open && setEditingProject(null)}>
+        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>Edit Project</DialogTitle>
+          </DialogHeader>
+          {editingProject && (
+            <div className="space-y-4">
+              <div>
+                <Label htmlFor="edit-title">Title (English)</Label>
+                <Input
+                  id="edit-title"
+                  value={editingProject.title}
+                  onChange={(e) => setEditingProject(prev => prev ? { ...prev, title: e.target.value } : null)}
+                />
+              </div>
+              <div>
+                <Label htmlFor="edit-titleZh">Title (Chinese)</Label>
+                <Input
+                  id="edit-titleZh"
+                  value={editingProject.titleZh}
+                  onChange={(e) => setEditingProject(prev => prev ? { ...prev, titleZh: e.target.value } : null)}
+                />
+              </div>
+              
+              <div>
+                <Label>Project Image</Label>
+                <div {...getRootProps()} className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center cursor-pointer hover:border-primary">
+                  <input {...getInputProps()} />
+                  <Upload className="w-8 h-8 mx-auto mb-2 text-gray-400" />
+                  <p className="text-sm text-gray-600">Drop an image here or click to select</p>
+                </div>
+                {editingProject.image && (
+                  <img src={editingProject.image} alt="Preview" className="mt-2 w-32 h-32 object-cover rounded" />
+                )}
+              </div>
+
+              <div>
+                <div className="flex justify-between items-center mb-2">
+                  <Label>Buttons</Label>
+                  <Button type="button" onClick={addButton} size="sm">
+                    <Plus className="w-4 h-4 mr-1" />
+                    Add Button
+                  </Button>
+                </div>
+                <div className="space-y-2">
+                  {currentButtons.map((button) => (
+                    <Card key={button.id} className="p-3">
+                      <div className="flex gap-2 items-start">
+                        <div className="flex-1 space-y-2">
+                          <div className="flex gap-2">
+                            <Select 
+                              value={button.type} 
+                              onValueChange={(value: any) => updateButton(button.id, { type: value })}
+                            >
+                              <SelectTrigger className="w-32">
+                                <SelectValue />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="report">Report</SelectItem>
+                                <SelectItem value="website">Website</SelectItem>
+                                <SelectItem value="github">Github</SelectItem>
+                                <SelectItem value="video">Video</SelectItem>
+                              </SelectContent>
+                            </Select>
+                            <Input
+                              placeholder="Button label"
+                              value={button.label}
+                              onChange={(e) => updateButton(button.id, { label: e.target.value })}
+                            />
+                          </div>
+                          {button.type !== 'report' && (
+                            <Input
+                              placeholder="URL"
+                              value={button.url || ''}
+                              onChange={(e) => updateButton(button.id, { url: e.target.value })}
+                            />
+                          )}
+                          {button.type === 'report' && (
+                            <div className="border-2 border-dashed border-gray-300 rounded p-2 text-center">
+                              <FileText className="w-4 h-4 mx-auto mb-1 text-gray-400" />
+                              <p className="text-xs text-gray-600">Upload PDF/Word</p>
+                            </div>
+                          )}
+                        </div>
+                        <Button
+                          type="button"
+                          variant="outline"
+                          size="icon"
+                          onClick={() => removeButton(button.id)}
+                        >
+                          <X className="w-4 h-4" />
+                        </Button>
+                      </div>
+                    </Card>
+                  ))}
+                </div>
+              </div>
+
+              <div className="flex justify-end gap-2">
+                <Button variant="outline" onClick={() => setEditingProject(null)}>Cancel</Button>
+                <Button onClick={handleSave}>Save Changes</Button>
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
+    </div>
+  );
+};
+
+export default ProjectManagement;
