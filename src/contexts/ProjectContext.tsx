@@ -6,6 +6,7 @@ export interface ProjectButton {
   label: string;
   url?: string;
   file?: File;
+  fileName?: string;
 }
 
 export interface Project {
@@ -184,18 +185,42 @@ export const ProjectProvider: React.FC<{ children: ReactNode }> = ({ children })
 
       if (supabaseProjects && supabaseProjects.length > 0) {
         // Transform Supabase data to match our Project interface
-        const transformedProjects = supabaseProjects.map(p => ({
+        let transformedProjects = supabaseProjects.map(p => ({
           id: p.id,
           title: p.title,
           titleZh: p.title_zh,
           image: p.image_url || '',
           buttons: (p.buttons as unknown as ProjectButton[]) || []
         }));
+
+        // Migrate and clean up report data
+        const { migrateExistingReports, cleanupReportData } = await import('@/utils/migrateReports');
+        transformedProjects = await migrateExistingReports(transformedProjects);
+        transformedProjects = await cleanupReportData(transformedProjects);
+        
         setProjects(transformedProjects);
+        
+        // If we made changes during migration, save them back
+        const hasChanges = JSON.stringify(transformedProjects) !== JSON.stringify(supabaseProjects.map(p => ({
+          id: p.id,
+          title: p.title,
+          titleZh: p.title_zh,
+          image: p.image_url || '',
+          buttons: (p.buttons as unknown as ProjectButton[]) || []
+        })));
+        
+        if (hasChanges) {
+          console.log('Report migration made changes, saving back to Supabase...');
+          await saveProjectsToSupabase(transformedProjects);
+        }
       } else {
         // If no projects in Supabase, use defaults and save them
-        setProjects(defaultProjects);
-        await saveProjectsToSupabase(defaultProjects);
+        const { migrateExistingReports, cleanupReportData } = await import('@/utils/migrateReports');
+        let migratedDefaults = await migrateExistingReports(defaultProjects);
+        migratedDefaults = await cleanupReportData(migratedDefaults);
+        
+        setProjects(migratedDefaults);
+        await saveProjectsToSupabase(migratedDefaults);
       }
     } catch (error) {
       console.error('Error loading projects from Supabase:', error);

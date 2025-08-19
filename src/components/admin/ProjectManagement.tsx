@@ -10,6 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { useProject, Project, ProjectButton } from '@/contexts/ProjectContext';
 import { useAdmin } from '@/contexts/AdminContext';
 import { useDropzone } from 'react-dropzone';
+import { uploadReportFile } from '@/utils/reportUpload';
 
 const ProjectManagement = () => {
   const { projects, addProject, updateProject, deleteProject, reorderProjects, hasUnsavedChanges: projectChanges, saveChanges: saveProjectChanges } = useProject();
@@ -57,13 +58,15 @@ const ProjectManagement = () => {
     }
   });
 
-  const handleFileUpload = (buttonId: string, file: File) => {
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      const base64String = e.target?.result as string;
-      updateButton(buttonId, { url: base64String, file: file });
-    };
-    reader.readAsDataURL(file);
+  const handleFileUpload = async (buttonId: string, file: File) => {
+    try {
+      const projectId = editingProject?.id || 'new';
+      const url = await uploadReportFile(file, projectId, buttonId);
+      updateButton(buttonId, { url, fileName: file.name });
+    } catch (error) {
+      console.error('Error uploading file:', error);
+      alert('Error uploading file. Please try again.');
+    }
   };
 
   const addButton = () => {
@@ -268,13 +271,13 @@ const ProjectManagement = () => {
                                   className="border-2 border-dashed border-gray-300 rounded p-2 text-center cursor-pointer hover:border-primary block"
                                 >
                                   <FileText className="w-4 h-4 mx-auto mb-1 text-gray-400" />
-                                  <p className="text-xs text-gray-600">
-                                    {button.file ? button.file.name : 'Upload PDF/Word'}
-                                  </p>
+                                <p className="text-xs text-gray-600">
+                                  {button.fileName || (button.url && !button.url.startsWith('data:') ? 'File uploaded' : 'Upload PDF/Word')}
+                                </p>
                                 </label>
-                                {button.file && (
-                                  <p className="text-xs text-green-600 mt-1">✓ File uploaded: {button.file.name}</p>
-                                )}
+                              {(button.fileName || (button.url && !button.url.startsWith('data:'))) && (
+                                <p className="text-xs text-green-600 mt-1">✓ File uploaded: {button.fileName || 'Report file'}</p>
+                              )}
                               </div>
                             )}
                           </div>
@@ -473,11 +476,11 @@ const ProjectManagement = () => {
                               >
                                 <FileText className="w-4 h-4 mx-auto mb-1 text-gray-400" />
                                 <p className="text-xs text-gray-600">
-                                  {button.file ? button.file.name : 'Upload PDF/Word'}
+                                  {button.fileName || (button.url && !button.url.startsWith('data:') ? 'File uploaded' : 'Upload PDF/Word')}
                                 </p>
                               </label>
-                              {button.file && (
-                                <p className="text-xs text-green-600 mt-1">✓ File uploaded: {button.file.name}</p>
+                              {(button.fileName || (button.url && !button.url.startsWith('data:'))) && (
+                                <p className="text-xs text-green-600 mt-1">✓ File uploaded: {button.fileName || 'Report file'}</p>
                               )}
                             </div>
                           )}

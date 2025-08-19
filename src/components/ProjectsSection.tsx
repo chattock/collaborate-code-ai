@@ -75,16 +75,9 @@ const ProjectsSection = () => {
                           size="sm"
                           className={`gap-1.5 text-xs ${isLastOddButton ? 'col-span-2' : ''}`}
                           onClick={() => {
-                            if (button.type === 'report' && button.file) {
-                              // Handle file download
-                              const url = URL.createObjectURL(button.file);
-                              const a = document.createElement('a');
-                              a.href = url;
-                              a.download = button.file.name;
-                              document.body.appendChild(a);
-                              a.click();
-                              document.body.removeChild(a);
-                              URL.revokeObjectURL(url);
+                            if (button.type === 'report' && button.url) {
+                              // For reports, open the Supabase storage URL directly
+                              window.open(button.url, '_blank');
                             } else if (button.url) {
                               window.open(button.url, '_blank');
                             }
