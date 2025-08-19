@@ -283,27 +283,40 @@ export const ProjectProvider: React.FC<{ children: ReactNode }> = ({ children })
 
   const saveProjectsToSupabase = async (projectsToSave: Project[]) => {
     try {
-      // First, clear existing projects
-      await supabase.from('projects').delete().neq('id', '');
-
       // Upload images and get updated project data
       const projectsWithImages = await uploadProjectImagesAndUpdate(projectsToSave);
 
-      // Transform projects for Supabase
-      const supabaseProjects = projectsWithImages.map((project, index) => ({
-        id: project.id,
-        title: project.title,
-        title_zh: project.titleZh,
-        image_url: project.image,
-        buttons: project.buttons,
-        display_order: index
-      }));
+      // Transform projects for Supabase and ensure valid UUIDs
+      const supabaseProjects = projectsWithImages.map((project, index) => {
+        let projectId = project.id;
+        
+        // If the ID is not a valid UUID, generate a new one
+        const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+        if (!uuidRegex.test(projectId)) {
+          projectId = crypto.randomUUID();
+        }
+        
+        return {
+          id: projectId,
+          title: project.title,
+          title_zh: project.titleZh,
+          image_url: project.image,
+          buttons: project.buttons,
+          display_order: index
+        };
+      });
 
+      // Use upsert to handle both inserts and updates safely
       const { error } = await supabase
         .from('projects')
-        .insert(supabaseProjects as any);
+        .upsert(supabaseProjects, { 
+          onConflict: 'id',
+          ignoreDuplicates: false 
+        });
 
       if (error) throw error;
+
+      console.log('Successfully saved projects to Supabase');
     } catch (error) {
       console.error('Error saving projects to Supabase:', error);
       // Fallback to localStorage
@@ -373,9 +386,12 @@ export const ProjectProvider: React.FC<{ children: ReactNode }> = ({ children })
   };
 
   const addProject = async (project: Omit<Project, 'id'>) => {
+    // Generate a proper UUID for the new project
+    const uuid = crypto.randomUUID();
+    
     const newProject = {
       ...project,
-      id: Date.now().toString()
+      id: uuid
     };
     setProjects(prev => [...prev, newProject]);
     setHasUnsavedChanges(true);
