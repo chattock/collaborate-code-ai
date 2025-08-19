@@ -210,10 +210,15 @@ export const ProjectProvider: React.FC<{ children: ReactNode }> = ({ children })
           .from('project-files')
           .getPublicUrl(`cv/${files[0].name}`);
         
+        console.log('CV URL loaded:', publicUrl);
         setCvUrl(publicUrl);
+      } else {
+        console.log('No CV files found in Supabase');
+        setCvUrl(null);
       }
     } catch (error) {
       console.error('Error loading CV from Supabase:', error);
+      setCvUrl(null);
     }
   };
 
@@ -224,12 +229,15 @@ export const ProjectProvider: React.FC<{ children: ReactNode }> = ({ children })
     for (const project of projectsToUpload) {
       let imageUrl = project.image;
       
-      // If the image is a local asset path, we need to keep it as is for now
-      // In production, these would be pre-uploaded to Supabase
+      // If the image is a local asset path, upload it to Supabase
       if (project.image.startsWith('/src/assets/')) {
-        // Convert asset path to a Supabase-compatible URL
-        const fileName = project.image.split('/').pop() || 'image.jpg';
-        imageUrl = `https://bfttasxtzlmnfwstxxkz.supabase.co/storage/v1/object/public/project-files/images/projects/${project.id}/${fileName}`;
+        try {
+          const { migrateAssetToSupabase } = await import('@/utils/imageUpload');
+          imageUrl = await migrateAssetToSupabase(project.image, project.id);
+        } catch (error) {
+          console.error(`Error uploading image for project ${project.id}:`, error);
+          // Keep original path as fallback
+        }
       }
       
       updatedProjects.push({

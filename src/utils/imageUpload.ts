@@ -40,10 +40,47 @@ export const uploadProjectImage = async (file: File, projectId: string): Promise
 // Upload existing asset images to Supabase
 export const migrateAssetToSupabase = async (assetPath: string, projectId: string): Promise<string> => {
   try {
-    // For demo purposes, we'll return a placeholder URL
-    // In a real scenario, you'd fetch the asset and upload it
+    // Extract filename from asset path
     const fileName = assetPath.split('/').pop() || 'image.jpg';
-    const publicUrl = `https://bfttasxtzlmnfwstxxkz.supabase.co/storage/v1/object/public/project-files/images/projects/${projectId}/${fileName}`;
+    const filePath = `images/projects/${projectId}/${fileName}`;
+    
+    // Check if file already exists
+    const { data: existingFile } = await supabase.storage
+      .from('project-files')
+      .list(`images/projects/${projectId}/`, {
+        search: fileName
+      });
+    
+    if (existingFile && existingFile.length > 0) {
+      // File already exists, return the public URL
+      const { data: { publicUrl } } = supabase.storage
+        .from('project-files')
+        .getPublicUrl(filePath);
+      return publicUrl;
+    }
+    
+    // Fetch the local asset and convert to blob
+    const response = await fetch(assetPath);
+    if (!response.ok) {
+      throw new Error(`Failed to fetch asset: ${response.statusText}`);
+    }
+    const blob = await response.blob();
+    
+    // Upload to Supabase
+    const { data, error } = await supabase.storage
+      .from('project-files')
+      .upload(filePath, blob, {
+        contentType: blob.type || 'image/jpeg',
+        upsert: true
+      });
+    
+    if (error) throw error;
+    
+    const { data: { publicUrl } } = supabase.storage
+      .from('project-files')
+      .getPublicUrl(data.path);
+    
+    console.log(`Uploaded ${fileName} to Supabase:`, publicUrl);
     return publicUrl;
   } catch (error) {
     console.error('Error migrating asset:', error);

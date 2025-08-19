@@ -1,9 +1,12 @@
 import Navigation from "@/components/Navigation";
 import HeroSection from "@/components/HeroSection";
+import AboutSection from "@/components/AboutSection";
 import ServicesSection from "@/components/ServicesSection";
 import ProjectsSection from "@/components/ProjectsSection";
 import ContactSection from "@/components/ContactSection";
 import Footer from "@/components/Footer";
+// Import migration utility to trigger image upload
+import "@/utils/migrateProjectImages";
 
 const Index = () => {
   return (
@@ -11,6 +14,7 @@ const Index = () => {
       <Navigation />
       <main>
         <HeroSection />
+        <AboutSection />
         <ProjectsSection />
         <ServicesSection />
         <ContactSection />
