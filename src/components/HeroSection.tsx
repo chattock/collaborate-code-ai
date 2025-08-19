@@ -8,21 +8,22 @@ import profilePic from "@/assets/profile-pic.jpg";
 import wechatIcon from "@/assets/wechat-icon.png";
 
 // WeChat icon component
-const WeChatIcon = ({ size = 24, className }: { size?: number; className?: string }) => (
-  <img 
-    src={wechatIcon} 
-    alt="WeChat" 
-    width={size} 
-    height={size} 
-    className={className}
-  />
-);
-
+const WeChatIcon = ({
+  size = 24,
+  className
+}: {
+  size?: number;
+  className?: string;
+}) => <img src={wechatIcon} alt="WeChat" width={size} height={size} className={className} />;
 const HeroSection = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const { t } = useLanguage();
-  const { cvUrl, cvOriginalUrl } = useProject();
-  
+  const {
+    t
+  } = useLanguage();
+  const {
+    cvUrl,
+    cvOriginalUrl
+  } = useProject();
   const scrollToContact = () => {
     const element = document.querySelector('#contact');
     if (element) {
@@ -62,44 +63,34 @@ const HeroSection = () => {
                   <DialogHeader>
                     <DialogTitle>{t("hero.cvTitle")}</DialogTitle>
                   </DialogHeader>
-                  {cvUrl ? (
-                    <div className="space-y-4">
+                  {cvUrl ? <div className="space-y-4">
                       <div className="text-center">
-                        <p className="font-medium">Curriculum Vitae</p>
+                        
                       </div>
                       <div className="max-w-full overflow-auto">
-                        <img 
-                          src={cvUrl} 
-                          alt="CV Preview"
-                          className="w-full h-auto max-h-[600px] object-contain border rounded"
-                        />
+                        <img src={cvUrl} alt="CV Preview" className="w-full h-auto max-h-[600px] object-contain border rounded" />
                       </div>
                       <div className="flex justify-center">
-                        <Button 
-                          onClick={() => {
-                            const downloadUrl = cvOriginalUrl || cvUrl;
-                            if (downloadUrl) {
-                              const a = document.createElement('a');
-                              a.href = downloadUrl;
-                              a.download = 'CV';
-                              a.target = '_blank';
-                              document.body.appendChild(a);
-                              a.click();
-                              document.body.removeChild(a);
-                            }
-                          }}
-                        >
+                        <Button onClick={() => {
+                      const downloadUrl = cvOriginalUrl || cvUrl;
+                      if (downloadUrl) {
+                        const a = document.createElement('a');
+                        a.href = downloadUrl;
+                        a.download = 'CV';
+                        a.target = '_blank';
+                        document.body.appendChild(a);
+                        a.click();
+                        document.body.removeChild(a);
+                      }
+                    }}>
                           <Download size={20} className="mr-2" />
                           {t("hero.downloadCV")}
                         </Button>
                       </div>
-                    </div>
-                  ) : (
-                    <div className="text-center py-12 text-muted-foreground">
+                    </div> : <div className="text-center py-12 text-muted-foreground">
                       <p>No CV uploaded yet.</p>
                       <p className="text-sm mt-2">Admin can upload a CV in the admin panel.</p>
-                    </div>
-                  )}
+                    </div>}
                 </DialogContent>
               </Dialog>
               <Button size="lg" className="gap-2" onClick={scrollToContact}>
