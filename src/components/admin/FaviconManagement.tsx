@@ -83,24 +83,20 @@ const FaviconManagement = () => {
   };
 
   const updateFaviconInDocument = (url: string) => {
-    // Update existing favicon link or create new one
-    let faviconLink = document.querySelector("link[rel*='icon']") as HTMLLinkElement;
+    // Remove all existing favicon links
+    const existingFavicons = document.querySelectorAll("link[rel*='icon']");
+    existingFavicons.forEach(link => link.remove());
     
-    if (faviconLink) {
-      faviconLink.href = url;
-    } else {
-      faviconLink = document.createElement('link');
-      faviconLink.rel = 'icon';
-      faviconLink.href = url;
-      faviconLink.type = 'image/png';
-      document.head.appendChild(faviconLink);
-    }
+    // Create new favicon link
+    const faviconLink = document.createElement('link');
+    faviconLink.rel = 'icon';
+    faviconLink.href = url;
+    faviconLink.type = 'image/png';
+    document.head.appendChild(faviconLink);
     
-    // Also update shortcut icon if it exists
-    const shortcutIcon = document.querySelector("link[rel='shortcut icon']") as HTMLLinkElement;
-    if (shortcutIcon) {
-      shortcutIcon.href = url;
-    }
+    // Force browser to reload favicon by appending timestamp
+    const timestamp = new Date().getTime();
+    faviconLink.href = `${url}?t=${timestamp}`;
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
