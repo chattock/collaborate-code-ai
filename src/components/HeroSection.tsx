@@ -3,10 +3,12 @@ import { Download, Mail, Linkedin, Github } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { useProject } from "@/contexts/ProjectContext";
 import profilePic from "@/assets/profile-pic.jpg";
 const HeroSection = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const { t } = useLanguage();
+  const { cvUrl } = useProject();
   
   const scrollToContact = () => {
     const element = document.querySelector('#contact');
@@ -47,14 +49,40 @@ const HeroSection = () => {
                   <DialogHeader>
                     <DialogTitle>{t("hero.cvTitle")}</DialogTitle>
                   </DialogHeader>
-                  <div className="text-center py-12 text-muted-foreground space-y-4">
-                    <p>{t("hero.cvContent")}</p>
-                    <p className="text-sm">{t("hero.cvDemo")}</p>
-                    <Button className="gap-2" onClick={() => window.open('#', '_blank')}>
-                      <Download size={20} />
-                      {t("hero.downloadCV")}
-                    </Button>
-                  </div>
+                  {cvUrl ? (
+                    <div className="space-y-4">
+                      <div className="text-center">
+                        <p className="font-medium">Curriculum Vitae</p>
+                      </div>
+                      <embed 
+                        src={cvUrl} 
+                        type="application/pdf" 
+                        width="100%" 
+                        height="600px" 
+                      />
+                      <div className="flex justify-center">
+                        <Button 
+                          onClick={() => {
+                            const a = document.createElement('a');
+                            a.href = cvUrl;
+                            a.download = 'CV.pdf';
+                            a.target = '_blank';
+                            document.body.appendChild(a);
+                            a.click();
+                            document.body.removeChild(a);
+                          }}
+                        >
+                          <Download size={20} className="mr-2" />
+                          {t("hero.downloadCV")}
+                        </Button>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="text-center py-12 text-muted-foreground">
+                      <p>No CV uploaded yet.</p>
+                      <p className="text-sm mt-2">Admin can upload a CV in the admin panel.</p>
+                    </div>
+                  )}
                 </DialogContent>
               </Dialog>
               <Button size="lg" className="gap-2" onClick={scrollToContact}>
