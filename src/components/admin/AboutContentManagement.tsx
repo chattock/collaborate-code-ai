@@ -48,11 +48,10 @@ const AboutContentManagement = () => {
     try {
       const { error } = await supabase
         .from('about_content')
-        .upsert({
-          section,
-          content,
-          content_zh
-        });
+        .upsert(
+          { section, content, content_zh },
+          { onConflict: 'section' }
+        );
 
       if (error) throw error;
 
