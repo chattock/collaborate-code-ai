@@ -289,16 +289,6 @@ export const ProjectProvider: React.FC<{ children: ReactNode }> = ({ children })
       const projectsWithImages = await uploadProjectImagesAndUpdate(projectsToSave);
       console.log('Images uploaded and processed');
 
-      // First, delete all existing projects to avoid conflicts
-      const { error: deleteError } = await supabase
-        .from('projects')
-        .delete()
-        .neq('id', '');
-
-      if (deleteError) {
-        console.warn('Warning during delete (might be expected if no data exists):', deleteError);
-      }
-
       // Transform projects for Supabase and ensure valid UUIDs
       const supabaseProjects = projectsWithImages.map((project, index) => {
         let projectId = project.id;
@@ -319,14 +309,32 @@ export const ProjectProvider: React.FC<{ children: ReactNode }> = ({ children })
         };
       });
 
-      console.log('Inserting projects into Supabase...', supabaseProjects);
-      
-      // Insert the new projects
-      const { error } = await supabase
-        .from('projects')
-        .insert(supabaseProjects);
+      const idsToKeep = supabaseProjects.map(p => p.id);
 
-      if (error) throw error;
+      // Upsert new/updated projects
+      const { error: upsertError } = await supabase
+        .from('projects')
+        .upsert(supabaseProjects, {
+          onConflict: 'id',
+          ignoreDuplicates: false
+        });
+      if (upsertError) throw upsertError;
+
+      // Delete records that no longer exist locally
+      if (idsToKeep.length > 0) {
+        const { error: deleteMissingError } = await supabase
+          .from('projects')
+          .delete()
+          .not('id', 'in', idsToKeep);
+        if (deleteMissingError) throw deleteMissingError;
+      } else {
+        // If no projects left, delete all
+        const { error: deleteAllError } = await supabase
+          .from('projects')
+          .delete()
+          .neq('id', '00000000-0000-0000-0000-000000000000');
+        if (deleteAllError) throw deleteAllError;
+      }
 
       console.log('Successfully saved projects to Supabase');
     } catch (error) {

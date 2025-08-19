@@ -1,8 +1,8 @@
-import * as pdfjsLib from 'pdfjs-dist';
+import { GlobalWorkerOptions, getDocument, version } from 'pdfjs-dist';
 import { supabase } from '@/integrations/supabase/client';
 
 // Set up PDF.js worker
-pdfjsLib.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.js`;
+GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${version}/pdf.worker.min.js`;
 
 export interface ConvertedDocument {
   originalUrl: string;
@@ -13,7 +13,7 @@ export interface ConvertedDocument {
 export const convertPDFToImage = async (file: File): Promise<Blob> => {
   try {
     const arrayBuffer = await file.arrayBuffer();
-    const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+    const pdf = await getDocument({ data: arrayBuffer }).promise;
     
     // Get the first page
     const page = await pdf.getPage(1);
