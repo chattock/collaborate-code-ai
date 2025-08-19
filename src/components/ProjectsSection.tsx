@@ -62,6 +62,9 @@ const ProjectsSection = () => {
                   <CardTitle className="text-lg text-center line-clamp-2">
                     {language === 'zh' ? project.titleZh : project.title}
                   </CardTitle>
+                  <p className="text-sm text-muted-foreground text-center mt-2">
+                    {language === 'zh' ? project.introductionZh : project.introduction}
+                  </p>
                 </CardHeader>
                 <CardContent className="pt-0">
                   <div className="grid grid-cols-2 gap-2">

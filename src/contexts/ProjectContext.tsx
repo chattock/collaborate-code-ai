@@ -13,6 +13,8 @@ export interface Project {
   id: string;
   title: string;
   titleZh: string;
+  introduction: string;
+  introductionZh: string;
   image: string;
   buttons: ProjectButton[];
 }
@@ -46,6 +48,8 @@ export const ProjectProvider: React.FC<{ children: ReactNode }> = ({ children })
       id: '1',
       title: 'UK Trade in 1700s',
       titleZh: '18世纪英国贸易',
+      introduction: 'demo intro',
+      introductionZh: 'demo intro',
       image: '/src/assets/project-uk-trade.jpg',
       buttons: [
         { id: '1-1', type: 'website', label: 'Website', url: 'https://chattock.github.io/Edmond/' },
@@ -56,6 +60,8 @@ export const ProjectProvider: React.FC<{ children: ReactNode }> = ({ children })
       id: '2',
       title: 'Word Relationship Project',
       titleZh: '词汇关系项目',
+      introduction: 'demo intro',
+      introductionZh: 'demo intro',
       image: '/src/assets/project-word-relations.jpg',
       buttons: [
         { id: '2-1', type: 'website', label: 'Website', url: 'https://chattock.github.io/Crisis/' },
@@ -66,6 +72,8 @@ export const ProjectProvider: React.FC<{ children: ReactNode }> = ({ children })
       id: '3',
       title: 'Global Temperatures',
       titleZh: '全球气温分析',
+      introduction: 'demo intro',
+      introductionZh: 'demo intro',
       image: '/src/assets/project-global-temps.jpg',
       buttons: [
         { id: '3-1', type: 'video', label: 'Video', url: 'https://www.youtube.com/watch?v=zUuyePLL3rw&t=165s' },
@@ -77,6 +85,8 @@ export const ProjectProvider: React.FC<{ children: ReactNode }> = ({ children })
       id: '4',
       title: 'Battle of the Skies Demo',
       titleZh: '天空战争演示',
+      introduction: 'demo intro',
+      introductionZh: 'demo intro',
       image: '/src/assets/project-climate-mapping.jpg',
       buttons: [
         { id: '4-1', type: 'website', label: 'Website', url: 'https://chattock.github.io/climate-mapping/' },
@@ -87,6 +97,8 @@ export const ProjectProvider: React.FC<{ children: ReactNode }> = ({ children })
       id: '5',
       title: 'Orsted Project',
       titleZh: 'Ørsted金融分析',
+      introduction: 'demo intro',
+      introductionZh: 'demo intro',
       image: '/src/assets/project-orsted.jpg',
       buttons: [
         { id: '5-1', type: 'report', label: 'Report', url: '#' }
@@ -96,6 +108,8 @@ export const ProjectProvider: React.FC<{ children: ReactNode }> = ({ children })
       id: '6',
       title: 'Fashion ESG Analysis',
       titleZh: '英国时尚ESG报告',
+      introduction: 'demo intro',
+      introductionZh: 'demo intro',
       image: '/src/assets/project-fashion-esg.jpg',
       buttons: [
         { id: '6-1', type: 'report', label: 'Report', url: '#' }
@@ -105,6 +119,8 @@ export const ProjectProvider: React.FC<{ children: ReactNode }> = ({ children })
       id: '7',
       title: 'Chinese Development',
       titleZh: '中国在内罗毕的发展',
+      introduction: 'demo intro',
+      introductionZh: 'demo intro',
       image: '/src/assets/project-retail-analytics.jpg',
       buttons: [
         { id: '7-1', type: 'report', label: 'Report', url: '#' },
@@ -115,6 +131,8 @@ export const ProjectProvider: React.FC<{ children: ReactNode }> = ({ children })
       id: '8',
       title: 'California Fires',
       titleZh: '加州火灾预测',
+      introduction: 'demo intro',
+      introductionZh: 'demo intro',
       image: '/src/assets/project-ml-network.jpg',
       buttons: [
         { id: '8-1', type: 'report', label: 'Report', url: '#' },
@@ -125,6 +143,8 @@ export const ProjectProvider: React.FC<{ children: ReactNode }> = ({ children })
       id: '9',
       title: 'Glastonbury',
       titleZh: '格拉斯顿伯里音乐节经济评估',
+      introduction: 'demo intro',
+      introductionZh: 'demo intro',
       image: '/src/assets/project-property-analysis.jpg',
       buttons: [
         { id: '9-1', type: 'report', label: 'Report', url: '#' }
@@ -134,6 +154,8 @@ export const ProjectProvider: React.FC<{ children: ReactNode }> = ({ children })
       id: '10',
       title: 'Gentrification',
       titleZh: '芝加哥中产阶级化驱动因素',
+      introduction: 'demo intro',
+      introductionZh: 'demo intro',
       image: '/src/assets/project-supply-chain.jpg',
       buttons: [
         { id: '10-1', type: 'website', label: 'Website', url: '#' }
@@ -143,6 +165,8 @@ export const ProjectProvider: React.FC<{ children: ReactNode }> = ({ children })
       id: '11',
       title: 'Elizabeth Line',
       titleZh: '伊丽莎白线对房价的影响',
+      introduction: 'demo intro',
+      introductionZh: 'demo intro',
       image: '/src/assets/project-sentiment-analysis.jpg',
       buttons: [
         { id: '11-1', type: 'report', label: 'Report', url: '#' },
@@ -153,6 +177,8 @@ export const ProjectProvider: React.FC<{ children: ReactNode }> = ({ children })
       id: '12',
       title: 'Portfolio Optimizer',
       titleZh: '投资组合优化器',
+      introduction: 'demo intro',
+      introductionZh: 'demo intro',
       image: '/src/assets/project-portfolio-optimizer.jpg',
       buttons: [
         { id: '12-1', type: 'github', label: 'Github', url: '#' }
@@ -189,6 +215,8 @@ export const ProjectProvider: React.FC<{ children: ReactNode }> = ({ children })
           id: p.id,
           title: p.title,
           titleZh: p.title_zh,
+          introduction: p.introduction || 'demo intro',
+          introductionZh: p.introduction_zh || 'demo intro',
           image: p.image_url || '',
           buttons: (p.buttons as unknown as ProjectButton[]) || []
         }));
@@ -205,6 +233,8 @@ export const ProjectProvider: React.FC<{ children: ReactNode }> = ({ children })
           id: p.id,
           title: p.title,
           titleZh: p.title_zh,
+          introduction: p.introduction || 'demo intro',
+          introductionZh: p.introduction_zh || 'demo intro',
           image: p.image_url || '',
           buttons: (p.buttons as unknown as ProjectButton[]) || []
         })));
@@ -328,6 +358,8 @@ export const ProjectProvider: React.FC<{ children: ReactNode }> = ({ children })
           id: projectId,
           title: project.title,
           title_zh: project.titleZh,
+          introduction: project.introduction,
+          introduction_zh: project.introductionZh,
           image_url: project.image,
           buttons: project.buttons,
           display_order: index

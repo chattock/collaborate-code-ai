@@ -20,6 +20,8 @@ const ProjectManagement = () => {
   const [newProject, setNewProject] = useState<Partial<Project>>({
     title: '',
     titleZh: '',
+    introduction: '',
+    introductionZh: '',
     image: '',
     buttons: []
   });
@@ -125,7 +127,7 @@ const ProjectManagement = () => {
     } else {
       if (newProject.title && newProject.titleZh) {
         addProject(newProject as Omit<Project, 'id'>);
-        setNewProject({ title: '', titleZh: '', image: '', buttons: [] });
+        setNewProject({ title: '', titleZh: '', introduction: '', introductionZh: '', image: '', buttons: [] });
         setIsAddOpen(false);
       }
     }
@@ -196,6 +198,22 @@ const ProjectManagement = () => {
                     id="titleZh"
                     value={newProject.titleZh}
                     onChange={(e) => setNewProject(prev => ({ ...prev, titleZh: e.target.value }))}
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="introduction">Introduction (English)</Label>
+                  <Input
+                    id="introduction"
+                    value={newProject.introduction}
+                    onChange={(e) => setNewProject(prev => ({ ...prev, introduction: e.target.value }))}
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="introductionZh">Introduction (Chinese)</Label>
+                  <Input
+                    id="introductionZh"
+                    value={newProject.introductionZh}
+                    onChange={(e) => setNewProject(prev => ({ ...prev, introductionZh: e.target.value }))}
                   />
                 </div>
                 
@@ -401,8 +419,24 @@ const ProjectManagement = () => {
                   value={editingProject.titleZh}
                   onChange={(e) => setEditingProject(prev => prev ? { ...prev, titleZh: e.target.value } : null)}
                 />
-              </div>
-              
+                </div>
+                <div>
+                  <Label htmlFor="edit-introduction">Introduction (English)</Label>
+                  <Input
+                    id="edit-introduction"
+                    value={editingProject.introduction}
+                    onChange={(e) => setEditingProject(prev => prev ? { ...prev, introduction: e.target.value } : null)}
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="edit-introductionZh">Introduction (Chinese)</Label>
+                  <Input
+                    id="edit-introductionZh"
+                    value={editingProject.introductionZh}
+                    onChange={(e) => setEditingProject(prev => prev ? { ...prev, introductionZh: e.target.value } : null)}
+                  />
+                </div>
+                
               <div>
                 <Label>Project Image</Label>
                 <div {...getRootProps()} className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center cursor-pointer hover:border-primary">

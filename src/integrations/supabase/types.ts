@@ -114,6 +114,8 @@ export type Database = {
           display_order: number | null
           id: string
           image_url: string | null
+          introduction: string | null
+          introduction_zh: string | null
           title: string
           title_zh: string
           updated_at: string
@@ -124,6 +126,8 @@ export type Database = {
           display_order?: number | null
           id?: string
           image_url?: string | null
+          introduction?: string | null
+          introduction_zh?: string | null
           title: string
           title_zh: string
           updated_at?: string
@@ -134,6 +138,8 @@ export type Database = {
           display_order?: number | null
           id?: string
           image_url?: string | null
+          introduction?: string | null
+          introduction_zh?: string | null
           title?: string
           title_zh?: string
           updated_at?: string
