@@ -32,7 +32,7 @@ const translations = {
     
     // Services Section
     'services.explore': 'Explore My',
-    'services.title': 'Services',
+    'services.title': 'Skills',
     'services.skills': 'Skills',
     'services.aboutMe': 'About Me',
     'services.experience': 'Experience',
@@ -142,7 +142,7 @@ const translations = {
     
     // Services Section
     'services.explore': '探索我的',
-    'services.title': '服务',
+    'services.title': '技能',
     'services.skills': '技能',
     'services.aboutMe': '关于我',
     'services.experience': '经验',

@@ -1,41 +1,69 @@
+import { useState, useEffect } from "react";
 import { Check, ChevronDown, ExternalLink, Award, GraduationCap, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { BookingDialog } from "@/components/BookingDialog";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useAdmin } from "@/contexts/AdminContext";
+import { supabase } from "@/integrations/supabase/client";
+
+interface Skill {
+  id: string;
+  title: string;
+  title_zh: string;
+  description: string;
+  description_zh: string;
+  display_order: number;
+}
+
+interface AboutContent {
+  section: string;
+  content: any;
+  content_zh: any;
+}
 
 const ServicesSection = () => {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const { showBookingSection } = useAdmin();
-  const services = [{
-    title: t("services.gis"),
-    description: t("services.gisDesc")
-  }, {
-    title: t("services.dataAnalysis"),
-    description: t("services.dataAnalysisDesc")
-  }, {
-    title: t("services.ml"),
-    description: t("services.mlDesc")
-  }, {
-    title: t("services.webDev"),
-    description: t("services.webDevDesc")
-  }, {
-    title: t("services.dataViz"),
-    description: t("services.dataVizDesc")
-  }, {
-    title: t("services.webScraping"),
-    description: t("services.webScrapingDesc")
-  }, {
-    title: t("services.database"),
-    description: t("services.databaseDesc")
-  }, {
-    title: t("services.bigData"),
-    description: t("services.bigDataDesc")
-  }, {
-    title: t("services.dataCleaning"),
-    description: t("services.dataCleaningDesc")
-  }];
+  const [skills, setSkills] = useState<Skill[]>([]);
+  const [aboutContent, setAboutContent] = useState<AboutContent[]>([]);
+
+  // Load skills from Supabase
+  useEffect(() => {
+    const loadSkills = async () => {
+      try {
+        const { data, error } = await supabase
+          .from('skills')
+          .select('*')
+          .order('display_order');
+        
+        if (error) throw error;
+        setSkills(data || []);
+      } catch (error) {
+        console.error('Error loading skills:', error);
+      }
+    };
+
+    const loadAboutContent = async () => {
+      try {
+        const { data, error } = await supabase
+          .from('about_content')
+          .select('*');
+        
+        if (error) throw error;
+        setAboutContent(data || []);
+      } catch (error) {
+        console.error('Error loading about content:', error);
+      }
+    };
+
+    loadSkills();
+    loadAboutContent();
+  }, []);
+
+  const getAboutSection = (section: string) => {
+    return aboutContent.find(item => item.section === section);
+  };
   const scrollToContact = () => {
     const element = document.querySelector('#contact');
     if (element) {
@@ -59,13 +87,19 @@ const ServicesSection = () => {
             </CardHeader>
             <CardContent>
               <div className="grid gap-4 h-96 overflow-y-auto pr-2">
-                {services.map((service, index) => <div key={index} className="flex gap-3 p-3 rounded-lg hover:bg-muted/50 transition-colors">
+                {skills.map((skill) => (
+                  <div key={skill.id} className="flex gap-3 p-3 rounded-lg hover:bg-muted/50 transition-colors">
                     <Check className="w-5 h-5 text-accent mt-0.5 flex-shrink-0" />
                     <div>
-                      <h3 className="font-semibold text-foreground">{service.title}</h3>
-                      <p className="text-sm text-muted-foreground mt-1">{service.description}</p>
+                      <h3 className="font-semibold text-foreground">
+                        {language === 'zh' ? skill.title_zh : skill.title}
+                      </h3>
+                      <p className="text-sm text-muted-foreground mt-1">
+                        {language === 'zh' ? skill.description_zh : skill.description}
+                      </p>
                     </div>
-                  </div>)}
+                  </div>
+                ))}
               </div>
             </CardContent>
           </Card>
@@ -79,40 +113,53 @@ const ServicesSection = () => {
               <div className="bg-muted/30 rounded-lg p-6 h-96 overflow-y-auto pr-2 space-y-6">
                 <div className="grid gap-6">
                   {/* Experience Card */}
-                  <div className="text-center">
-                    <Award className="w-6 h-6 mx-auto text-primary mb-2" />
-                    <h3 className="font-semibold text-foreground mb-1">{t("services.experience")}</h3>
-                    <div className="text-sm text-muted-foreground text-left">
-                      <ul className="space-y-1">
-                        <li>{t("services.experienceDesc1")}</li>
-                        <li>{t("services.experienceDesc2")}</li>
-                        <li>{t("services.experienceDesc3")}</li>
-                      </ul>
+                  {getAboutSection('experience') && (
+                    <div className="text-center">
+                      <Award className="w-6 h-6 mx-auto text-primary mb-2" />
+                      <h3 className="font-semibold text-foreground mb-1">
+                        {language === 'zh' ? getAboutSection('experience')?.content_zh.title : getAboutSection('experience')?.content.title}
+                      </h3>
+                      <div className="text-sm text-muted-foreground text-left">
+                        <ul className="space-y-1">
+                          {(language === 'zh' ? getAboutSection('experience')?.content_zh.bullets : getAboutSection('experience')?.content.bullets)?.map((bullet: string, index: number) => (
+                            <li key={index}>{bullet}</li>
+                          ))}
+                        </ul>
+                      </div>
                     </div>
-                  </div>
+                  )}
 
                   {/* Education Card */}
-                  <div className="text-center">
-                    <GraduationCap className="w-6 h-6 mx-auto text-primary mb-2" />
-                    <h3 className="font-semibold text-foreground mb-1">{t("services.education")}</h3>
-                    <div className="text-sm text-muted-foreground text-left">
-                      <ul className="space-y-1">
-                        <li>{t("services.educationDesc1")}</li>
-                        <li>{t("services.educationDesc2")}</li>
-                        <li>{t("services.educationDesc3")}</li>
-                      </ul>
+                  {getAboutSection('education') && (
+                    <div className="text-center">
+                      <GraduationCap className="w-6 h-6 mx-auto text-primary mb-2" />
+                      <h3 className="font-semibold text-foreground mb-1">
+                        {language === 'zh' ? getAboutSection('education')?.content_zh.title : getAboutSection('education')?.content.title}
+                      </h3>
+                      <div className="text-sm text-muted-foreground text-left">
+                        <ul className="space-y-1">
+                          {(language === 'zh' ? getAboutSection('education')?.content_zh.bullets : getAboutSection('education')?.content.bullets)?.map((bullet: string, index: number) => (
+                            <li key={index}>{bullet}</li>
+                          ))}
+                        </ul>
+                      </div>
                     </div>
-                  </div>
+                  )}
 
                   {/* About Me Section */}
-                  <div className="text-center">
-                    <User className="w-6 h-6 mx-auto text-primary mb-2" />
-                    <h3 className="font-semibold text-foreground mb-3">{t("services.aboutMe")}</h3>
-                    <div className="text-sm text-muted-foreground leading-relaxed text-left space-y-2">
-                      <p>{t("services.aboutDesc1")}</p>
-                      <p>{t("services.aboutDesc2")}</p>
+                  {getAboutSection('about') && (
+                    <div className="text-center">
+                      <User className="w-6 h-6 mx-auto text-primary mb-2" />
+                      <h3 className="font-semibold text-foreground mb-3">
+                        {language === 'zh' ? getAboutSection('about')?.content_zh.title : getAboutSection('about')?.content.title}
+                      </h3>
+                      <div className="text-sm text-muted-foreground leading-relaxed text-left space-y-2">
+                        {(language === 'zh' ? getAboutSection('about')?.content_zh.paragraphs : getAboutSection('about')?.content.paragraphs)?.map((paragraph: string, index: number) => (
+                          <p key={index}>{paragraph}</p>
+                        ))}
+                      </div>
                     </div>
-                  </div>
+                  )}
                 </div>
               </div>
             </CardContent>

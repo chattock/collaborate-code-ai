@@ -14,6 +14,33 @@ export type Database = {
   }
   public: {
     Tables: {
+      about_content: {
+        Row: {
+          content: Json
+          content_zh: Json
+          created_at: string
+          id: string
+          section: string
+          updated_at: string
+        }
+        Insert: {
+          content: Json
+          content_zh: Json
+          created_at?: string
+          id?: string
+          section: string
+          updated_at?: string
+        }
+        Update: {
+          content?: Json
+          content_zh?: Json
+          created_at?: string
+          id?: string
+          section?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       admin_settings: {
         Row: {
           created_at: string
@@ -107,6 +134,39 @@ export type Database = {
           display_order?: number | null
           id?: string
           image_url?: string | null
+          title?: string
+          title_zh?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      skills: {
+        Row: {
+          created_at: string
+          description: string
+          description_zh: string
+          display_order: number | null
+          id: string
+          title: string
+          title_zh: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description: string
+          description_zh: string
+          display_order?: number | null
+          id?: string
+          title: string
+          title_zh: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string
+          description_zh?: string
+          display_order?: number | null
+          id?: string
           title?: string
           title_zh?: string
           updated_at?: string

@@ -10,6 +10,8 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { useAdmin } from "@/contexts/AdminContext";
 import ProjectManagement from "./admin/ProjectManagement";
 import CVManagement from "./admin/CVManagement";
+import SkillsManagement from "./admin/SkillsManagement";
+import AboutContentManagement from "./admin/AboutContentManagement";
 
 const Navigation = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -133,6 +135,8 @@ const Navigation = () => {
                     
                     <CVManagement />
                     <ProjectManagement />
+                    <SkillsManagement />
+                    <AboutContentManagement />
                   </div>
                 </DialogContent>
               </Dialog>
@@ -212,6 +216,8 @@ const Navigation = () => {
                     
                     <CVManagement />
                     <ProjectManagement />
+                    <SkillsManagement />
+                    <AboutContentManagement />
                   </div>
                 </DialogContent>
               </Dialog>
