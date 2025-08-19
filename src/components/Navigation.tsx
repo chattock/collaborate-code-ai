@@ -12,6 +12,7 @@ import ProjectManagement from "./admin/ProjectManagement";
 import CVManagement from "./admin/CVManagement";
 import SkillsManagement from "./admin/SkillsManagement";
 import AboutContentManagement from "./admin/AboutContentManagement";
+import FaviconManagement from "./admin/FaviconManagement";
 
 const Navigation = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -137,6 +138,7 @@ const Navigation = () => {
                     <ProjectManagement />
                     <SkillsManagement />
                     <AboutContentManagement />
+                    <FaviconManagement />
                   </div>
                 </DialogContent>
               </Dialog>
@@ -218,6 +220,7 @@ const Navigation = () => {
                     <ProjectManagement />
                     <SkillsManagement />
                     <AboutContentManagement />
+                    <FaviconManagement />
                   </div>
                 </DialogContent>
               </Dialog>
