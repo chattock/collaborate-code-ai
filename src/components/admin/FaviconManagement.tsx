@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -6,12 +6,25 @@ import { Label } from "@/components/ui/label";
 import { Upload, Image as ImageIcon } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import { loadAndSetFavicon } from "@/utils/faviconLoader";
 
 const FaviconManagement = () => {
   const [isUploading, setIsUploading] = useState(false);
   const [currentFavicon, setCurrentFavicon] = useState<string>("");
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
+
+  // Load existing favicon on component mount
+  useEffect(() => {
+    loadCurrentFavicon();
+  }, []);
+
+  const loadCurrentFavicon = async () => {
+    const faviconUrl = await loadAndSetFavicon();
+    if (faviconUrl) {
+      setCurrentFavicon(faviconUrl);
+    }
+  };
 
   const handleFileSelect = () => {
     fileInputRef.current?.click();
