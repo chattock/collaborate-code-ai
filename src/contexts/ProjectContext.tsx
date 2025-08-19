@@ -322,10 +322,11 @@ export const ProjectProvider: React.FC<{ children: ReactNode }> = ({ children })
 
       // Delete records that no longer exist locally
       if (idsToKeep.length > 0) {
+        const idsParam = `(${idsToKeep.join(',')})`;
         const { error: deleteMissingError } = await supabase
           .from('projects')
           .delete()
-          .not('id', 'in', idsToKeep);
+          .not('id', 'in', idsParam);
         if (deleteMissingError) throw deleteMissingError;
       } else {
         // If no projects left, delete all
