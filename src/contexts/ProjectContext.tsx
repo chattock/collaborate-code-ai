@@ -369,19 +369,25 @@ export const ProjectProvider: React.FC<{ children: ReactNode }> = ({ children })
 
   const saveChanges = async () => {
     try {
-      await saveProjectsToSupabase(projects);
+      console.log('Saving changes to Supabase...');
       
+      // Save projects
+      await saveProjectsToSupabase(projects);
+      console.log('Projects saved successfully');
+      
+      // Save CV if there's one
       if (cvFile) {
+        console.log('Uploading CV file:', cvFile.name);
         await saveCVToSupabase(cvFile);
         setCvFile(null); // Clear the file state after uploading
+        console.log('CV uploaded and converted successfully');
       }
       
       setHasUnsavedChanges(false);
+      console.log('All changes saved successfully');
     } catch (error) {
       console.error('Error saving changes:', error);
-      // Fallback to localStorage for projects
-      localStorage.setItem('projects', JSON.stringify(projects));
-      setHasUnsavedChanges(false);
+      throw error; // Re-throw to allow UI to handle the error
     }
   };
 
@@ -424,10 +430,25 @@ export const ProjectProvider: React.FC<{ children: ReactNode }> = ({ children })
     }, 500);
   };
 
-  const handleSetCvFile = (file: File | null) => {
-    setCvFile(file);
+  const handleSetCvFile = async (file: File | null) => {
     if (file) {
+      console.log('Processing CV file:', file.name);
+      setCvFile(file);
       setHasUnsavedChanges(true);
+      
+      // Convert and upload immediately for better UX
+      try {
+        console.log('Converting and uploading CV immediately...');
+        const result = await saveCVToSupabase(file);
+        setCvFile(null); // Clear the file state after successful upload
+        setHasUnsavedChanges(false);
+        console.log('CV processed successfully:', result);
+      } catch (error) {
+        console.error('Error processing CV immediately:', error);
+        // Keep the file in state for manual save
+      }
+    } else {
+      setCvFile(null);
     }
   };
 

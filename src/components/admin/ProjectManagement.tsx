@@ -121,12 +121,20 @@ const ProjectManagement = () => {
 
   const saveAllChanges = async () => {
     try {
+      console.log('Saving all changes...');
       await Promise.all([
         projectChanges ? saveProjectChanges() : Promise.resolve(),
         adminChanges ? saveAdminChanges() : Promise.resolve()
       ]);
+      console.log('All changes saved successfully');
+      
+      // Reload the page to reflect changes
+      setTimeout(() => {
+        window.location.reload();
+      }, 1000);
     } catch (error) {
       console.error('Error saving changes:', error);
+      alert('Error saving changes. Please try again.');
     }
   };
 
