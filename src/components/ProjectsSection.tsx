@@ -3,6 +3,8 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useProject } from "@/contexts/ProjectContext";
+import HTMLViewer from "@/components/HTMLViewer";
+import { useState } from "react";
 
 
 const ProjectsSection = () => {
@@ -11,6 +13,16 @@ const ProjectsSection = () => {
   console.log('Language context loaded');
   const { projects } = useProject();
   console.log('Project context loaded, projects:', projects);
+  
+  const [htmlViewer, setHtmlViewer] = useState<{
+    isOpen: boolean;
+    url: string;
+    title: string;
+  }>({
+    isOpen: false,
+    url: '',
+    title: ''
+  });
 
   const getButtonIcon = (type: string) => {
     switch (type) {
@@ -80,7 +92,13 @@ const ProjectsSection = () => {
                           size="sm"
                           className={`gap-1.5 text-xs ${isLastOddButton ? 'col-span-2' : ''}`}
                           onClick={() => {
-                            if (button.url) {
+                            if (button.type === 'html' && button.url) {
+                              setHtmlViewer({
+                                isOpen: true,
+                                url: button.url,
+                                title: language === 'zh' ? project.titleZh : project.title
+                              });
+                            } else if (button.url) {
                               window.open(button.url, '_blank');
                             }
                           }}
@@ -108,6 +126,13 @@ const ProjectsSection = () => {
             <ChevronDown size={24} className="text-primary" />
           </Button>
         </div>
+
+        <HTMLViewer
+          isOpen={htmlViewer.isOpen}
+          onClose={() => setHtmlViewer(prev => ({ ...prev, isOpen: false }))}
+          url={htmlViewer.url}
+          title={htmlViewer.title}
+        />
       </div>
     </section>
   );
