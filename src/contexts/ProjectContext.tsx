@@ -2,7 +2,7 @@ import React, { createContext, useContext, useState, ReactNode, useEffect } from
 import { supabase } from '@/integrations/supabase/client';
 export interface ProjectButton {
   id: string;
-  type: 'report' | 'website' | 'github' | 'video';
+  type: 'report' | 'website' | 'github' | 'video' | 'html';
   label: string;
   url?: string;
   file?: File;

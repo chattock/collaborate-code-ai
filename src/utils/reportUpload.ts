@@ -4,27 +4,30 @@ export const uploadReportFile = async (file: File, projectId: string, buttonId: 
   try {
     const fileExtension = file.name.split('.').pop()?.toLowerCase();
     const timestamp = Date.now();
-    const fileName = `report-${projectId}-${buttonId}-${timestamp}.${fileExtension}`;
+    const isHtmlFile = fileExtension === 'html' || fileExtension === 'htm';
+    const filePrefix = isHtmlFile ? 'html' : 'report';
+    const fileName = `${filePrefix}-${projectId}-${buttonId}-${timestamp}.${fileExtension}`;
     
     // Delete existing file if it exists
+    const folderName = isHtmlFile ? 'html' : 'reports';
     const existingFiles = await supabase.storage
       .from('project-files')
-      .list(`reports/${projectId}`, {
-        search: `report-${projectId}-${buttonId}`
+      .list(`${folderName}/${projectId}`, {
+        search: `${filePrefix}-${projectId}-${buttonId}`
       });
     
     if (existingFiles.data && existingFiles.data.length > 0) {
       for (const existingFile of existingFiles.data) {
         await supabase.storage
           .from('project-files')
-          .remove([`reports/${projectId}/${existingFile.name}`]);
+          .remove([`${folderName}/${projectId}/${existingFile.name}`]);
       }
     }
     
     // Upload new file
     const { data, error } = await supabase.storage
       .from('project-files')
-      .upload(`reports/${projectId}/${fileName}`, file, { 
+      .upload(`${folderName}/${projectId}/${fileName}`, file, { 
         upsert: true,
         contentType: file.type
       });

@@ -1,4 +1,4 @@
-import { ExternalLink, Github, Play, FileText, ChevronDown, Globe, Video } from "lucide-react";
+import { ExternalLink, Github, Play, FileText, ChevronDown, Globe, Video, Code } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useLanguage } from "@/contexts/LanguageContext";
@@ -18,6 +18,7 @@ const ProjectsSection = () => {
       case 'github': return Github;
       case 'video': return Video;
       case 'report': return FileText;
+      case 'html': return Code;
       default: return ExternalLink;
     }
   };
@@ -28,6 +29,7 @@ const ProjectsSection = () => {
       case 'github': return t("projects.github");
       case 'video': return t("projects.video");
       case 'report': return t("projects.report");
+      case 'html': return t("projects.html");
       default: return type;
     }
   };
@@ -78,8 +80,8 @@ const ProjectsSection = () => {
                           size="sm"
                           className={`gap-1.5 text-xs ${isLastOddButton ? 'col-span-2' : ''}`}
                           onClick={() => {
-                            if (button.type === 'report' && button.url) {
-                              // For reports, open the Supabase storage URL directly
+                            if ((button.type === 'report' || button.type === 'html') && button.url) {
+                              // For reports and HTML files, open the Supabase storage URL directly
                               window.open(button.url, '_blank');
                             } else if (button.url) {
                               window.open(button.url, '_blank');

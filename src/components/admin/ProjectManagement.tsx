@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Plus, Edit, Trash2, Upload, X, Link, FileText, Github, Globe, Video, GripVertical } from 'lucide-react';
+import { Plus, Edit, Trash2, Upload, X, Link, FileText, Github, Globe, Video, GripVertical, Code } from 'lucide-react';
 import { DragDropContext, Droppable, Draggable, DropResult } from 'react-beautiful-dnd';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
@@ -32,7 +32,8 @@ const ProjectManagement = () => {
     report: FileText,
     website: Globe,
     github: Github,
-    video: Video
+    video: Video,
+    html: Code
   };
 
   const { getRootProps, getInputProps } = useDropzone({
@@ -255,6 +256,7 @@ const ProjectManagement = () => {
                                   <SelectItem value="website">Website</SelectItem>
                                   <SelectItem value="github">Github</SelectItem>
                                   <SelectItem value="video">Video</SelectItem>
+                                  <SelectItem value="html">HTML Document</SelectItem>
                                 </SelectContent>
                               </Select>
                               <Input
@@ -263,18 +265,18 @@ const ProjectManagement = () => {
                                 onChange={(e) => updateButton(button.id, { label: e.target.value })}
                               />
                             </div>
-                            {button.type !== 'report' && (
+                            {button.type !== 'report' && button.type !== 'html' && (
                               <Input
                                 placeholder="URL"
                                 value={button.url || ''}
                                 onChange={(e) => updateButton(button.id, { url: e.target.value })}
                               />
                             )}
-                            {button.type === 'report' && (
+                            {(button.type === 'report' || button.type === 'html') && (
                               <div>
                                 <input
                                   type="file"
-                                  accept=".pdf,.doc,.docx"
+                                  accept={button.type === 'html' ? '.html,.htm' : '.pdf,.doc,.docx'}
                                   onChange={(e) => {
                                     const file = e.target.files?.[0];
                                     if (file) {
@@ -288,9 +290,14 @@ const ProjectManagement = () => {
                                   htmlFor={`file-${button.id}`}
                                   className="border-2 border-dashed border-gray-300 rounded p-2 text-center cursor-pointer hover:border-primary block"
                                 >
-                                  <FileText className="w-4 h-4 mx-auto mb-1 text-gray-400" />
+                                  {button.type === 'html' ? (
+                                    <Code className="w-4 h-4 mx-auto mb-1 text-gray-400" />
+                                  ) : (
+                                    <FileText className="w-4 h-4 mx-auto mb-1 text-gray-400" />
+                                  )}
                                 <p className="text-xs text-gray-600">
-                                  {button.fileName || (button.url && !button.url.startsWith('data:') ? 'File uploaded' : 'Upload PDF/Word')}
+                                  {button.fileName || (button.url && !button.url.startsWith('data:') ? 'File uploaded' : 
+                                    button.type === 'html' ? 'Upload HTML' : 'Upload PDF/Word')}
                                 </p>
                                 </label>
                               {(button.fileName || (button.url && !button.url.startsWith('data:'))) && (
@@ -470,12 +477,13 @@ const ProjectManagement = () => {
                               <SelectTrigger className="w-32">
                                 <SelectValue />
                               </SelectTrigger>
-                              <SelectContent>
-                                <SelectItem value="report">Report</SelectItem>
-                                <SelectItem value="website">Website</SelectItem>
-                                <SelectItem value="github">Github</SelectItem>
-                                <SelectItem value="video">Video</SelectItem>
-                              </SelectContent>
+                          <SelectContent>
+                            <SelectItem value="report">Report</SelectItem>
+                            <SelectItem value="website">Website</SelectItem>
+                            <SelectItem value="github">Github</SelectItem>
+                            <SelectItem value="video">Video</SelectItem>
+                            <SelectItem value="html">HTML Document</SelectItem>
+                          </SelectContent>
                             </Select>
                             <Input
                               placeholder="Button label"
@@ -483,18 +491,18 @@ const ProjectManagement = () => {
                               onChange={(e) => updateButton(button.id, { label: e.target.value })}
                             />
                           </div>
-                          {button.type !== 'report' && (
+                          {button.type !== 'report' && button.type !== 'html' && (
                             <Input
                               placeholder="URL"
                               value={button.url || ''}
                               onChange={(e) => updateButton(button.id, { url: e.target.value })}
                             />
                           )}
-                          {button.type === 'report' && (
+                          {(button.type === 'report' || button.type === 'html') && (
                             <div>
                               <input
                                 type="file"
-                                accept=".pdf,.doc,.docx"
+                                accept={button.type === 'html' ? '.html,.htm' : '.pdf,.doc,.docx'}
                                 onChange={(e) => {
                                   const file = e.target.files?.[0];
                                   if (file) {
@@ -508,9 +516,14 @@ const ProjectManagement = () => {
                                 htmlFor={`edit-file-${button.id}`}
                                 className="border-2 border-dashed border-gray-300 rounded p-2 text-center cursor-pointer hover:border-primary block"
                               >
-                                <FileText className="w-4 h-4 mx-auto mb-1 text-gray-400" />
+                                {button.type === 'html' ? (
+                                  <Code className="w-4 h-4 mx-auto mb-1 text-gray-400" />
+                                ) : (
+                                  <FileText className="w-4 h-4 mx-auto mb-1 text-gray-400" />
+                                )}
                                 <p className="text-xs text-gray-600">
-                                  {button.fileName || (button.url && !button.url.startsWith('data:') ? 'File uploaded' : 'Upload PDF/Word')}
+                                  {button.fileName || (button.url && !button.url.startsWith('data:') ? 'File uploaded' : 
+                                    button.type === 'html' ? 'Upload HTML' : 'Upload PDF/Word')}
                                 </p>
                               </label>
                               {(button.fileName || (button.url && !button.url.startsWith('data:'))) && (
