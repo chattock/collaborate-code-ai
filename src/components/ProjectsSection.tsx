@@ -80,10 +80,7 @@ const ProjectsSection = () => {
                           size="sm"
                           className={`gap-1.5 text-xs ${isLastOddButton ? 'col-span-2' : ''}`}
                           onClick={() => {
-                            if ((button.type === 'report' || button.type === 'html') && button.url) {
-                              // For reports and HTML files, open the Supabase storage URL directly
-                              window.open(button.url, '_blank');
-                            } else if (button.url) {
+                            if (button.url) {
                               window.open(button.url, '_blank');
                             }
                           }}

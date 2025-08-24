@@ -24,12 +24,13 @@ export const uploadReportFile = async (file: File, projectId: string, buttonId: 
       }
     }
     
-    // Upload new file
+    // Upload new file with correct content type
+    const contentType = isHtmlFile ? 'text/html' : file.type;
     const { data, error } = await supabase.storage
       .from('project-files')
       .upload(`${folderName}/${projectId}/${fileName}`, file, { 
         upsert: true,
-        contentType: file.type
+        contentType: contentType
       });
 
     if (error) throw error;
