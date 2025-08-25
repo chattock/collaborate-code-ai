@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useProject } from "@/contexts/ProjectContext";
+import { useNavigate } from "react-router-dom";
 
 
 const ProjectsSection = () => {
@@ -11,6 +12,7 @@ const ProjectsSection = () => {
   console.log('Language context loaded');
   const { projects } = useProject();
   console.log('Project context loaded, projects:', projects);
+  const navigate = useNavigate();
 
   const getButtonIcon = (type: string) => {
     switch (type) {
@@ -82,7 +84,7 @@ const ProjectsSection = () => {
                           onClick={() => {
                             if (button.type === 'html' && button.url) {
                               const htmlViewerUrl = `/html-viewer?url=${encodeURIComponent(button.url)}&title=${encodeURIComponent(language === 'zh' ? project.titleZh : project.title)}`;
-                              window.open(htmlViewerUrl, '_blank');
+                              navigate(htmlViewerUrl);
                             } else if (button.url) {
                               window.open(button.url, '_blank');
                             }
