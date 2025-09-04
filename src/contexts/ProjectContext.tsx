@@ -501,10 +501,6 @@ export const ProjectProvider: React.FC<{ children: ReactNode }> = ({ children })
       return result;
     });
     setHasUnsavedChanges(true);
-    // Auto-save after reordering
-    setTimeout(() => {
-      saveChanges();
-    }, 500);
   };
 
   const handleSetCvFile = async (file: File | null) => {
