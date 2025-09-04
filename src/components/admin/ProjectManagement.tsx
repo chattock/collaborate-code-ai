@@ -137,10 +137,19 @@ const ProjectManagement = () => {
   const saveAllChanges = async () => {
     try {
       console.log('Saving all changes...');
+      
+      // Save all registered admin functions
+      if (window.adminSaveFunctions) {
+        const savePromises = Array.from(window.adminSaveFunctions).map(fn => fn());
+        await Promise.all(savePromises);
+      }
+
+      // Save project and admin context changes
       await Promise.all([
         projectChanges ? saveProjectChanges() : Promise.resolve(),
         adminChanges ? saveAdminChanges() : Promise.resolve()
       ]);
+      
       console.log('All changes saved successfully');
       alert('Changes saved successfully!');
     } catch (error) {
@@ -168,11 +177,6 @@ const ProjectManagement = () => {
       <div className="flex justify-between items-center">
         <h3 className="text-lg font-semibold">Project Management</h3>
         <div className="flex gap-2">
-          {hasUnsavedChanges && (
-            <Button onClick={saveAllChanges} variant="default">
-              Save All Changes
-            </Button>
-          )}
           <Dialog open={isAddOpen} onOpenChange={setIsAddOpen}>
             <DialogTrigger asChild>
               <Button>

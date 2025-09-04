@@ -8,6 +8,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Plus, Trash2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import { useAdminSave } from "@/hooks/useAdminSave";
 
 interface AboutContent {
   id: string;
@@ -18,7 +19,32 @@ interface AboutContent {
 
 const AboutContentManagement = () => {
   const [aboutContent, setAboutContent] = useState<AboutContent[]>([]);
+  const [initialContent, setInitialContent] = useState<AboutContent[]>([]);
   const { toast } = useToast();
+
+  // Save function for the hook
+  const saveContentChanges = async () => {
+    try {
+      const updates = aboutContent.map(item => 
+        supabase
+          .from('about_content')
+          .upsert(
+            { section: item.section, content: item.content, content_zh: item.content_zh },
+            { onConflict: 'section' }
+          )
+      );
+
+      await Promise.all(updates);
+      setInitialContent([...aboutContent]);
+    } catch (error) {
+      console.error('Error saving about content:', error);
+      throw error;
+    }
+  };
+
+  // Register with admin save system
+  const hasChanges = JSON.stringify(aboutContent) !== JSON.stringify(initialContent);
+  useAdminSave(saveContentChanges, [hasChanges]);
 
   // Load about content from Supabase
   const loadAboutContent = async () => {
@@ -29,7 +55,9 @@ const AboutContentManagement = () => {
         .order('section');
       
       if (error) throw error;
-      setAboutContent(data || []);
+      const content = data || [];
+      setAboutContent(content);
+      setInitialContent([...content]);
     } catch (error) {
       console.error('Error loading about content:', error);
       toast({
@@ -44,31 +72,22 @@ const AboutContentManagement = () => {
     loadAboutContent();
   }, []);
 
-  const updateContent = async (section: string, content: any, content_zh: any) => {
-    try {
-      const { error } = await supabase
-        .from('about_content')
-        .upsert(
-          { section, content, content_zh },
-          { onConflict: 'section' }
-        );
-
-      if (error) throw error;
-
-      loadAboutContent();
+  const updateContent = (section: string, content: any, content_zh: any) => {
+    // Update local state only - don't save to Supabase immediately
+    setAboutContent(prev => {
+      const updated = prev.map(item => 
+        item.section === section 
+          ? { ...item, content, content_zh }
+          : item
+      );
       
-      toast({
-        title: "Success",
-        description: "Content updated successfully"
-      });
-    } catch (error) {
-      console.error('Error updating content:', error);
-      toast({
-        title: "Error",
-        description: "Failed to update content",
-        variant: "destructive"
-      });
-    }
+      // If section doesn't exist, add it
+      if (!updated.find(item => item.section === section)) {
+        updated.push({ id: Date.now().toString(), section, content, content_zh });
+      }
+      
+      return updated;
+    });
   };
 
   const addBulletPoint = (section: string, language: 'en' | 'zh') => {

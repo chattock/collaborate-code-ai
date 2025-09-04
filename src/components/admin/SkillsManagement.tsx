@@ -9,6 +9,7 @@ import { Trash2, Edit, Plus, GripVertical } from "lucide-react";
 import { DragDropContext, Droppable, Draggable, DropResult } from "react-beautiful-dnd";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import { useAdminSave } from "@/hooks/useAdminSave";
 
 interface Skill {
   id: string;
@@ -21,6 +22,7 @@ interface Skill {
 
 const SkillsManagement = () => {
   const [skills, setSkills] = useState<Skill[]>([]);
+  const [initialSkills, setInitialSkills] = useState<Skill[]>([]);
   const [isAddOpen, setIsAddOpen] = useState(false);
   const [editingSkill, setEditingSkill] = useState<Skill | null>(null);
   const [newSkill, setNewSkill] = useState({
@@ -31,6 +33,35 @@ const SkillsManagement = () => {
   });
   const { toast } = useToast();
 
+  // Save function for the hook
+  const saveSkillsChanges = async () => {
+    try {
+      // Save skill updates
+      const skillUpdates = skills.map(skill => 
+        supabase
+          .from('skills')
+          .upsert({
+            id: skill.id,
+            title: skill.title,
+            title_zh: skill.title_zh,
+            description: skill.description,
+            description_zh: skill.description_zh,
+            display_order: skill.display_order
+          })
+      );
+
+      await Promise.all(skillUpdates);
+      setInitialSkills([...skills]);
+    } catch (error) {
+      console.error('Error saving skills:', error);
+      throw error;
+    }
+  };
+
+  // Register with admin save system
+  const hasChanges = JSON.stringify(skills) !== JSON.stringify(initialSkills);
+  useAdminSave(saveSkillsChanges, [hasChanges]);
+
   // Load skills from Supabase
   const loadSkills = async () => {
     try {
@@ -40,7 +71,9 @@ const SkillsManagement = () => {
         .order('display_order');
       
       if (error) throw error;
-      setSkills(data || []);
+      const loadedSkills = data || [];
+      setSkills(loadedSkills);
+      setInitialSkills([...loadedSkills]);
     } catch (error) {
       console.error('Error loading skills:', error);
       toast({
@@ -86,37 +119,15 @@ const SkillsManagement = () => {
     }
   };
 
-  const handleEdit = async () => {
+  const handleEdit = () => {
     if (!editingSkill) return;
 
-    try {
-      const { error } = await supabase
-        .from('skills')
-        .update({
-          title: editingSkill.title,
-          title_zh: editingSkill.title_zh,
-          description: editingSkill.description,
-          description_zh: editingSkill.description_zh
-        })
-        .eq('id', editingSkill.id);
-
-      if (error) throw error;
-
-      setEditingSkill(null);
-      loadSkills();
-      
-      toast({
-        title: "Success",
-        description: "Skill updated successfully"
-      });
-    } catch (error) {
-      console.error('Error updating skill:', error);
-      toast({
-        title: "Error",
-        description: "Failed to update skill",
-        variant: "destructive"
-      });
-    }
+    // Update local state only
+    setSkills(prev => prev.map(skill => 
+      skill.id === editingSkill.id ? editingSkill : skill
+    ));
+    
+    setEditingSkill(null);
   };
 
   const handleDelete = async (id: string) => {
@@ -144,7 +155,7 @@ const SkillsManagement = () => {
     }
   };
 
-  const handleDragEnd = async (result: DropResult) => {
+  const handleDragEnd = (result: DropResult) => {
     if (!result.destination) return;
 
     const reorderedSkills = Array.from(skills);
@@ -158,30 +169,6 @@ const SkillsManagement = () => {
     }));
 
     setSkills(updatedSkills);
-
-    try {
-      const updates = updatedSkills.map(skill => 
-        supabase
-          .from('skills')
-          .update({ display_order: skill.display_order })
-          .eq('id', skill.id)
-      );
-
-      await Promise.all(updates);
-      
-      toast({
-        title: "Success",
-        description: "Skills reordered successfully"
-      });
-    } catch (error) {
-      console.error('Error reordering skills:', error);
-      loadSkills(); // Revert on error
-      toast({
-        title: "Error",
-        description: "Failed to reorder skills",
-        variant: "destructive"
-      });
-    }
   };
 
   return (

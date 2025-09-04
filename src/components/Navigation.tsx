@@ -1,11 +1,13 @@
 import { useState } from "react";
-import { Menu, X, Languages, User, LogOut, Settings } from "lucide-react";
+import { Menu, X, Languages, User, LogOut, Settings, Save } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Switch } from "@/components/ui/switch";
 import { cn } from "@/lib/utils";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useAdmin } from "@/contexts/AdminContext";
+import { useAdminData } from "@/contexts/AdminDataContext";
+import { useProject } from "@/contexts/ProjectContext";
 import { useNavigate } from "react-router-dom";
 import ProjectManagement from "./admin/ProjectManagement";
 import CVManagement from "./admin/CVManagement";
@@ -16,8 +18,36 @@ import FaviconManagement from "./admin/FaviconManagement";
 const Navigation = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { language, toggleLanguage, t } = useLanguage();
-  const { isLoggedIn, isAdmin, user, showBookingSection, logout, toggleBookingSection } = useAdmin();
+  const { isLoggedIn, isAdmin, user, showBookingSection, logout, toggleBookingSection, hasUnsavedChanges: adminUnsavedChanges, saveChanges: saveAdminChanges } = useAdmin();
+  const { hasUnsavedChanges: adminDataUnsavedChanges } = useAdminData();
+  const { hasUnsavedChanges: projectUnsavedChanges, saveChanges: saveProjectChanges } = useProject();
   const navigate = useNavigate();
+
+  const hasAnyUnsavedChanges = adminUnsavedChanges || adminDataUnsavedChanges || projectUnsavedChanges;
+
+  const saveAllChanges = async () => {
+    try {
+      console.log('Saving all changes...');
+      
+      // Save all registered admin functions
+      if (window.adminSaveFunctions) {
+        const savePromises = Array.from(window.adminSaveFunctions).map(fn => fn());
+        await Promise.all(savePromises);
+      }
+
+      // Save project and admin context changes
+      await Promise.all([
+        projectUnsavedChanges ? saveProjectChanges() : Promise.resolve(),
+        adminUnsavedChanges ? saveAdminChanges() : Promise.resolve()
+      ]);
+      
+      console.log('All changes saved successfully');
+      alert('All changes saved successfully!');
+    } catch (error) {
+      console.error('Error saving changes:', error);
+      alert('Error saving changes. Please try again.');
+    }
+  };
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
@@ -86,7 +116,15 @@ const Navigation = () => {
                 </DialogTrigger>
                 <DialogContent className="max-w-7xl max-h-[90vh] overflow-y-auto">
                   <DialogHeader>
-                    <DialogTitle>Admin Panel</DialogTitle>
+                    <div className="flex justify-between items-center">
+                      <DialogTitle>Admin Panel</DialogTitle>
+                      {hasAnyUnsavedChanges && (
+                        <Button onClick={saveAllChanges} className="gap-2" size="sm">
+                          <Save size={16} />
+                          Save All Changes
+                        </Button>
+                      )}
+                    </div>
                   </DialogHeader>
                   <div className="space-y-6">
                     <div className="flex items-center gap-4 p-4 bg-muted/30 rounded-lg">
@@ -152,7 +190,15 @@ const Navigation = () => {
                 </DialogTrigger>
                 <DialogContent className="max-w-7xl max-h-[90vh] overflow-y-auto">
                   <DialogHeader>
-                    <DialogTitle>Admin Panel</DialogTitle>
+                    <div className="flex justify-between items-center">
+                      <DialogTitle>Admin Panel</DialogTitle>
+                      {hasAnyUnsavedChanges && (
+                        <Button onClick={saveAllChanges} className="gap-2" size="sm">
+                          <Save size={16} />
+                          Save All
+                        </Button>
+                      )}
+                    </div>
                   </DialogHeader>
                   <div className="space-y-6">
                     <div className="flex items-center gap-4 p-4 bg-muted/30 rounded-lg">
