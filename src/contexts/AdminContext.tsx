@@ -52,6 +52,7 @@ export const AdminProvider: React.FC<{ children: ReactNode }> = ({ children }) =
       }
     });
 
+    // Always load admin settings for everyone
     loadAdminSettings();
 
     return () => subscription.unsubscribe();
@@ -75,6 +76,7 @@ export const AdminProvider: React.FC<{ children: ReactNode }> = ({ children }) =
 
   const loadAdminSettings = async () => {
     try {
+      // Use anon access to read admin settings for everyone
       const { data: settings } = await supabase
         .from('admin_settings')
         .select('setting_name, setting_value')
@@ -88,11 +90,8 @@ export const AdminProvider: React.FC<{ children: ReactNode }> = ({ children }) =
       }
     } catch (error) {
       console.error('Error loading admin settings:', error);
-      // Fallback to localStorage if Supabase fails
-      const saved = localStorage.getItem('show-booking-section');
-      if (saved) {
-        setShowBookingSection(JSON.parse(saved));
-      }
+      // Fallback to default true if both Supabase and localStorage fail
+      setShowBookingSection(true);
     }
   };
 
