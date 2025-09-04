@@ -7,6 +7,7 @@ import { useEffect } from "react";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import HTMLViewer from "./pages/HTMLViewer";
+import Auth from "./pages/Auth";
 import { loadAndSetFavicon } from "@/utils/faviconLoader";
 
 const queryClient = new QueryClient();
@@ -25,6 +26,7 @@ const App = () => {
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<Index />} />
+            <Route path="/auth" element={<Auth />} />
             <Route path="/html-viewer" element={<HTMLViewer />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />

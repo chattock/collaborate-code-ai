@@ -1,13 +1,12 @@
 import { useState } from "react";
 import { Menu, X, Languages, User, LogOut, Settings } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Switch } from "@/components/ui/switch";
-import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useAdmin } from "@/contexts/AdminContext";
+import { useNavigate } from "react-router-dom";
 import ProjectManagement from "./admin/ProjectManagement";
 import CVManagement from "./admin/CVManagement";
 import SkillsManagement from "./admin/SkillsManagement";
@@ -16,11 +15,9 @@ import FaviconManagement from "./admin/FaviconManagement";
 
 const Navigation = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isLoginOpen, setIsLoginOpen] = useState(false);
-  const [password, setPassword] = useState('');
-  const [loginError, setLoginError] = useState('');
   const { language, toggleLanguage, t } = useLanguage();
-  const { isLoggedIn, showBookingSection, login, logout, toggleBookingSection } = useAdmin();
+  const { isLoggedIn, isAdmin, user, showBookingSection, logout, toggleBookingSection } = useAdmin();
+  const navigate = useNavigate();
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
@@ -39,21 +36,12 @@ const Navigation = () => {
     setIsMenuOpen(false);
   };
 
-  const handleLogin = () => {
-    const success = login(password);
-    if (success) {
-      setIsLoginOpen(false);
-      setPassword('');
-      setLoginError('');
-    } else {
-      setLoginError('Invalid password');
-    }
+  const handleAuthClick = () => {
+    navigate('/auth');
   };
 
-  const handleLogout = () => {
-    logout();
-    setPassword('');
-    setLoginError('');
+  const handleLogout = async () => {
+    await logout();
   };
 
   return (
@@ -83,35 +71,11 @@ const Navigation = () => {
           
           {/* Admin Login/Controls */}
           {!isLoggedIn ? (
-            <Dialog open={isLoginOpen} onOpenChange={setIsLoginOpen}>
-              <DialogTrigger asChild>
-                <Button variant="ghost" size="sm" className="gap-2">
-                  <User size={16} />
-                  Admin
-                </Button>
-              </DialogTrigger>
-              <DialogContent>
-                <DialogHeader>
-                  <DialogTitle>Admin Login</DialogTitle>
-                </DialogHeader>
-                <div className="space-y-4">
-                  <Input
-                    type="password"
-                    placeholder="Enter password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    onKeyPress={(e) => e.key === 'Enter' && handleLogin()}
-                  />
-                  {loginError && (
-                    <p className="text-sm text-destructive">{loginError}</p>
-                  )}
-                  <Button onClick={handleLogin} className="w-full">
-                    Login
-                  </Button>
-                </div>
-              </DialogContent>
-            </Dialog>
-          ) : (
+            <Button variant="ghost" size="sm" className="gap-2" onClick={handleAuthClick}>
+              <User size={16} />
+              Admin Login
+            </Button>
+          ) : isAdmin ? (
             <div className="flex items-center gap-2">
               <Dialog>
                 <DialogTrigger asChild>
@@ -147,6 +111,14 @@ const Navigation = () => {
                 Logout
               </Button>
             </div>
+          ) : (
+            <div className="flex items-center gap-2">
+              <span className="text-sm text-muted-foreground">Welcome, {user?.email}</span>
+              <Button variant="ghost" size="sm" onClick={handleLogout} className="gap-2">
+                <LogOut size={16} />
+                Logout
+              </Button>
+            </div>
           )}
         </div>
       </nav>
@@ -167,34 +139,10 @@ const Navigation = () => {
           
           {/* Mobile Admin Controls */}
           {!isLoggedIn ? (
-            <Dialog open={isLoginOpen} onOpenChange={setIsLoginOpen}>
-              <DialogTrigger asChild>
-                <Button variant="ghost" size="sm" className="gap-1">
-                  <User size={14} />
-                </Button>
-              </DialogTrigger>
-              <DialogContent>
-                <DialogHeader>
-                  <DialogTitle>Admin Login</DialogTitle>
-                </DialogHeader>
-                <div className="space-y-4">
-                  <Input
-                    type="password"
-                    placeholder="Enter password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    onKeyPress={(e) => e.key === 'Enter' && handleLogin()}
-                  />
-                  {loginError && (
-                    <p className="text-sm text-destructive">{loginError}</p>
-                  )}
-                  <Button onClick={handleLogin} className="w-full">
-                    Login
-                  </Button>
-                </div>
-              </DialogContent>
-            </Dialog>
-          ) : (
+            <Button variant="ghost" size="sm" className="gap-1" onClick={handleAuthClick}>
+              <User size={14} />
+            </Button>
+          ) : isAdmin ? (
             <div className="flex items-center gap-1">
               <Dialog>
                 <DialogTrigger asChild>
@@ -228,6 +176,10 @@ const Navigation = () => {
                 <LogOut size={14} />
               </Button>
             </div>
+          ) : (
+            <Button variant="ghost" size="sm" onClick={handleLogout}>
+              <LogOut size={14} />
+            </Button>
           )}
           <Button
             variant="ghost"

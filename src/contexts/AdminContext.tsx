@@ -1,10 +1,13 @@
 import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
+import { User, Session } from '@supabase/supabase-js';
 
 interface AdminContextType {
   isLoggedIn: boolean;
+  isAdmin: boolean;
+  user: User | null;
+  session: Session | null;
   showBookingSection: boolean;
-  login: (password: string) => boolean;
   logout: () => void;
   toggleBookingSection: () => void;
   hasUnsavedChanges: boolean;
@@ -14,14 +17,61 @@ interface AdminContextType {
 const AdminContext = createContext<AdminContextType | undefined>(undefined);
 
 export const AdminProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [user, setUser] = useState<User | null>(null);
+  const [session, setSession] = useState<Session | null>(null);
+  const [isAdmin, setIsAdmin] = useState(false);
   const [showBookingSection, setShowBookingSection] = useState(true);
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
 
-  // Load admin settings from Supabase on component mount
+  // Set up authentication listener and load settings
   useEffect(() => {
+    // Set up auth state listener FIRST
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      (event, session) => {
+        setSession(session);
+        setUser(session?.user ?? null);
+        
+        // Check admin role when user changes
+        if (session?.user) {
+          setTimeout(() => {
+            checkAdminRole(session.user.id);
+          }, 0);
+        } else {
+          setIsAdmin(false);
+        }
+      }
+    );
+
+    // THEN check for existing session
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
+      setUser(session?.user ?? null);
+      
+      if (session?.user) {
+        checkAdminRole(session.user.id);
+      }
+    });
+
     loadAdminSettings();
+
+    return () => subscription.unsubscribe();
   }, []);
+
+  const checkAdminRole = async (userId: string) => {
+    try {
+      const { data } = await supabase
+        .from('user_roles')
+        .select('role')
+        .eq('user_id', userId)
+        .eq('role', 'admin')
+        .single();
+      
+      setIsAdmin(!!data);
+    } catch (error) {
+      console.error('Error checking admin role:', error);
+      setIsAdmin(false);
+    }
+  };
 
   const loadAdminSettings = async () => {
     try {
@@ -43,12 +93,6 @@ export const AdminProvider: React.FC<{ children: ReactNode }> = ({ children }) =
       if (saved) {
         setShowBookingSection(JSON.parse(saved));
       }
-    }
-
-    // Load login status from localStorage (temporary session state)
-    const savedLogin = localStorage.getItem('admin-logged-in');
-    if (savedLogin) {
-      setIsLoggedIn(JSON.parse(savedLogin));
     }
   };
 
@@ -73,20 +117,8 @@ export const AdminProvider: React.FC<{ children: ReactNode }> = ({ children }) =
     }
   };
 
-  useEffect(() => {
-    localStorage.setItem('admin-logged-in', JSON.stringify(isLoggedIn));
-  }, [isLoggedIn]);
-
-  const login = (password: string): boolean => {
-    if (password === 'Kpmg@138176') {
-      setIsLoggedIn(true);
-      return true;
-    }
-    return false;
-  };
-
-  const logout = () => {
-    setIsLoggedIn(false);
+  const logout = async () => {
+    await supabase.auth.signOut();
     setShowBookingSection(true);
   };
 
@@ -97,9 +129,11 @@ export const AdminProvider: React.FC<{ children: ReactNode }> = ({ children }) =
 
   return (
     <AdminContext.Provider value={{
-      isLoggedIn,
+      isLoggedIn: !!session,
+      isAdmin,
+      user,
+      session,
       showBookingSection,
-      login,
       logout,
       toggleBookingSection,
       hasUnsavedChanges,
