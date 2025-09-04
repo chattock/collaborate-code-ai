@@ -51,8 +51,7 @@ const ProjectsSection = () => {
           <h2 className="text-3xl lg:text-4xl font-bold text-foreground">{t("projects.title")}</h2>
         </div>
 
-        <div className="h-[600px] overflow-y-auto pr-2">
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {projects.map((project, index) => (
               <Card key={project.id} className="group hover:shadow-lg transition-all duration-300 overflow-hidden">
                 <div className="aspect-square overflow-hidden">
@@ -99,7 +98,6 @@ const ProjectsSection = () => {
                 </CardContent>
               </Card>
             ))}
-          </div>
         </div>
 
         {/* Scroll Arrow */}
