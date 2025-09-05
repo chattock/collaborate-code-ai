@@ -21,8 +21,12 @@ export const AdminDataProvider: React.FC<{ children: ReactNode }> = ({ children 
 
   const saveAllAdminData = async () => {
     try {
-      // This will be called by individual components to save their data
-      // Each component will register their save function with this context
+      // Call all registered save functions
+      if (window.adminSaveFunctions) {
+        const savePromises = Array.from(window.adminSaveFunctions).map(saveFunc => saveFunc());
+        await Promise.all(savePromises);
+      }
+      
       setHasUnsavedChanges(false);
       
       toast({

@@ -1,8 +1,11 @@
-import { Mail, Linkedin } from "lucide-react";
+import { Mail, Linkedin, ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { BookingDialog } from "@/components/BookingDialog";
 import wechatIcon from "@/assets/wechat-icon.png";
+import { useState, useEffect } from "react";
+import { supabase } from "@/integrations/supabase/client";
 
 // WeChat icon component
 const WeChatIcon = ({ size = 24, className }: { size?: number; className?: string }) => (
@@ -17,6 +20,44 @@ const WeChatIcon = ({ size = 24, className }: { size?: number; className?: strin
 
 const ContactSection = () => {
   const { t } = useLanguage();
+  const [showBookingSection, setShowBookingSection] = useState(true);
+  const [paymentText, setPaymentText] = useState("Meetings are Free. Work outside of meetings are billed at £20 per hour.");
+  const [paymentLink, setPaymentLink] = useState("https://buy.stripe.com/9AQ9Cv4mm2HgcEgcMM");
+
+  // Load payment settings from Supabase
+  useEffect(() => {
+    const loadPaymentSettings = async () => {
+      try {
+        const { data: settings, error } = await supabase
+          .from('admin_settings')
+          .select('setting_name, setting_value')
+          .in('setting_name', ['payment_text', 'payment_link', 'show_booking_section']);
+
+        if (error) throw error;
+
+        if (settings && settings.length > 0) {
+          settings.forEach(setting => {
+            switch (setting.setting_name) {
+              case 'payment_text':
+                setPaymentText(setting.setting_value as string);
+                break;
+              case 'payment_link':
+                setPaymentLink(setting.setting_value as string);
+                break;
+              case 'show_booking_section':
+                setShowBookingSection(setting.setting_value as boolean);
+                break;
+            }
+          });
+        }
+      } catch (error) {
+        console.error('Error loading payment settings:', error);
+      }
+    };
+
+    loadPaymentSettings();
+  }, []);
+
   return <section id="contact" className="py-20 px-4">
       <div className="container mx-auto max-w-4xl">
         <div className="text-center mb-16">
@@ -68,6 +109,30 @@ const ContactSection = () => {
             </div>
           </CardContent>
         </Card>
+
+        {/* Payment and Booking Section */}
+        {showBookingSection && (
+          <div className="mt-8">
+            <Card>
+              <CardContent className="pt-6">
+                <div className="text-center">
+                  <p className="text-muted-foreground mb-4">{paymentText}</p>
+                  <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                    <BookingDialog>
+                      <Button size="lg" className="bg-gray-800 text-white hover:bg-gray-700">
+                        {t("services.bookMeeting")}
+                      </Button>
+                    </BookingDialog>
+                    <Button size="lg" variant="outline" className="border-2 gap-2" onClick={() => window.open(paymentLink, '_blank')}>
+                      <ExternalLink size={20} />
+                      {t("services.paymentLink")}
+                    </Button>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        )}
       </div>
     </section>;
 };

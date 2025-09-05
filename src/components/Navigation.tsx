@@ -9,16 +9,17 @@ import { useAdmin } from "@/contexts/AdminContext";
 import { useAdminData } from "@/contexts/AdminDataContext";
 import { useProject } from "@/contexts/ProjectContext";
 import { useNavigate } from "react-router-dom";
-import ProjectManagement from "./admin/ProjectManagement";
-import CVManagement from "./admin/CVManagement";
-import SkillsManagement from "./admin/SkillsManagement";
-import AboutContentManagement from "./admin/AboutContentManagement";
-import FaviconManagement from "./admin/FaviconManagement";
+import CVManagement from "@/components/admin/CVManagement";
+import ProjectManagement from "@/components/admin/ProjectManagement";
+import SkillsManagement from "@/components/admin/SkillsManagement";
+import AboutContentManagement from "@/components/admin/AboutContentManagement";
+import FaviconManagement from "@/components/admin/FaviconManagement";
+import PaymentManagement from "@/components/admin/PaymentManagement";
 
 const Navigation = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { language, toggleLanguage, t } = useLanguage();
-  const { isLoggedIn, isAdmin, user, showBookingSection, logout, toggleBookingSection, hasUnsavedChanges: adminUnsavedChanges, saveChanges: saveAdminChanges } = useAdmin();
+  const { isLoggedIn, isAdmin, user, logout, hasUnsavedChanges: adminUnsavedChanges, saveChanges: saveAdminChanges } = useAdmin();
   const { hasUnsavedChanges: adminDataUnsavedChanges } = useAdminData();
   const { hasUnsavedChanges: projectUnsavedChanges, saveChanges: saveProjectChanges } = useProject();
   const navigate = useNavigate();
@@ -127,15 +128,7 @@ const Navigation = () => {
                     </div>
                   </DialogHeader>
                   <div className="space-y-6">
-                    <div className="flex items-center gap-4 p-4 bg-muted/30 rounded-lg">
-                      <Switch
-                        checked={showBookingSection}
-                        onCheckedChange={toggleBookingSection}
-                        className="h-4 w-7"
-                      />
-                      <span className="text-sm font-medium">Show Booking Section</span>
-                    </div>
-                    
+                    <PaymentManagement />
                     <CVManagement />
                     <ProjectManagement />
                     <SkillsManagement />
@@ -201,15 +194,7 @@ const Navigation = () => {
                     </div>
                   </DialogHeader>
                   <div className="space-y-6">
-                    <div className="flex items-center gap-4 p-4 bg-muted/30 rounded-lg">
-                      <Switch
-                        checked={showBookingSection}
-                        onCheckedChange={toggleBookingSection}
-                        className="h-4 w-7"
-                      />
-                      <span className="text-sm font-medium">Show Booking Section</span>
-                    </div>
-                    
+                    <PaymentManagement />
                     <CVManagement />
                     <ProjectManagement />
                     <SkillsManagement />

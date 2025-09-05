@@ -1,10 +1,8 @@
 import { useState, useEffect } from "react";
-import { Check, ChevronDown, ExternalLink, Award, GraduationCap, User } from "lucide-react";
+import { Check, ChevronDown, Award, GraduationCap, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { BookingDialog } from "@/components/BookingDialog";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { useAdmin } from "@/contexts/AdminContext";
 import { supabase } from "@/integrations/supabase/client";
 
 interface Skill {
@@ -24,7 +22,6 @@ interface AboutContent {
 
 const ServicesSection = () => {
   const { t, language } = useLanguage();
-  const { showBookingSection } = useAdmin();
   const [skills, setSkills] = useState<Skill[]>([]);
   const [aboutContent, setAboutContent] = useState<AboutContent[]>([]);
 
@@ -166,29 +163,6 @@ const ServicesSection = () => {
           </Card>
         </div>
 
-        {/* Payment and Booking Section */}
-        {showBookingSection && (
-          <div className="mt-8">
-            <Card>
-              <CardContent className="pt-6">
-                <div className="text-center">
-                  <p className="text-muted-foreground mb-4">{t("services.paymentDesc")}</p>
-                  <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                    <BookingDialog>
-                      <Button size="lg" className="bg-gray-800 text-white hover:bg-gray-700">
-                        {t("services.bookMeeting")}
-                      </Button>
-                    </BookingDialog>
-                    <Button size="lg" variant="outline" className="border-2 gap-2" onClick={() => window.open('https://buy.stripe.com/9AQ9Cv4mm2HgcEgcMM', '_blank')}>
-                      <ExternalLink size={20} />
-                      {t("services.paymentLink")}
-                    </Button>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-        )}
 
         {/* Scroll Arrow */}
         <div className="flex justify-center mt-16">
