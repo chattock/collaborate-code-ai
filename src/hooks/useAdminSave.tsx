@@ -38,7 +38,7 @@ export const useAdminSave = (saveFunction: SaveFunction, dependencies: any[] = [
         }
       };
     }
-  }, []);
+  }, [saveFunction]);
 
   return { markAsChanged };
 };
