@@ -32,7 +32,7 @@ const HeroSection = () => {
       });
     }
   };
-  return <section id="hero" className="min-h-screen flex items-center justify-center px-4 py-20">
+  return <section id="hero" className="min-h-screen flex items-center justify-center px-2 sm:px-4 py-20">
       <div className="container mx-auto max-w-6xl">
         <div className="flex flex-col lg:flex-row items-center justify-center gap-12 lg:gap-20">
           {/* Profile Image */}
