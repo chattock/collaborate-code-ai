@@ -44,7 +44,7 @@ const ProjectsSection = () => {
   };
 
   return (
-    <section id="projects" className="py-20 px-2 sm:px-4 bg-muted/30">
+    <section id="projects" className="py-20 px-1 sm:px-4 bg-muted/30">
       <div className="container mx-auto max-w-6xl">
         <div className="text-center mb-16">
           <p className="text-lg text-muted-foreground mb-4">{t("projects.browse")}</p>
