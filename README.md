@@ -1,73 +1,93 @@
-# Welcome to your Lovable project
+# James Chattock - Data Scientist Portfolio
 
-## Project info
+A modern, responsive portfolio website showcasing my expertise in geospatial data science, machine learning, and web development.
 
-**URL**: https://lovable.dev/projects/ddef0753-f563-45f2-bcc6-e52d1c0d65f1
+## Features
 
-## How can I edit this code?
+- **Responsive Design**: Optimized for all devices and screen sizes
+- **Multi-language Support**: English and Chinese language toggle
+- **Interactive Projects**: Detailed project showcases with live demos
+- **Contact Integration**: Built-in contact forms and booking system
+- **Admin Panel**: Content management system for easy updates
+- **Modern Tech Stack**: Built with React, TypeScript, and Tailwind CSS
 
-There are several ways of editing your application.
+## Technologies Used
 
-**Use Lovable**
+- **Frontend**: React 18, TypeScript, Vite
+- **Styling**: Tailwind CSS, shadcn/ui components
+- **Backend**: Supabase (Database, Authentication, Storage)
+- **Deployment**: Vercel/Netlify ready
+- **Additional**: React Router, React Hook Form, Recharts
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/ddef0753-f563-45f2-bcc6-e52d1c0d65f1) and start prompting.
+## Getting Started
 
-Changes made via Lovable will be committed automatically to this repo.
+### Prerequisites
 
-**Use your preferred IDE**
+- Node.js (v18 or higher)
+- npm or yarn package manager
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+### Installation
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
-
-```sh
-# Step 1: Clone the repository using the project's Git URL.
+1. Clone the repository:
+```bash
 git clone <YOUR_GIT_URL>
+cd collaborate-code-ai
+```
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+2. Install dependencies:
+```bash
+npm install
+```
 
-# Step 3: Install the necessary dependencies.
-npm i
+3. Set up environment variables:
+```bash
+cp .env.example .env.local
+# Add your Supabase credentials
+```
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
+4. Start the development server:
+```bash
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+5. Open [http://localhost:8080](http://localhost:8080) in your browser.
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+## Available Scripts
 
-**Use GitHub Codespaces**
+- `npm run dev` - Start development server
+- `npm run build` - Build for production
+- `npm run preview` - Preview production build
+- `npm run lint` - Run ESLint
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+## Project Structure
 
-## What technologies are used for this project?
+```
+src/
+├── components/          # Reusable UI components
+│   ├── admin/          # Admin panel components
+│   └── ui/             # shadcn/ui components
+├── contexts/           # React contexts for state management
+├── hooks/              # Custom React hooks
+├── integrations/       # External service integrations
+├── pages/              # Main application pages
+└── utils/              # Utility functions
+```
 
-This project is built with:
+## Deployment
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+This project is ready for deployment on platforms like Vercel, Netlify, or any static hosting service.
 
-## How can I deploy this project?
+1. Build the project:
+```bash
+npm run build
+```
 
-Simply open [Lovable](https://lovable.dev/projects/ddef0753-f563-45f2-bcc6-e52d1c0d65f1) and click on Share -> Publish.
+2. Deploy the `dist` folder to your hosting platform.
 
-## Can I connect a custom domain to my Lovable project?
+## Contributing
 
-Yes, you can!
+This is a personal portfolio project. For any suggestions or improvements, please feel free to open an issue or submit a pull request.
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+## License
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+This project is open source and available under the [MIT License](LICENSE).
