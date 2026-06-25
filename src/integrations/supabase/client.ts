@@ -2,8 +2,11 @@
 import { createClient } from '@supabase/supabase-js';
 import type { Database } from './types';
 
-const SUPABASE_URL = "https://bfttasxtzlmnfwstxxkz.supabase.co";
-const SUPABASE_PUBLISHABLE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJmdHRhc3h0emxtbmZ3c3R4eGt6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTUzNTc0MDcsImV4cCI6MjA3MDkzMzQwN30.ydICN88BQBFpM-5BwkyraVYgKfsNauX962ghJ_C4eFE";
+// Migrated onto the shared babytoefu Supabase project. This app's tables live
+// in the dedicated `portfolio` schema there (so they don't collide with
+// babytoefu's own tables); storage uses the `project-files` bucket as before.
+const SUPABASE_URL = "https://pfnjauzaitixbjzlnysx.supabase.co";
+const SUPABASE_PUBLISHABLE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBmbmphdXphaXRpeGJqemxueXN4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAzMDQ0ODEsImV4cCI6MjA5NTg4MDQ4MX0.eBufDaatMDa39G4PkpQ_p4hWt8UXL8Ipm3vQRZ5j1vg";
 
 // Import the supabase client like this:
 // import { supabase } from "@/integrations/supabase/client";
@@ -13,5 +16,8 @@ export const supabase = createClient<Database>(SUPABASE_URL, SUPABASE_PUBLISHABL
     storage: localStorage,
     persistSession: true,
     autoRefreshToken: true,
-  }
+  },
+  db: {
+    schema: 'portfolio',
+  },
 });
