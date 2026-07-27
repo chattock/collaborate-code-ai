@@ -5,8 +5,8 @@ import type { Database } from './types';
 // Migrated onto the shared babytoefu Supabase project. This app's tables live
 // in the dedicated `portfolio` schema there (so they don't collide with
 // babytoefu's own tables); storage uses the `project-files` bucket as before.
-const SUPABASE_URL = "https://pfnjauzaitixbjzlnysx.supabase.co";
-const SUPABASE_PUBLISHABLE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBmbmphdXphaXRpeGJqemxueXN4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAzMDQ0ODEsImV4cCI6MjA5NTg4MDQ4MX0.eBufDaatMDa39G4PkpQ_p4hWt8UXL8Ipm3vQRZ5j1vg";
+const SUPABASE_URL = "https://knoctjndbbnqjaamfsyd.supabase.co";
+const SUPABASE_PUBLISHABLE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imtub2N0am5kYmJucWphYW1mc3lkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk2MzgxMjYsImV4cCI6MjA5NTIxNDEyNn0.or9cE7XPwdvM46E2U_9uQ9211ERzCrtiNhCH99xiH2o";
 
 // Import the supabase client like this:
 // import { supabase } from "@/integrations/supabase/client";
