@@ -6,7 +6,7 @@ import type { Database } from './types';
 // in the dedicated `portfolio` schema there (so they don't collide with
 // babytoefu's own tables); storage uses the `project-files` bucket as before.
 const SUPABASE_URL = "https://knoctjndbbnqjaamfsyd.supabase.co";
-const SUPABASE_PUBLISHABLE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imtub2N0am5kYmJucWphYW1mc3lkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk2MzgxMjYsImV4cCI6MjA5NTIxNDEyNn0.or9cE7XPwdvM46E2U_9uQ9211ERzCrtiNhCH99xiH2o";
+const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_upVuPujQNukocjT4ZN3cRw_aoPpYxrr";
 
 // Import the supabase client like this:
 // import { supabase } from "@/integrations/supabase/client";
