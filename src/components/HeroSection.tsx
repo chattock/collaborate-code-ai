@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Download, Mail, Linkedin, Github, Loader2, User, Briefcase, GraduationCap } from "lucide-react";
+import { Download, Mail, Loader2, User, Briefcase, GraduationCap } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -7,11 +7,6 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { useCv } from "@/hooks/useCv";
 import { fetchAboutContent, cleanBullet, AboutContentRow, AboutSectionContent } from "@/lib/aboutContent";
 import profilePic from "@/assets/profile-pic.jpg";
-import wechatIcon from "@/assets/wechat-icon.png";
-
-const WeChatIcon = ({ size = 24, className }: { size?: number; className?: string }) => (
-  <img src={wechatIcon} alt="WeChat" width={size} height={size} className={className} />
-);
 
 const INFO_SECTIONS = [
   { key: 'about', icon: User },
@@ -90,7 +85,7 @@ const HeroSection = () => {
             </h1>
 
             {/* Action Buttons */}
-            <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start mb-4">
+            <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start mb-8">
               <Dialog open={isCvOpen} onOpenChange={handleCvDialogChange}>
                 <DialogTrigger asChild>
                   <Button size="lg" variant="outline" className="border-2 gap-2">
@@ -125,62 +120,33 @@ const HeroSection = () => {
                   )}
                 </DialogContent>
               </Dialog>
-              <Button size="lg" variant="outline" className="border-2 gap-2" onClick={scrollToContact}>
+              <Button size="lg" className="gap-2" onClick={scrollToContact}>
                 <Mail size={20} />
                 {t("hero.contactInfo")}
               </Button>
             </div>
 
             {/* About / Experience / Education */}
-            <div className="flex flex-col sm:flex-row flex-wrap gap-3 justify-center lg:justify-start mb-8">
+            <div className="flex gap-4 justify-center lg:justify-start">
               {aboutLoading
-                ? INFO_SECTIONS.map(({ key }) => <Skeleton key={key} className="h-11 w-full sm:w-36 rounded-md" />)
+                ? INFO_SECTIONS.map(({ key }) => <Skeleton key={key} className="w-12 h-12 rounded-full" />)
                 : INFO_SECTIONS.map(({ key, icon: Icon }) => {
                     const section = getSection(key);
                     if (!section) return null;
                     return (
                       <Button
                         key={key}
-                        variant="outline"
-                        className="border-2 gap-2 h-11"
+                        variant="ghost"
+                        size="icon"
+                        aria-label={section.title}
+                        title={section.title}
+                        className="w-12 h-12 rounded-full border border-border hover:border-primary hover:bg-primary/10"
                         onClick={() => setOpenSection(key)}
                       >
-                        <Icon size={18} />
-                        {section.title}
+                        <Icon size={24} />
                       </Button>
                     );
                   })}
-            </div>
-
-            {/* Social Links */}
-            <div className="flex gap-4 justify-center lg:justify-start">
-              <Button
-                variant="ghost"
-                size="icon"
-                aria-label="LinkedIn"
-                className="w-12 h-12 rounded-full border border-border hover:border-primary hover:bg-primary/10"
-                onClick={() => window.open('https://www.linkedin.com/in/james-chattock/', '_blank')}
-              >
-                <Linkedin size={24} />
-              </Button>
-              <Button
-                variant="ghost"
-                size="icon"
-                aria-label="GitHub"
-                className="w-12 h-12 rounded-full border border-border hover:border-primary hover:bg-primary/10"
-                onClick={() => window.open('https://github.com/chattock', '_blank')}
-              >
-                <Github size={24} />
-              </Button>
-              <Button
-                variant="ghost"
-                size="icon"
-                aria-label="WeChat"
-                className="w-12 h-12 rounded-full border border-border hover:border-primary hover:bg-primary/10"
-                onClick={scrollToContact}
-              >
-                <WeChatIcon size={24} />
-              </Button>
             </div>
           </div>
         </div>
