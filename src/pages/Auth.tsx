@@ -23,9 +23,9 @@ const Auth = () => {
         setSession(session);
         setUser(session?.user ?? null);
         
-        // Redirect authenticated users to home
+        // Signed in — go straight to the dashboard
         if (session?.user) {
-          navigate('/');
+          navigate('/admin', { replace: true });
         }
       }
     );
@@ -34,9 +34,9 @@ const Auth = () => {
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
       setUser(session?.user ?? null);
-      
+
       if (session?.user) {
-        navigate('/');
+        navigate('/admin', { replace: true });
       }
     });
 

@@ -1,85 +1,79 @@
 import { useState } from "react";
-import { Menu, X, Languages, User, LogOut, Settings, Save } from "lucide-react";
+import { Menu, X, Languages, User, LogOut, LayoutDashboard } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Switch } from "@/components/ui/switch";
 import { cn } from "@/lib/utils";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useAdmin } from "@/contexts/AdminContext";
-import { useAdminData } from "@/contexts/AdminDataContext";
-import { useProject } from "@/contexts/ProjectContext";
 import { useNavigate } from "react-router-dom";
-import CVManagement from "@/components/admin/CVManagement";
-import ProjectManagement from "@/components/admin/ProjectManagement";
-import SkillsManagement from "@/components/admin/SkillsManagement";
-import AboutContentManagement from "@/components/admin/AboutContentManagement";
-import FaviconManagement from "@/components/admin/FaviconManagement";
-import PaymentManagement from "@/components/admin/PaymentManagement";
 
 const Navigation = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { language, toggleLanguage, t } = useLanguage();
-  const { isLoggedIn, isAdmin, user, logout, hasUnsavedChanges: adminUnsavedChanges, saveChanges: saveAdminChanges } = useAdmin();
-  const { hasUnsavedChanges: adminDataUnsavedChanges } = useAdminData();
-  const { hasUnsavedChanges: projectUnsavedChanges, saveChanges: saveProjectChanges } = useProject();
+  const { isLoggedIn, isAdmin, logout } = useAdmin();
   const navigate = useNavigate();
-
-  const hasAnyUnsavedChanges = adminUnsavedChanges || adminDataUnsavedChanges || projectUnsavedChanges;
-
-  const saveAllChanges = async () => {
-    try {
-      console.log('Saving all changes...');
-      
-      // Save all registered admin functions
-      if (window.adminSaveFunctions) {
-        const savePromises = Array.from(window.adminSaveFunctions).map(fn => fn());
-        await Promise.all(savePromises);
-      }
-
-      // Save project and admin context changes
-      await Promise.all([
-        projectUnsavedChanges ? saveProjectChanges() : Promise.resolve(),
-        adminUnsavedChanges ? saveAdminChanges() : Promise.resolve()
-      ]);
-      
-      console.log('All changes saved successfully');
-      alert('All changes saved successfully!');
-    } catch (error) {
-      console.error('Error saving changes:', error);
-      alert('Error saving changes. Please try again.');
-    }
-  };
-
-  const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
   const navLinks = [
     { href: "#hero", label: t("nav.about") },
     { href: "#projects", label: t("nav.projects") },
-    { href: "#services", label: t("nav.skills") },
     { href: "#contact", label: t("nav.contact") },
   ];
 
   const scrollToSection = (href: string) => {
-    const element = document.querySelector(href);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-    }
+    document.querySelector(href)?.scrollIntoView({ behavior: 'smooth' });
     setIsMenuOpen(false);
   };
 
-  const handleAuthClick = () => {
-    navigate('/auth');
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    setIsMenuOpen(false);
   };
 
-  const handleLogout = async () => {
-    await logout();
+  const adminControls = (compact: boolean) => {
+    if (!isLoggedIn) {
+      return (
+        <Button
+          variant="ghost"
+          size="sm"
+          aria-label="Admin login"
+          className="gap-1 text-muted-foreground"
+          onClick={() => navigate('/auth')}
+        >
+          <User size={compact ? 14 : 16} />
+        </Button>
+      );
+    }
+    return (
+      <div className="flex items-center gap-1">
+        {isAdmin && (
+          <Button
+            variant="ghost"
+            size="sm"
+            className="gap-2"
+            onClick={() => navigate('/admin')}
+          >
+            <LayoutDashboard size={compact ? 14 : 16} />
+            {!compact && "Dashboard"}
+          </Button>
+        )}
+        <Button
+          variant="ghost"
+          size="sm"
+          aria-label="Log out"
+          onClick={() => logout()}
+        >
+          <LogOut size={compact ? 14 : 16} />
+        </Button>
+      </div>
+    );
   };
 
   return (
     <>
       {/* Desktop Navigation */}
       <nav className="hidden lg:flex justify-between items-center h-20 px-8 fixed top-0 left-0 right-0 bg-background/95 backdrop-blur-sm border-b border-border z-50">
-        <div className="text-2xl font-bold text-primary">James Chattock</div>
+        <button className="text-2xl font-bold text-primary" onClick={scrollToTop}>
+          James Chattock
+        </button>
         <div className="flex gap-8 items-center">
           {navLinks.map((link) => (
             <button
@@ -99,65 +93,16 @@ const Navigation = () => {
             <Languages size={16} />
             {language === 'en' ? '中文' : 'EN'}
           </Button>
-          
-          {/* Admin Login/Controls */}
-          {!isLoggedIn ? (
-            <Button variant="ghost" size="sm" className="gap-2" onClick={handleAuthClick}>
-              <User size={16} />
-              Admin Login
-            </Button>
-          ) : isAdmin ? (
-            <div className="flex items-center gap-2">
-              <Dialog>
-                <DialogTrigger asChild>
-                  <Button variant="ghost" size="sm" className="gap-2">
-                    <Settings size={16} />
-                    Admin Panel
-                  </Button>
-                </DialogTrigger>
-                <DialogContent className="max-w-7xl max-h-[90vh] overflow-y-auto">
-                  <DialogHeader>
-                    <div className="flex justify-between items-center">
-                      <DialogTitle>Admin Panel</DialogTitle>
-                      {hasAnyUnsavedChanges && (
-                        <Button onClick={saveAllChanges} className="gap-2" size="sm">
-                          <Save size={16} />
-                          Save All Changes
-                        </Button>
-                      )}
-                    </div>
-                  </DialogHeader>
-                  <div className="space-y-6">
-                    <PaymentManagement />
-                    <CVManagement />
-                    <ProjectManagement />
-                    <SkillsManagement />
-                    <AboutContentManagement />
-                    <FaviconManagement />
-                  </div>
-                </DialogContent>
-              </Dialog>
-              <Button variant="ghost" size="sm" onClick={handleLogout} className="gap-2">
-                <LogOut size={16} />
-                Logout
-              </Button>
-            </div>
-          ) : (
-            <div className="flex items-center gap-2">
-              <span className="text-sm text-muted-foreground">Welcome, {user?.email}</span>
-              <Button variant="ghost" size="sm" onClick={handleLogout} className="gap-2">
-                <LogOut size={16} />
-                Logout
-              </Button>
-            </div>
-          )}
+          {adminControls(false)}
         </div>
       </nav>
 
       {/* Mobile Navigation */}
       <nav className="lg:hidden flex justify-between items-center h-16 px-4 fixed top-0 left-0 right-0 bg-background/95 backdrop-blur-sm border-b border-border z-50">
-        <div className="text-xl font-bold text-primary">James Chattock</div>
-        <div className="flex items-center gap-2">
+        <button className="text-xl font-bold text-primary" onClick={scrollToTop}>
+          James Chattock
+        </button>
+        <div className="flex items-center gap-1">
           <Button
             variant="ghost"
             size="sm"
@@ -167,55 +112,12 @@ const Navigation = () => {
             <Languages size={14} />
             {language === 'en' ? '中文' : 'EN'}
           </Button>
-          
-          {/* Mobile Admin Controls */}
-          {!isLoggedIn ? (
-            <Button variant="ghost" size="sm" className="gap-1" onClick={handleAuthClick}>
-              <User size={14} />
-            </Button>
-          ) : isAdmin ? (
-            <div className="flex items-center gap-1">
-              <Dialog>
-                <DialogTrigger asChild>
-                  <Button variant="ghost" size="sm">
-                    <Settings size={14} />
-                  </Button>
-                </DialogTrigger>
-                <DialogContent className="max-w-7xl max-h-[90vh] overflow-y-auto">
-                  <DialogHeader>
-                    <div className="flex justify-between items-center">
-                      <DialogTitle>Admin Panel</DialogTitle>
-                      {hasAnyUnsavedChanges && (
-                        <Button onClick={saveAllChanges} className="gap-2" size="sm">
-                          <Save size={16} />
-                          Save All
-                        </Button>
-                      )}
-                    </div>
-                  </DialogHeader>
-                  <div className="space-y-6">
-                    <PaymentManagement />
-                    <CVManagement />
-                    <ProjectManagement />
-                    <SkillsManagement />
-                    <AboutContentManagement />
-                    <FaviconManagement />
-                  </div>
-                </DialogContent>
-              </Dialog>
-              <Button variant="ghost" size="sm" onClick={handleLogout}>
-                <LogOut size={14} />
-              </Button>
-            </div>
-          ) : (
-            <Button variant="ghost" size="sm" onClick={handleLogout}>
-              <LogOut size={14} />
-            </Button>
-          )}
+          {adminControls(true)}
           <Button
             variant="ghost"
             size="icon"
-            onClick={toggleMenu}
+            aria-label={isMenuOpen ? "Close menu" : "Open menu"}
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
             className="relative z-50"
           >
             {isMenuOpen ? <X size={24} /> : <Menu size={24} />}

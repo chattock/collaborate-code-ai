@@ -3,17 +3,13 @@ import { useLanguage } from "@/contexts/LanguageContext";
 const Footer = () => {
   const { t } = useLanguage();
   const navLinks = [
-    { href: "#about", label: t("nav.about") },
+    { href: "#hero", label: t("nav.about") },
     { href: "#projects", label: t("nav.projects") },
-    { href: "#services", label: t("nav.services") },
     { href: "#contact", label: t("nav.contact") },
   ];
 
   const scrollToSection = (href: string) => {
-    const element = document.querySelector(href);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-    }
+    document.querySelector(href)?.scrollIntoView({ behavior: 'smooth' });
   };
 
   return (
@@ -32,9 +28,9 @@ const Footer = () => {
             ))}
           </div>
         </nav>
-        
+
         <div className="text-center text-muted-foreground">
-          <p>{t("footer.copyright")}</p>
+          <p>© {new Date().getFullYear()} {t("footer.rights")}</p>
         </div>
       </div>
     </footer>

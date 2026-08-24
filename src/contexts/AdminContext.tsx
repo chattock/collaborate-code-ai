@@ -5,11 +5,11 @@ import { User, Session } from '@supabase/supabase-js';
 interface AdminContextType {
   isLoggedIn: boolean;
   isAdmin: boolean;
+  /** True while the initial session restore / admin-role check is in flight. */
+  isLoading: boolean;
   user: User | null;
   session: Session | null;
-  logout: () => void;
-  hasUnsavedChanges: boolean;
-  saveChanges: () => Promise<void>;
+  logout: () => Promise<void>;
 }
 
 const AdminContext = createContext<AdminContextType | undefined>(undefined);
@@ -18,88 +18,70 @@ export const AdminProvider: React.FC<{ children: ReactNode }> = ({ children }) =
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
   const [isAdmin, setIsAdmin] = useState(false);
-  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
-  // Set up authentication listener and load settings
   useEffect(() => {
-    // Set up auth state listener FIRST
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (event, session) => {
-        setSession(session);
-        setUser(session?.user ?? null);
-        
-        // Check admin role when user changes
-        if (session?.user) {
-          setTimeout(() => {
-            checkAdminRole(session.user.id);
-          }, 0);
-        } else {
-          setIsAdmin(false);
-        }
-      }
-    );
+    let cancelled = false;
 
-    // THEN check for existing session
-    supabase.auth.getSession().then(({ data: { session } }) => {
+    const checkAdminRole = async (userId: string) => {
+      try {
+        const { data } = await supabase
+          .from('user_roles')
+          .select('role')
+          .eq('user_id', userId)
+          .eq('role', 'admin')
+          .maybeSingle();
+        if (!cancelled) setIsAdmin(!!data);
+      } catch {
+        if (!cancelled) setIsAdmin(false);
+      } finally {
+        if (!cancelled) setIsLoading(false);
+      }
+    };
+
+    // Listen for auth changes first, then restore any existing session.
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      if (cancelled) return;
       setSession(session);
       setUser(session?.user ?? null);
-      
       if (session?.user) {
-        checkAdminRole(session.user.id);
+        // Defer the role query out of the auth callback (Supabase deadlock guard).
+        setTimeout(() => checkAdminRole(session.user.id), 0);
+      } else {
+        setIsAdmin(false);
+        setIsLoading(false);
       }
     });
 
-    // Always load admin settings for everyone
-    loadAdminSettings();
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (cancelled) return;
+      setSession(session);
+      setUser(session?.user ?? null);
+      if (session?.user) {
+        checkAdminRole(session.user.id);
+      } else {
+        setIsLoading(false);
+      }
+    });
 
-    return () => subscription.unsubscribe();
+    return () => {
+      cancelled = true;
+      subscription.unsubscribe();
+    };
   }, []);
-
-  const checkAdminRole = async (userId: string) => {
-    try {
-      const { data } = await supabase
-        .from('user_roles')
-        .select('role')
-        .eq('user_id', userId)
-        .eq('role', 'admin')
-        .single();
-      
-      setIsAdmin(!!data);
-    } catch (error) {
-      console.error('Error checking admin role:', error);
-      setIsAdmin(false);
-    }
-  };
-
-  // Load admin settings from Supabase
-  const loadAdminSettings = async () => {
-    // No longer needed since PaymentManagement handles its own settings
-  };
-
-  const saveChanges = async () => {
-    try {
-      // No longer need to save booking section settings here
-      setHasUnsavedChanges(false);
-    } catch (error) {
-      console.error('Error saving admin settings:', error);
-      setHasUnsavedChanges(false);
-    }
-  };
 
   const logout = async () => {
     await supabase.auth.signOut();
   };
 
-
   return (
     <AdminContext.Provider value={{
       isLoggedIn: !!session,
       isAdmin,
+      isLoading,
       user,
       session,
       logout,
-      hasUnsavedChanges,
-      saveChanges
     }}>
       {children}
     </AdminContext.Provider>
